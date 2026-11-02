@@ -6,6 +6,8 @@ __pycache__/
 results/eb_profile_*.npz
 results/sweeps/
 results/study_guide/
+results/logs/
+results/figures/
 results/pinn/*.log
 results/hw_pred_*.npz
 results/calib_*.json

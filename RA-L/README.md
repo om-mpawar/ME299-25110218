@@ -43,14 +43,42 @@ s.positions[-1], s.converged, s.solve_ms
 
 ## Reproducing the paper's simulation results
 
-| Paper item | Command | Writes |
+One command regenerates every simulation-derived number and figure of `paper/main.tex` and checks each against the
+printed value:
+
+```bash
+.venv/bin/python scripts/reproduce.py          # fast mode, ~5 min on a laptop: everything but the multi-hour jobs
+.venv/bin/python scripts/reproduce.py --full   # also n_transfer (~2 h, 8 threads) and the PINN baseline (hours)
+.venv/bin/python scripts/reproduce.py --list   # the steps, their commands and their outputs
+```
+
+It runs the producers below one at a time (logs in `results/logs/`), writes their result files in place under
+`results/` (so `git diff results/` shows what moved), draws Fig. 1 and 2 into `results/figures/` and compares them
+pixel by pixel with `paper/figures/`, and finally writes **`results/CLAIMS.md`** (readable) and `results/claims.json`:
+for every number in the paper, its line, the printed value, the regenerated value, the command and a status
+(reproduced / differs / stored, not re-run / not reproducible here / hardware pending), with the physics audit's
+corrections as notes. No SOFA, hardware or network is needed; Table II's first and last rows need the `pinn` extra.
+
+| Paper item | Step (`scripts/...`) | Writes |
 |---|---|---|
-| Table I (identified physics) | `.venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json` (~2 min) | `results/mc_std6.json` |
-| Table I (learned column), Fig. 2 points | `OMP_NUM_THREADS=8 .venv/bin/python scripts/n_transfer.py --mc results/mc_std6.json` | `results/n_transfer.json` |
-| Fig. 2 | `.venv/bin/python scripts/fig_transfer.py` | `paper/figures/fig_transfer.pdf` |
-| Fig. 1 | `.venv/bin/python scripts/fig_profile.py` | `paper/figures/fig_profile.pdf` |
-| Prop. 1, Prop. 2, run times | `.venv/bin/python scripts/study_guide_figs.py` | `results/study_guide/numbers.json` |
-| Table II (PINN) | `scripts/pinn_stage1.sh`, then `scripts/pinn_stage2.sh` (needs the `pinn` extra; hours on CPU) | `results/pinn/` |
+| Table I (identified physics), x20.2 / 5.9 / 5.3 | `module_compliance.py` (~1 min) | `results/mc_std6.json` |
+| Table I (learned column), Fig. 2 points, residual variants, coverage | `n_transfer.py` (~2 h, long) | `results/n_transfer.json` |
+| Table I re-evaluated (comment under the table); at a tight tolerance | `mc_reeval.py`, `tol_reeval.py` | `results/mc_std6_reeval.json`, `results/tol_reeval.json` |
+| Table II PINN rows | `pinn_stage1.sh`, `pinn_stage2.sh` (hours, long) | `results/pinn/2s_*.json`, `4s_*.json` |
+| Table II exact-solver rows, x20.2 / 5.8 / 5.3 in 80 s | `exact_global3.py` | `results/pinn/exact_global3_2s.json`, `pinn_laws_exact.json` |
+| Prop. 1 example, Prop. 3, tendon stretch, Remark 1 hysteresis, sag, mounting error | `physics_props.py` | `results/physics_props.json` |
+| Prop. 1 (4.5 mm), Prop. 2 Jacobian, run-time medians and p95 | `study_guide_figs.py` | `results/study_guide/numbers.json` |
+| Slowest call, Cosserat time per pose | `runtime.py` | `results/runtime.json` |
+| D30 vs D40 sensitivity | `geometry_sensitivity.py` | `results/geometry_sensitivity.json` |
+| Calibration on synthetic data (0.003, 0.244, mass drift) | `calib_synthetic.py` | `results/calib_synthetic.json` |
+| Ablation footnote (older robot) | `mc_ablation.py` | `results/mc_ablation.json` |
+| FEM nodal mass vs the part ("2 %") | `fem_mass.py` (needs the std6 meshes, `data/README.md`) | `results/fem_mass.json` |
+| FEM mesh error (0.6 mm) | `mesh_error.py` (stub: needs SOFA; collects the stored old-robot values) | `results/mesh_error.json` |
+| Fig. 1, Fig. 2 | `fig_profile.py`, `fig_transfer.py` (`--out-dir`; default `paper/figures/`) | `results/figures/` |
+| every number of the paper | `claims.py` | `results/claims.json`, `results/CLAIMS.md` |
+
+Timings depend on the machine and its load; run on an otherwise idle computer. `module_compliance` runs with
+`OMP_NUM_THREADS=1`, which makes `results/mc_std6.json` bit-reproducible.
 
 `PACKAGING_NOTES.md` maps every file of the old research repository to its place here and lists the open
 questions for the physics audit.
