@@ -22,7 +22,7 @@ loop). Both interactive and batch mode instead run as a plain script, using
 system python3 with SOFA's own Python bindings (built for this exact python3
 version) added to PYTHONPATH/LD_LIBRARY_PATH -- no runSofa binary involved:
 
-    export SOFA_ROOT=/home/pawar/SOFA/v25.06.00
+    export SOFA_ROOT=<your SOFA 25.06 install>      # or: source sim/sofa_env.sh
     export PYTHONPATH="$SOFA_ROOT/plugins/SofaPython3/lib/python3/site-packages:$SOFA_ROOT/plugins/SofaPython3/lib:$SOFA_ROOT/plugins/SoftRobots/lib/python3/site-packages:$SOFA_ROOT/plugins/STLIB/lib/python3/site-packages:$SOFA_ROOT/lib"
     export LD_LIBRARY_PATH="$SOFA_ROOT/lib:$SOFA_ROOT/plugins/SofaPython3/lib:$LD_LIBRARY_PATH"
 
@@ -30,8 +30,6 @@ version) added to PYTHONPATH/LD_LIBRARY_PATH -- no runSofa binary involved:
     python3 sim/cylinder_scene.py --batch results/configs.csv --out results/results.csv    # headless batch
 """
 
-import os as _os, sys as _sys
-_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))  # repo root, for `import tdcr`
 import argparse
 import csv
 import math
@@ -49,7 +47,6 @@ FEM_COMPONENT = ("TetrahedronFEMForceField" if os.environ.get("TDCR_SERIAL_FEM")
 import Sofa.constants.Key as Key
 from tendon import PullingCable  # pull-only (minForce = 0): sim/tendon.py
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from tdcr.cc_kinematics import TENDON_R, BACKBONE_L  # single source of truth, shared with Level-0
 
 # ── Mesh paths (relative to this script) ─────────────────────────────────────

@@ -71,8 +71,6 @@ Batch mode passes include_visual=False, add_controller=False explicitly, so
 it pays none of the rendering cost.
 """
 
-import os as _os, sys as _sys
-_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))  # repo root, for `import tdcr`
 import argparse
 import csv
 import math
@@ -92,9 +90,9 @@ import Sofa.Core
 from tendon import PullingCable  # pull-only (minForce = 0): sim/tendon.py
 from mass import MASS_MODEL, mass_component  # TDCR_MASS: uniform (default) or volume (sim/mass.py)
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from tdcr.cc_kinematics import TENDON_R, THETA_DEG
 from tdcr.multisection import SECTION_LENGTHS, SECTION_GAMMAS
+from tdcr.params import STD6
 
 from tdcr.paths import ROOT as _DIR  # paths below are relative to the repo root
 MESH_S1 = os.path.join(_DIR, "data", "meshes", "section1.vtk")
@@ -107,16 +105,15 @@ MESH_MERGED_LO = os.path.join(_DIR, "data", "meshes", "two_section_lo.vtk")
 CABLES_JSON = os.path.join(_DIR, "data", "cables", "two_section.cables.json")
 
 # ── Material / solver settings ─────────────────────────────────────────────
-# Units: mm, kg, s  ->  force in mN, stress in kPa, gravity in mm/s^2.
-# So E = 50000 is 50 MPa, and gravity must be 9810 to be real: the historical
-# value 9.81 is 1000 times too weak (effectively no gravity), which is what every
-# sweep up to 2026-09-30 used. Environment variables override the defaults so a
-# run can use measured values without editing this file:
+# Units: mm, kg, s  ->  force in mN, stress in kPa, gravity in mm/s^2 (9810 is real gravity).
+# Defaults: the std6 robot (tdcr/params.py), the values every std6 sweep ran with. Environment variables
+# override them for sensitivity runs and the gravity-free sets (TDCR_GRAVITY=0):
 #   TDCR_YOUNG (kPa), TDCR_POISSON, TDCR_SECTION_MASS (kg), TDCR_GRAVITY (mm/s^2)
-YOUNG_MODULUS = float(os.environ.get("TDCR_YOUNG", 50000))
-POISSON_RATIO = float(os.environ.get("TDCR_POISSON", 0.45))
-SECTION_MASS = float(os.environ.get("TDCR_SECTION_MASS", 0.015))   # kg per section
-GRAVITY = float(os.environ.get("TDCR_GRAVITY", 9.81))              # magnitude; direction below
+# (Before the packaging the defaults were 50000 / 0.45 / 0.015 / 9.81, all overridden by the sweep wrapper.)
+YOUNG_MODULUS = float(os.environ.get("TDCR_YOUNG", STD6.youngs_kpa))
+POISSON_RATIO = float(os.environ.get("TDCR_POISSON", STD6.poisson))
+SECTION_MASS = float(os.environ.get("TDCR_SECTION_MASS", STD6.module_mass_kg))   # kg per section
+GRAVITY = float(os.environ.get("TDCR_GRAVITY", STD6.gravity_mm_s2))               # magnitude; direction below
 # TDCR_GRAVITY_DIR: direction of gravity in the LAB frame (z along the backbone, base at the bottom):
 # -z upright (default, as before), +z hanging, +-x / +-y horizontal. The scene's y-up frame is the lab frame
 # rotated (x_lab = x, y_lab = -z, z_lab = y), so a lab vector (gx, gy, gz) is (gx, gz, -gy) here.

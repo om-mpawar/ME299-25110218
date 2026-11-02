@@ -19,14 +19,10 @@ cable constraints from a verified cables.json. The only generalisations:
     createSceneRoutedN(root, mesh=".../four_section_cad.vtk",
                        cables_json=".../four_section_cad.cables.json", n_sections=4)
 """
-import os as _os, sys as _sys
-_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))  # repo root, for `import tdcr`
 import os
-import sys
 
 import numpy as np
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import two_section_scene as ts  # noqa: E402  (shared constants and helpers)
 from tendon import PullingCable  # noqa: E402  (pull-only: sim/tendon.py)
 from tdcr.make_cables_json import load_cables_json  # noqa: E402

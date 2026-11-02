@@ -38,12 +38,9 @@ which push each finished pose to GitHub; sim/merge_poses.py assembles the
 standard file above from one or more such directories.
 """
 
-import os as _os, sys as _sys
-_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))  # repo root, for `import tdcr`
 import argparse
 import csv
 import os
-import sys
 import time
 
 import numpy as np
@@ -51,11 +48,11 @@ import numpy as np
 import Sofa.Core
 import Sofa.Simulation
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from cylinder_scene import createScene, find_tip_index  # noqa: E402
-from tdcr.paths import MESHES  # noqa: E402
-
+from cylinder_scene import createScene, find_tip_index
+from tdcr.paths import MESHES
 from tdcr.paths import ROOT as _DIR  # paths below are relative to the repo root
+
+
 def load_doe(path, n_sections=1):
     """-> theta (P,) or (P, n), alpha likewise, dl (P, 3n)."""
     rows = list(csv.DictReader(open(path)))
