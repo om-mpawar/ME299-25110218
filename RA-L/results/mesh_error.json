@@ -1,0 +1,28 @@
+{
+ "regenerated": false,
+ "why": "needs SOFA (not run here) and the coarse/fine std meshes, which are not in the repository",
+ "what": "coarse-vs-fine mesh difference on the older 3-channel std robot, gravity-free, 30 poses per set",
+ "std6_study": "none exists: needs fine std6 meshes and SOFA runs with gravity (physics audit K2)",
+ "stored": {
+  "1s": {
+   "poses": 30,
+   "tip_mean": 0.5559938549995422,
+   "tip_max": 1.1096891164779663,
+   "along_mean": 0.28291282057762146,
+   "along_max": 0.5665719509124756,
+   "file": "results/meshcheck/meshcheck_std_1s_sym_meshcheck_fine_g0.json"
+  },
+  "2s": {
+   "poses": 30,
+   "tip_mean": 0.5910303592681885,
+   "tip_max": 1.5141916275024414,
+   "along_mean": 0.35300400853157043,
+   "along_max": 0.6378787159919739,
+   "file": "results/meshcheck/meshcheck_std_2s_sym_meshcheck_fine_g0.json"
+  }
+ },
+ "tip_mean_mm": [
+  0.5559938549995422,
+  0.5910303592681885
+ ]
+}

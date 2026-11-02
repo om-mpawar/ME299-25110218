@@ -1,0 +1,32 @@
+{
+ "N1": {
+  "fem_uniform_nodes": {
+   "com_y_mm": 80.52130645679935,
+   "base_sleeve_frac": 0.06683849395701996,
+   "base_moment_mNmm": 26620.102350698486,
+   "second_moment": 292.3321150741242,
+   "base_moment_vs_true": 0.04213124145962266,
+   "notched_cell_mass_frac": 0.9010483786701963
+  },
+  "true_volume": {
+   "com_y_mm": 77.2659941986003,
+   "base_sleeve_frac": 0.11546723278631339,
+   "base_moment_mNmm": 25543.905884074662,
+   "second_moment": 286.5401205412915,
+   "notched_cell_mass_frac": 0.8436423642010626
+  },
+  "eb_prior": {
+   "com_y_mm": 77.23104130502205,
+   "base_sleeve_frac": 0.11574920567265261,
+   "base_moment_mNmm": 25532.35056231638,
+   "second_moment": 286.3703768637865,
+   "base_moment_vs_true": -0.0004523709808015308,
+   "notched_cell_mass_frac": 0.8437385723419188
+  },
+  "mesh_nodes": 28711,
+  "mesh_volume_mm3": 27976.260709236747
+ },
+ "N2": {
+  "missing": "data/meshes/std6_two_section_sym.vtk"
+ }
+}

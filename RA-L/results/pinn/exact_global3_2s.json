@@ -43,5 +43,11 @@
    "along": 0.2867660214099231,
    "poses": 100
   }
+ },
+ "fit_seconds": 36.7796847820282,
+ "nfev": 10,
+ "threads": {
+  "OMP_NUM_THREADS": "2",
+  "NUMBA_NUM_THREADS": "2"
  }
 }
