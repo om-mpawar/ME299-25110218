@@ -7,8 +7,8 @@ tension); that position is the tendon's zero, i.e. dl = 0 means "taut at the thr
 tilts a module by ~0.8 deg (~8 mm at a four-module tip), so re-home after every re-tensioning or reassembly and report
 the repeatability (homing_repeatability).
 
-    motors = {"s1t1": Dynamixel(port, baud, 1), ...}           # lab tendon names, see hardware/run_poses.TENDON_ORDER
-    zeros = home_all(motors, threshold_ma=60.0)                 # -> hardware/zeros/<date>.json
+    motors = {"s1t1": Dynamixel(port, baud, 1), ...}           # lab tendon names, see tdcr/hardware/run_poses.TENDON_ORDER
+    zeros = home_all(motors, threshold_ma=60.0)                 # -> data/hardware/zeros/<date>.json
 
 Motors must be in position control (Dynamixel.enable() does that); home_all enables them. `direction` is the sign of
 the tick change that winds the tendon in (it depends on how the servo is mounted).
@@ -21,10 +21,10 @@ import time
 
 import numpy as np
 
-from hardware.hysteresis_probe import PULLEY_R_MM, mm_to_ticks, ticks_to_mm
-from tdcr.paths import ROOT
+from tdcr.hardware.hysteresis_probe import PULLEY_R_MM, mm_to_ticks, ticks_to_mm
+from tdcr.paths import HARDWARE
 
-ZERO_DIR = os.path.join(ROOT, "hardware", "zeros")
+ZERO_DIR = os.path.join(HARDWARE, "zeros")
 
 
 class HomingError(RuntimeError):

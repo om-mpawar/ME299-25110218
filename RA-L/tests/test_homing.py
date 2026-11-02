@@ -5,8 +5,8 @@ import json
 import numpy as np
 import pytest
 
-from hardware.homing import HomingError, home_all, home_tendon, homing_repeatability
-from hardware.hysteresis_probe import mm_to_ticks, ticks_to_mm
+from tdcr.hardware.homing import HomingError, home_all, home_tendon, homing_repeatability
+from tdcr.hardware.hysteresis_probe import mm_to_ticks, ticks_to_mm
 
 
 class FakeTendonMotor:

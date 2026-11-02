@@ -36,15 +36,17 @@ import os
 import numpy as np
 from scipy.optimize import nnls
 
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CAD_JSON = os.path.join(ROOT, "cad", "std_tdcr_L150.json")
-CACHE = os.path.join(ROOT, "results", "eb_profile_std.npz")
+from tdcr.params import MASS_STD, STD6
+from tdcr.paths import CAD, RESULTS
+
+CAD_JSON = os.path.join(CAD, "std_tdcr_L150.json")   # std6 geometry: the same module; its holes are cut via `holes`
+CACHE = os.path.join(RESULTS, "eb_profile_std.npz")
 PSI = np.radians([0.0, 120.0, 240.0])
-R_BEAR = 10.55                     # tendon bearing radius: cable points in the channel wall (data/cables/std_*)
+R_BEAR = STD6.bearing_radius_mm   # tendon bearing radius: cable points in the channel wall (data/cables/std_*)
 Y_START, Y_END = 5.0, 155.0        # tendon path within its section (cable files: first / last point)
 
 
-def timoshenko_factor(nu=0.48, ri=7.0, ro=12.5):
+def timoshenko_factor(nu=STD6.poisson, ri=STD6.inner_radius_mm, ro=STD6.outer_radius_mm):
     """E / (kappa G) for the bored tube: 2 (1 + nu) / kappa, with Cowper's shear coefficient of a hollow circle
     kappa = 6 (1 + nu) (1 + m^2)^2 / ((7 + 6 nu) (1 + m^2)^2 + (20 + 12 nu) m^2), m = ri / ro."""
     m2 = (ri / ro) ** 2
@@ -52,7 +54,8 @@ def timoshenko_factor(nu=0.48, ri=7.0, ro=12.5):
     return 2 * (1 + nu) / kappa
 
 
-def section_profile(dy=0.02, dc=0.1, force=False, holes=None, hole_r=9.5, hole_dia=1.8, cad_json=None):
+def section_profile(dy=0.02, dc=0.1, force=False, holes=None, hole_r=STD6.tendon_radius_mm, hole_dia=STD6.hole_dia_mm,
+                    cad_json=None):
     """-> y (cell centres over one module), A, Jx, Jz (mm^2, mm^4) from the CAD parameters.
     holes: channel azimuths in the module frame (deg), removed from the section as round holes of hole_dia at radius
     hole_r; None = no holes (the profile used for every result before 10 Oct 2026)."""
@@ -154,7 +157,7 @@ class EBPrior:
     (module frame), see section_profile. gap: straight rigid length (mm) between consecutive modules (the printed
     coupler is gap mm thicker than the web the module length L already includes, see set_gap)."""
 
-    def __init__(self, n, cell=0.5, r_bear=R_BEAR, L=160.0, axial_scale=1.0, routing="shared",
+    def __init__(self, n, cell=0.5, r_bear=R_BEAR, L=STD6.module_length_mm, axial_scale=1.0, routing="shared",
                  module_rot_deg=None, tendon_az_deg=None, holes=None, gap=0.0, cad_json=None):
         self.n, self.L, self.cell = n, L, cell
         self.axial_scale_used = axial_scale
@@ -369,8 +372,8 @@ def _march(w, sh, sxz, cell, gap):
     return pc, Rc, pe, Re
 
 
-def predict_gravity(eb, dl, stations, g_vec=(0.0, -9810.0, 0.0), E=56000.0, mass=0.0346, iters=60, relax=0.5, tol=1e-4,
-                    state=None, joint_mass=0.0, tip_mass=0.0, mu=0.0, direction=None):
+def predict_gravity(eb, dl, stations, g_vec=(0.0, -STD6.gravity_mm_s2, 0.0), E=STD6.youngs_kpa, mass=MASS_STD, iters=60,
+                    relax=0.5, tol=1e-4, state=None, joint_mass=0.0, tip_mass=0.0, mu=0.0, direction=None):
     """Variable-section Euler-Bernoulli prior under gravity (units mm, kg, s; E in kPa = mN/mm^2, SOFA's units).
 
     Fixed point: shape -> internal moment and force of the weight distal to every cell (in the cell frame) ->

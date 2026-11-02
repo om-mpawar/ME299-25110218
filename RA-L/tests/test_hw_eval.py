@@ -3,8 +3,8 @@ import numpy as np
 import pytest
 from scipy.spatial.transform import Rotation
 
-from analysis.hw_eval import MODELS, cc_ends, evaluate, run_eval
-from analysis.module_compliance import MASS_STD6, load_set
+from tdcr.hw_eval import MODELS, cc_ends, evaluate, run_eval
+from tdcr.compliance import MASS_STD6, load_set
 from tests.test_calibrate import TRUE, _dataset
 
 
@@ -43,7 +43,7 @@ def test_calibration_test_overlap_rejected_before_fit(tmp_path):
 
 
 def test_duplicate_basenames_preserve_both_sessions(tmp_path, monkeypatch):
-    import analysis.hw_eval as hw
+    import tdcr.hw_eval as hw
     paths = [str(tmp_path / s / "dataset.npz") for s in ("two", "four")]
     monkeypatch.setattr(hw, "fit", lambda *a, **kw: dict(poses_used=[], gap_mm=2., joint_mass_kg=0., tip_mass_kg=0.))
     def load(paths):

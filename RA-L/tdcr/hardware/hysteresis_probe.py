@@ -34,9 +34,9 @@ position, present position, and present current at every step. Then reports
 the loop width -- the gap between the ascending and descending branches at
 the same command.
 
-    python3 hardware/hysteresis_probe.py --sim                       # no hardware
-    python3 hardware/hysteresis_probe.py --port /dev/ttyUSB0 --ids 1 --max-pull 5
-    python3 hardware/hysteresis_probe.py --analyse results/hysteresis_id1.csv
+    .venv/bin/python -m tdcr.hardware.hysteresis_probe --sim                       # no hardware
+    .venv/bin/python -m tdcr.hardware.hysteresis_probe --port /dev/ttyUSB0 --ids 1 --max-pull 5
+    .venv/bin/python -m tdcr.hardware.hysteresis_probe --analyse results/hysteresis_id1.csv
 
 SAFETY. This moves the robot. Read before running:
   * --max-pull is in MILLIMETRES of tendon travel and defaults to a
@@ -48,8 +48,6 @@ SAFETY. This moves the robot. Read before running:
   * It refuses to start without an explicit confirmation unless --yes.
 """
 
-import os as _os, sys as _sys
-_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))  # repo root, for `import tdcr`
 import argparse
 import csv
 import math
@@ -59,8 +57,7 @@ import time
 
 import numpy as np
 
-from tdcr.paths import ROOT as _DIR  # paths below are relative to the repo root
-RESULTS_DIR = os.path.join(_DIR, "results")
+from tdcr.paths import RESULTS as RESULTS_DIR
 
 # ── Actuator geometry ─────────────────────────────────────────────────────
 # Pulley radius converts motor angle to tendon length. PULLEY_DIA_MM = 10 in
@@ -287,7 +284,7 @@ def analyse(path, n_bins=20):
     # mid-range bend and measure how far the tip moves. This is a headline
     # number, so it should come from the model the rest of the project uses.
     from tdcr.multisection import theta_alpha_to_deltas, theta_alpha_to_pose6, SECTION_LENGTHS
-    from tdcr.digitaltuning import THETA_MAX
+    THETA_MAX = math.pi / 4          # 45 deg of bend per section (was tdcr/digitaltuning.THETA_MAX, not ported)
 
     th = [THETA_MAX / 2.0, THETA_MAX / 2.0]
     al = [0.0, 0.0]

@@ -5,7 +5,7 @@ import numpy as np
 import pytest
 from scipy.spatial.transform import Rotation
 
-from hardware.mocap import hold_pose, load_rigid_bodies, make_dataset
+from tdcr.hardware.mocap import hold_pose, load_rigid_bodies, make_dataset
 
 RATE = 100.0                                                      # mocap frames per second
 
@@ -97,6 +97,6 @@ def test_cap_offset_and_clock_offset(tmp_path):
 
 
 def test_mountings_match_the_twin():
-    from hardware.mocap import MOUNTINGS
+    from tdcr.hardware.mocap import MOUNTINGS
     from tdcr.twin import MOUNTINGS as TWIN_MOUNTINGS
     assert MOUNTINGS == TWIN_MOUNTINGS

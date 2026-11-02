@@ -19,7 +19,7 @@ A network for N modules takes 3N commands, so a 2-module PINN cannot be evaluate
 retrained on physics alone (no data), and its accuracy and training time are reported next to the exact solution of
 the same physics.
 
-    .venv/bin/python -m analysis.pinn_baseline --out results/pinn_baseline.json      # full grid (~1 h on CPU)
+    .venv/bin/python -m tdcr.baselines.pinn --out results/pinn_baseline.json      # full grid (~1 h on CPU)
 """
 import argparse
 import json
@@ -31,18 +31,19 @@ import numpy as np
 import torch
 from torch import nn
 
-from analysis.module_compliance import E_FEM, HOLES6, load_set
+from tdcr.compliance import E_FEM, HOLES6, MASS_STD6, MODULE_L, load_set
 from tdcr.eb_prior import EBPrior
+from tdcr.params import STD6
 
 torch.set_default_dtype(torch.float64)
-R_D = 9.5                                              # mapping radius of the command sampler (lab mapping, mm)
+R_D = STD6.tendon_radius_mm                             # mapping radius of the command sampler (lab mapping, mm)
 S_M, S_N = 1.0, 0.1                                    # load scales: moment / E (mm^3), force / E (mm^2)
 S_LAM, S_SLACK = 0.05, 0.2                             # tension / E (mm^2) and slack (mm) scales of the pull-only term
 TRAIN_2S = ("std6_2s_sym_train_g0", "std6_2s_sym_train")
 TESTS_2S = ("std6_2s_sym_test_g0", "std6_2s_sym_test", "std6_2s_sym_test_ghang", "std6_2s_sym_test_gx",
             "std6_2s_sym_test_gy")
 TEST_4S = "std6_4s_sym_test_g0"
-G_MAG = 9810.0
+G_MAG = STD6.gravity_mm_s2
 
 
 # ------------------------------------------------------------------ geometry (nominal plane-section beam, CAD)
@@ -63,7 +64,7 @@ class Geometry:
         self.T = torch.tensor(eb.through.astype(float))                      # (nt, nc)
         self.Dx, self.Dz = torch.tensor(eb.D[:, 0]), torch.tensor(eb.D[:, 1])
         self.yc = torch.tensor(eb.yc)
-        self.length = 160.0 * n
+        self.length = MODULE_L * n
         self.stations = np.arange(0.0, self.length + 1e-9, 5.0)
         self.station_idx = torch.tensor([int(np.flatnonzero(np.abs(eb.edges - y) < 1e-6)[0]) for y in self.stations])
         area = eb.cell / eb.cA_cad
@@ -169,9 +170,9 @@ def cell_features(geo, n_freq=24):
     geometry), and Fourier features of the in-module position fine enough for the notch pitch (period down to
     160/24 = 6.7 mm, the A-B notch spacing is 7.4 mm)."""
     y = geo.yc
-    local = torch.remainder(y, 160.0) / 160.0
+    local = torch.remainder(y, MODULE_L) / MODULE_L
     k = 2 * math.pi * torch.arange(1, n_freq + 1, dtype=torch.float64)
-    return torch.cat([(y / geo.length)[:, None], local[:, None], (torch.div(y, 160.0, rounding_mode="floor")
+    return torch.cat([(y / geo.length)[:, None], local[:, None], (torch.div(y, MODULE_L, rounding_mode="floor")
                       / geo.n)[:, None], geo.cut[:, None].to(torch.float64), torch.sin(local[:, None] * k),
                       torch.cos(local[:, None] * k)], 1)
 
@@ -377,7 +378,7 @@ def main(argv=None):                                                    # pragma
         ls = np.log(np.asarray(src["notch_factors"]))
         geo4 = Geometry(4)
         print(f"[4 modules, physics only, notch factors {np.round(src['notch_factors'], 2).tolist()}]", flush=True)
-        run4 = train(geo4, None, "forward", 1.0, a.iters, theta_max=45.0, gravity="none", mass=0.0337,
+        run4 = train(geo4, None, "forward", 1.0, a.iters, theta_max=45.0, gravity="none", mass=MASS_STD6,
                      log_scales=ls, **kw)
         res = dict(source=a.four_from, variant=src["variant"], w_phys=src["w_phys"], train_seconds_4s=run4["seconds"],
                    notch_factors=src["notch_factors"], tests_4s=evaluate(run4, geo4, [TEST_4S]),

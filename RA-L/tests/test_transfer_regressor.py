@@ -1,8 +1,8 @@
 """A reused module regressor must match the previous fit-and-predict path."""
 import numpy as np
 
-from analysis.model_study import modes_fit_predict
-from analysis.n_transfer import ModesGP
+from tdcr.backbones import modes_fit_predict
+from tdcr.backbones import ModesGP
 
 
 def test_reused_modes_gp_matches_previous_predictions():

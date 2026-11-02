@@ -3,8 +3,8 @@ fix, std6 sets got the shared routing, no channel holes and upright gravity for 
 0.9 mm on four modules), and the mirror swapped the wrong tendons in sections 3-4."""
 import json
 
-from analysis.model_study import evaluate, mirror_perm
-from analysis.module_compliance import ModuleModel, gravity_of, load_set
+from tdcr.backbones import evaluate, mirror_perm
+from tdcr.compliance import ModuleModel, gravity_of, load_set
 
 
 def test_std6_4s_routing_and_accuracy():

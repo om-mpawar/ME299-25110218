@@ -55,13 +55,14 @@ Sanity checks (see `_self_test` / run this file directly):
 """
 
 import math
-import os
 
-# ── Geometry (must match tdcr_scene.py) ───────────────────────────────────
-# Defaults: the current robot (220 mm sections, channels at r = 9 mm). The standard 150 mm module
-# (cad/std_tdcr_L150, 160 mm per section incl. its base) sets TDCR_TENDON_R=9.5 TDCR_SECTION_L=160.
-TENDON_R = float(os.environ.get("TDCR_TENDON_R", 9.0))      # mm, radius from backbone axis to tendon channel
-BACKBONE_L = float(os.environ.get("TDCR_SECTION_L", 220.0))  # mm, section (module) length
+from tdcr.params import STD6
+
+# ── Geometry ──────────────────────────────────────────────────────────────
+# The std6 robot (tdcr/params.py): 160 mm modules, channels at r = 9.5 mm. (Until the packaging these came from the
+# environment variables TDCR_TENDON_R / TDCR_SECTION_L with stale defaults 9.0 / 220; every std6 run set 9.5 / 160.)
+TENDON_R = STD6.tendon_radius_mm      # mm, radius from backbone axis to tendon channel
+BACKBONE_L = STD6.module_length_mm    # mm, section (module) length
 
 THETA_DEG = (0.0, 120.0, 240.0)
 THETA = tuple(math.radians(t) for t in THETA_DEG)

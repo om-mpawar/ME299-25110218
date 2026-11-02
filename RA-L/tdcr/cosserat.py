@@ -87,14 +87,11 @@ Body frame convention: +Y is the tangent, matching the rest of this project
 (cc_kinematics.py:13). That is not the textbook z-tangent convention, so
 Kse and Kbt are permuted accordingly -- see _stiffness().
 
-    python3 -m tdcr.cosserat --self-test
-    python3 -m tdcr.cosserat --sweep results/configs_2s_ta.csv --out results/level0p5_2s.csv
+    .venv/bin/python -m tdcr.cosserat --self-test
 """
 
 import argparse
-import csv
 import math
-import os
 
 import numpy as np
 from scipy.linalg import expm
@@ -102,16 +99,15 @@ from scipy.optimize import least_squares
 from scipy.spatial.transform import Rotation
 
 from tdcr.cc_kinematics import TENDON_R, THETA_DEG
+from tdcr.params import STD6
 from tdcr.multisection import SECTION_LENGTHS, SECTION_GAMMAS, matrix_to_pose6
 
 # ── Material and section properties ───────────────────────────────────────
-# Matched to the SOFA scenes so the two models describe the same rod.
-# NOTE the units question flagged elsewhere in this project is unresolved
-# here too: E is carried through exactly as the FEM uses it, so the two are
-# consistent with each other even if neither is in stated SI units.
-YOUNG_MODULUS = 50000.0
-POISSON_RATIO = 0.45
-R_OUTER = 11.5                     # mm
+# Defaults from the robot parameters (tdcr/params.py; before the packaging: 50000 kPa, 0.45 and a solid 11.5 mm
+# rod). The paper's Cosserat baseline (tdcr/baselines/cosserat_rod.py) passes E, nu, EA and EI explicitly.
+YOUNG_MODULUS = STD6.youngs_kpa
+POISSON_RATIO = STD6.poisson
+R_OUTER = STD6.outer_radius_mm     # mm
 GRAVITY = 0.0                      # per-length body force; see --gravity
 
 
@@ -607,77 +603,5 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--self-test", action="store_true")
-    ap.add_argument("--sweep", metavar="CONFIGS_CSV", default=None,
-                    help="evaluate every row of a (theta, alpha) DOE file")
-    ap.add_argument("--out", default=None)
-    ap.add_argument("--gravity", type=float, default=GRAVITY,
-                    help="per-length body force along -Y (units as for E)")
-    args = ap.parse_args()
-
-    if args.self_test or not args.sweep:
-        _self_test()
-    else:
-        from tdcr.digitaltuning import read_theta_alpha_csv, RESULTS_DIR
-        import time
-        th, al, dl, lab = read_theta_alpha_csv(args.sweep)
-        out = args.out or os.path.join(RESULTS_DIR, "level0p5_2s.csv")
-
-        # FORWARD sweep, in tension space.
-        #
-        # Inverting displacement -> tension costs ~7 integrations per optimiser
-        # step times ~30 steps times 2 multi-starts, i.e. minutes per sample,
-        # and it stalls on strong S-shapes. A single forward integration takes
-        # 0.14 s. Since what the calibration actually needs is (input, output)
-        # pairs -- not a prescribed dl grid -- we take the beam-theory tension
-        # for each commanded dl, integrate ONCE, and record the ACHIEVED dl
-        # beside the pose. Every row is internally consistent, the workspace
-        # coverage is the same, and the sweep runs in seconds rather than hours.
-        #
-        # The achieved dl differs slightly from the commanded one, which is why
-        # both are written out. Downstream, join on the ACHIEVED columns.
-        L_und = np.array([float(np.sum(SECTION_LENGTHS[: (j // 3) + 1]))
-                          for j in range(6)])
-        rows, t0, n_fail = [], time.time(), 0
-        resid, nslack = [], []
-        for i in range(len(dl)):
-            try:
-                tau, _info = solve_for_displacements(dl[i])
-                resid.append(_info["max_abs_residual"])
-                nslack.append(int(_info["slack"].sum()))
-                frames, lengths = integrate(tau, gravity=args.gravity or 0.0)
-                p6 = matrix_to_pose6(frames[-1])
-                got = L_und - lengths
-            except Exception as e:
-                print(f"[{i+1}/{len(dl)}] FAILED: {e}")
-                p6 = [float("nan")] * 6
-                got = [float("nan")] * 6
-                tau = [float("nan")] * 6
-                n_fail += 1
-            rows.append(list(th[i]) + list(al[i]) + list(dl[i]) + list(got)
-                        + list(tau) + list(p6))
-            if (i + 1) % 25 == 0 or i == len(dl) - 1:
-                print(f"  [{i+1}/{len(dl)}]  {time.time()-t0:.1f}s elapsed")
-
-        hdr = (["theta1", "theta2", "alpha1", "alpha2"]
-               + [f"dl{k+1}" for k in range(6)]
-               + [f"dl_achieved{k+1}" for k in range(6)]
-               + [f"tau{k+1}" for k in range(6)]
-               + ["tip_x", "tip_y", "tip_z", "tip_wx", "tip_wy", "tip_wz"])
-        os.makedirs(os.path.dirname(os.path.abspath(out)), exist_ok=True)
-        with open(out, "w", newline="") as f:
-            w = csv.writer(f); w.writerow(hdr); w.writerows(rows)
-
-        # Report the COMPLEMENTARITY residual, not |achieved - commanded|.
-        # Those differ wherever a tendon is slack, and slack is correct
-        # physics, not solver error: a tendon whose path is shorter than the
-        # servo allows simply carries no load.
-        if resid:
-            resid = np.array(resid)
-            print(f"\nwrote {len(rows)} rows to {out}  ({time.time()-t0:.1f}s, "
-                  f"{n_fail} failures)")
-            print(f"complementarity residual: median {np.median(resid):.2e} mm, "
-                  f"max {resid.max():.2e} mm")
-            print(f"  solved to 1e-6 mm : {(resid < 1e-6).sum()}/{len(resid)}")
-            print(f"  mean slack tendons per row: {np.mean(nslack):.2f} of 6")
-            print("  (a slack tendon means its achieved dl exceeds the command --")
-            print("   correct, and why dl_achieved* is the column to join on)")
+    ap.parse_args()
+    _self_test()

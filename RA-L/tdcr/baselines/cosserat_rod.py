@@ -12,11 +12,9 @@ What it is and is not (to state in the paper):
     lab azimuths 0/120/240 are scene 0/240/120, i.e. the rod's tendon order is lab (t1, t3, t2). Results are returned
     in the lab frame like the twin's.
 
-    .venv/bin/python analysis/cosserat_baseline.py --calib data/hw/c1/dataset.npz --test data/hw/t2_up/dataset.npz
-    -> results/hw_pred_cosserat_<test name>.npz (read by analysis/hw_eval.py)
+    .venv/bin/python -m tdcr.baselines.cosserat_rod --calib data/hw/c1/dataset.npz --test data/hw/t2_up/dataset.npz
+    -> results/hw_pred_cosserat_<test name>.npz (read by tdcr/hw_eval.py)
 """
-import os as _os, sys as _sys
-_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
 import argparse
 import math
 import os
@@ -28,11 +26,12 @@ from scipy.spatial.transform import Rotation
 
 from tdcr import cosserat
 from tdcr.calibrate import load_datasets, select_poses
+from tdcr.params import STD6
 from tdcr.paths import RESULTS
 from tdcr.twin import M_SCENE_TO_LAB, scene_to_lab
 
-MODULE_L, TENDON_R, E_KPA, NU = 160.0, 9.5, 56000.0, 0.48
-R_OUT, R_IN = 12.5, 7.0
+MODULE_L, TENDON_R, E_KPA, NU = STD6.module_length_mm, STD6.tendon_radius_mm, STD6.youngs_kpa, STD6.poisson
+R_OUT, R_IN = STD6.outer_radius_mm, STD6.inner_radius_mm
 EA_TUBE = E_KPA * math.pi * (R_OUT ** 2 - R_IN ** 2)
 EI_TUBE = E_KPA * math.pi * (R_OUT ** 4 - R_IN ** 4) / 4.0
 LAB_TO_ROD = [0, 2, 1]                     # rod tendon k = lab tendon LAB_TO_ROD[k] (an involution)

@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 from scipy.spatial.transform import Rotation
 
-from analysis.module_compliance import MASS_STD6, load_set
+from tdcr.compliance import MASS_STD6, load_set
 from tdcr.calibrate import FITTED, PARAMS, fit
 from tdcr.twin import Twin
 

@@ -20,7 +20,7 @@ stays in the calibration file (0, or fitted with fit_mass=True when the data all
 Loss: module-end position error (mm) and lever_mm x orientation error (rad) over every module end of the chosen poses,
 least squares with bounds (+-1 on the log-scales, 0 <= tendon_c <= 0.05, 0 <= mu <= 0.6), finite-difference Jacobian
 through the twin
-solved to a tight tolerance. Datasets: hardware/mocap.make_dataset files (any mix of section counts and mountings);
+solved to a tight tolerance. Datasets: tdcr/hardware/mocap.make_dataset files (any mix of section counts and mountings);
 n_poses valid poses are drawn from their union with `seed`. The joint (gap_mm, joint_mass_kg, tip_mass_kg) is measured
 and passed in like the mass; it travels in the calibration file.
 
@@ -34,7 +34,7 @@ import numpy as np
 from scipy.optimize import least_squares
 from scipy.spatial.transform import Rotation
 
-from analysis.module_compliance import MASS_STD6
+from tdcr.compliance import MASS_STD6
 from tdcr.twin import Twin, direction_from_sequence
 
 PARAMS = ("log_axial", "log_bend_x", "log_bend_z", "log_mass", "tendon_c", "mu")
@@ -44,11 +44,11 @@ BOUNDS = dict(log_axial=(-1.0, 1.0), log_bend_x=(-1.0, 1.0), log_bend_z=(-1.0, 1
 START = dict(log_axial=0.0, log_bend_x=0.0, log_bend_z=0.0, log_mass=0.0, tendon_c=1e-4, mu=0.1)
 SCALE = dict(log_axial=1.0, log_bend_x=1.0, log_bend_z=1.0, log_mass=1.0, tendon_c=0.01, mu=0.1)
 JOINT = ("gap_mm", "joint_mass_kg", "tip_mass_kg")                 # measured joint, passed in (see fit)
-STATIONS_PER_MODULE = 32                                   # twin stations every 5 mm, 160 mm per module
+STATIONS_PER_MODULE = 32                                   # twin stations every 5 mm, 160 mm per module (tdcr.params)
 
 
 def load_datasets(paths):
-    """-> list of dicts (n, mounting, dl, T_ends, valid, sigma) from hardware/mocap.make_dataset files. sigma: friction
+    """-> list of dicts (n, mounting, dl, T_ends, valid, sigma) from tdcr/hardware/mocap.make_dataset files. sigma: friction
     direction of every pose from the commanded sequence (poses are stored in run order)."""
     out = []
     for p in paths:

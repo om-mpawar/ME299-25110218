@@ -1,12 +1,12 @@
-"""PINN baseline (analysis/pinn_baseline.py): its differentiable pieces must reproduce the exact model, or a poor PINN
+"""PINN baseline (tdcr/baselines/pinn.py): its differentiable pieces must reproduce the exact model, or a poor PINN
 result could be a bug rather than a finding."""
 import numpy as np
 import pytest
 
 torch = pytest.importorskip("torch")
 
-from analysis import pinn_baseline as pb                                   # noqa: E402
-from analysis.module_compliance import load_set                            # noqa: E402
+from tdcr.baselines import pinn as pb                                   # noqa: E402
+from tdcr.compliance import load_set                            # noqa: E402
 from tdcr.eb_prior import _march, predict_gravity                          # noqa: E402
 
 

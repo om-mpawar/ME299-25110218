@@ -2,7 +2,7 @@
 coupler + dowel + plugs as a point mass at every joint (plus an optional tip mass)."""
 import numpy as np
 
-from analysis.module_compliance import MASS_STD6
+from tdcr.compliance import MASS_STD6
 from tdcr.eb_prior import EBPrior, _rodrigues, predict_gravity
 from tdcr.twin import Twin
 

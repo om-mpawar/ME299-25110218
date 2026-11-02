@@ -69,11 +69,8 @@ from scipy.spatial.transform import Rotation
 from tdcr.cc_kinematics import TENDON_R, BACKBONE_L, THETA, THETA_DEG
 
 # ── Geometry ──────────────────────────────────────────────────────────────
-# The lab's 2-section robot is two copies of the single-section backbone
-# stacked, so each section is a full BACKBONE_L and the robot is 2*BACKBONE_L
-# end to end. NOTE this is 440 mm total, not 220 -- if the physical robot is
-# 220 mm overall (i.e. the sections are half-length rather than stacked
-# copies) this is wrong and everything downstream scales with it.
+# A robot is a stack of identical modules: each section is a full BACKBONE_L
+# (160 mm for std6, tdcr/params.py) and n sections are n * BACKBONE_L long.
 SECTION_LENGTHS = (BACKBONE_L, BACKBONE_L)
 
 # Routing twist applied between consecutive sections, radians. Zero means
@@ -85,7 +82,7 @@ SECTION_GAMMAS = (0.0, 0.0)
 
 def section_lengths_for(n, section_lengths=None):
     """Lengths for an n-section robot. The defaults above describe the lab's two
-    sections; a robot with n sections repeats the same 220 mm module (the same
+    sections; a robot with n sections repeats the same module (the same
     backbone part, stacked). An explicit section_lengths always wins."""
     if section_lengths is not None:
         return tuple(section_lengths)

@@ -10,18 +10,17 @@ Models (MODELS):
                    calibration poses; only for test sets with the same number of modules (otherwise not applicable)
   cosserat, sofa_mor, sofa_calibrated
                    predictions read from <pred_dir>/hw_pred_<model>_<dataset>.npz (key T_ends), made by
-                   analysis/cosserat_baseline.py, sim/mor/run_reduced.py and sim/calibrate_sofa.py; skipped with a note
+                   tdcr/baselines/cosserat_rod.py (sim/mor/run_reduced.py and sim/calibrate_sofa.py of the old repository are
+                   not ported); skipped with a note
                    when the file is missing
 
 Metrics (evaluate): tip = last module end; tip_mm, tip_pct (of the robot length), tip_deg (geodesic angle), ends_mm
 (mean over all module ends), with 95th percentiles; invalid poses (NaN in the ground truth) are left out.
 
-    .venv/bin/python analysis/hw_eval.py --calib data/hw/c1/dataset.npz data/hw/c2/dataset.npz \
+    .venv/bin/python -m tdcr.hw_eval --calib data/hw/c1/dataset.npz data/hw/c2/dataset.npz \
         --test data/hw/t4_hang/dataset.npz data/hw/t2_up/dataset.npz --n-poses 15 --mass-kg <weighed> \
         --out results/hw_eval.json
 """
-import os as _os, sys as _sys
-_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
 import argparse
 import json
 import math
@@ -31,15 +30,16 @@ import warnings
 import numpy as np
 from scipy.spatial.transform import Rotation
 
-from analysis.model_study import gp_fit_predict
-from analysis.module_compliance import MASS_STD6
+from tdcr.backbones import gp_fit_predict
+from tdcr.compliance import MASS_STD6
 from tdcr.calibrate import JOINT, STATIONS_PER_MODULE, fit, load_datasets
+from tdcr.params import STD6
 from tdcr.paths import RESULTS
 from tdcr.twin import Twin
 
 MODELS = ("cc", "physics", "calibrated", "gp", "cosserat", "sofa_mor", "sofa_calibrated")
 FILE_MODELS = ("cosserat", "sofa_mor", "sofa_calibrated")
-MODULE_L, TENDON_R = 160.0, 9.5
+MODULE_L, TENDON_R = STD6.module_length_mm, STD6.tendon_radius_mm
 LAB_OFFSETS = (0.0, 0.0, 60.0, 60.0)                      # lab azimuth of tendon 1 per section (real routing)
 
 

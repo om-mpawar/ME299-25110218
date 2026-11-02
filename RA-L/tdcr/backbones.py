@@ -1,40 +1,39 @@
 """
-Fast model study on cached backbones: which prior, representation, inputs and regressor give
-the most accurate held-out shape for 2 and 4 sections?
+FEM backbones: loading, mirroring, the intrinsic (local-increment) shape representation, error metrics, the PCA + GP
+residual regressor, and the extraction of backbones from SOFA node positions.
 
-Reads the compact backbone files that shape_analysis.py writes (results/backbone_<tag>.npz:
-centreline C and cross-section rotations R at material stations every 5 mm), plus the tendon
-pulls from the matching shape file, so nothing is re-extracted from the meshes.
+Backbone files (results/backbone_<tag>.npz, written by scripts/extract_backbones.py from a SOFA pose directory):
+centreline C and cross-section rotations R at material stations every 5 mm, the tendon displacements dl, and the
+commanded bends theta / alpha (metadata).
 
-Representations of the shape (what the regressor predicts, as PCA modes + GP):
-  global     residual C - C_prior in world axes (the shape_analysis.py baseline)
-  intrinsic  per 5-mm segment: rotation increment log(R_k^T R_k+1) and translation increment
-             R_k^T (C_k+1 - C_k), both in the LOCAL cross-section frame, minus the prior's;
-             the backbone is rebuilt by chaining the segments from the base. A section's local
-             bending depends only on the tendons that pass through it, wherever the sections
-             below have turned it, so this is a much simpler function of the inputs.
+Intrinsic representation (to_intrinsic / from_intrinsic): per 5-mm segment, the rotation increment log(R_k^T R_k+1)
+and the translation increment R_k^T (C_k+1 - C_k), both in the LOCAL cross-section frame; the backbone is rebuilt by
+chaining the segments from the base. A module's local bending depends only on the tendons that pass through it,
+wherever the modules below have turned it.
 
-    OMP_NUM_THREADS=2 .venv/bin/python analysis/model_study.py --tag std_2s_sym_g0 --L 160 --r 10.55 \
-        --variants global:cc:dl intrinsic:mech:dl intrinsic:mech:dlq
+Extraction (backbone): the body is cut into slabs at the stations (arc length at rest); for each slab the rigid
+motion that best maps its rest nodes to its deformed nodes is found (Kabsch). Applied to the slab's axis point
+(0, s_k, 0) it gives the centreline point c(s_k); its rotation gives the cross-section orientation R(s_k). Stations
+are MATERIAL points, so axial compression shows up as the backbone ending short, as it physically does.
 """
-import os as _os, sys as _sys
-_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))  # repo root, for `import tdcr`
-import argparse
 import os
-import time
-import warnings
 
 import numpy as np
 from scipy.spatial.transform import Rotation
 
-from tdcr.paths import ROOT
+from tdcr.params import STD6
+from tdcr.paths import MESHES, RESULTS
+
+L = STD6.module_length_mm                          # one module (section)
+STATIONS = np.arange(0.0, L + 1e-9, 5.0)         # material stations every 5 mm, base to tip (1 module)
+HALF_SLAB = 2.5
 
 
 # ── data ──────────────────────────────────────────────────────────────────
 
 def load(tag, max_settle=0.01):
-    b = np.load(os.path.join(ROOT, "results", f"backbone_{tag}.npz"))
-    s = b if "dl" in b.files else np.load(os.path.join(ROOT, "results", f"shape_{tag}.npz"))
+    b = np.load(os.path.join(RESULTS, f"backbone_{tag}.npz"))
+    s = b if "dl" in b.files else np.load(os.path.join(RESULTS, f"shape_{tag}.npz"))
     th = np.asarray(b["theta"], float)
     n = 1 if th.ndim == 1 else th.shape[1]
     d = dict(C=np.asarray(b["C"], float), R=np.asarray(b["R"], float), theta=th,
@@ -86,25 +85,7 @@ def mirror(d):
     return out, np.concatenate([np.arange(P), np.arange(P)])
 
 
-# ── priors ────────────────────────────────────────────────────────────────
-
-def prior_backbone(d, kind, L, r, mu, base=0.0, top=0.0):
-    from analysis.shape_analysis import cc_backbone  # noqa
-    if kind == "cc":
-        return cc_backbone(d["theta"], d["alpha"], d["stations"])
-    if kind == "mech":
-        from tdcr import mechanics_prior as mp
-        q = mp.solve(d["dl"], d["n"], r, mu)
-        d["q"] = q
-        return mp.backbone(q, d["stations"], L, base, top)
-    if kind == "none":        # straight
-        P, K = len(d["C"]), len(d["stations"])
-        pts = np.zeros((P, K, 3)); pts[:, :, 1] = d["stations"]
-        return pts, np.tile(np.eye(3), (P, K, 1, 1))
-    raise ValueError(kind)
-
-
-# ── representations ───────────────────────────────────────────────────────
+# ── representations and metrics ───────────────────────────────────────────
 
 def to_intrinsic(C, R):
     """(P, K, 3), (P, K, 3, 3) -> (P, K-1, 6): local rotation and translation increments,
@@ -125,6 +106,13 @@ def from_intrinsic(X, C0, R0):
         C[:, k + 1] = C[:, k] + np.einsum("pij,pj->pi", R[:, k], X[:, k, 3:])
         R[:, k + 1] = np.einsum("pij,pjk->pik", R[:, k], E[:, k])
     return C, R
+
+
+def evaluate(Cp, Rp, C, R):
+    e = np.linalg.norm(Cp - C, axis=2)
+    rel = np.einsum("pji,pjl->pil", Rp[:, -1], R[:, -1])
+    rot = np.degrees(np.linalg.norm(Rotation.from_matrix(rel).as_rotvec(), axis=1))
+    return dict(tip=e[:, -1], mean_along=e.mean(1), max_along=e.max(1), tip_rot=rot)
 
 
 # ── regressors ────────────────────────────────────────────────────────────
@@ -155,102 +143,80 @@ def modes_fit_predict(Ytr, Ftr, Fte, n_modes, **gp):
     return mean + (Zp @ pca.components_) * sd
 
 
-# ── one variant ───────────────────────────────────────────────────────────
+class ModesGP:
+    """PCA modes of the standardised residuals + one GP over all modes (as modes_fit_predict),
+    fitted once and reused for every test set."""
 
-def features(d, kind):
-    out = []
-    for k in kind.split("+"):
-        if k == "dl":
-            out.append(d["dl"])
-        elif k == "q":              # mechanics-prior configuration (bend vectors, shortening)
-            out.append(d["q"].reshape(len(d["dl"]), -1))
-        elif k == "cmd":
-            out.append(np.column_stack([np.column_stack([d["theta"][:, j] * np.cos(d["alpha"][:, j]),
-                                                         d["theta"][:, j] * np.sin(d["alpha"][:, j])])
-                                        for j in range(d["n"])]))
-        else:
-            raise ValueError(k)
-    return np.hstack(out)
+    def __init__(self, Y, F, n_modes, nu=2.5, restarts=1):
+        from sklearn.decomposition import PCA
+        from sklearn.gaussian_process import GaussianProcessRegressor
+        from sklearn.gaussian_process.kernels import ConstantKernel, Matern, WhiteKernel
+        from sklearn.preprocessing import StandardScaler
+        self.mean, self.sd = Y.mean(0), Y.std(0) + 1e-12
+        self.pca = PCA(n_components=min(n_modes, len(Y) - 1)).fit((Y - self.mean) / self.sd)
+        Z = self.pca.transform((Y - self.mean) / self.sd)
+        self.sc = StandardScaler().fit(F)
+        k = ConstantKernel(1.0, (1e-3, 1e3)) * Matern(np.ones(F.shape[1]), (1e-2, 1e3), nu=nu) + WhiteKernel(1e-4, (1e-9, 1e0))
+        self.gp = GaussianProcessRegressor(k, normalize_y=True, n_restarts_optimizer=restarts, random_state=0)
+        self.gp.fit(self.sc.transform(F), Z)
 
-
-def evaluate(Cp, Rp, C, R):
-    e = np.linalg.norm(Cp - C, axis=2)
-    rel = np.einsum("pji,pjl->pil", Rp[:, -1], R[:, -1])
-    rot = np.degrees(np.linalg.norm(Rotation.from_matrix(rel).as_rotvec(), axis=1))
-    return dict(tip=e[:, -1], mean_along=e.mean(1), max_along=e.max(1), tip_rot=rot)
+    def predict(self, F):
+        return self.mean + (self.gp.predict(self.sc.transform(F)) @ self.pca.components_) * self.sd
 
 
-def run_variant(d, groups, rep, prior, feat, L, r, mu, n_modes, folds=5, base=0.0, top=0.0, **gp):
-    from sklearn.model_selection import GroupKFold
-    d = dict(d)
-    Pp, Rpr = prior_backbone(d, prior, L, r, mu, base, top)
-    if "q" in feat and "q" not in d:
-        from tdcr import mechanics_prior as mp
-        d["q"] = mp.solve(d["dl"], d["n"], r, mu)
-    F = features(d, feat)
-    C, R = d["C"], d["R"]
-    P = len(C)
-    if rep == "global":
-        Y = (C - Pp).reshape(P, -1)
-        W = np.einsum("pkji,pkjl->pkil", Rpr, R)
-        Yw = Rotation.from_matrix(W.reshape(-1, 3, 3)).as_rotvec().reshape(P, -1)
-        Y = np.hstack([Y, Yw])
-    else:
-        Y = (to_intrinsic(C, R) - to_intrinsic(Pp, Rpr)).reshape(P, -1)
-    Yhat = np.zeros_like(Y)
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore")
-        for tr, te in GroupKFold(folds).split(F, groups=groups):
-            Yhat[te] = modes_fit_predict(Y[tr], F[tr], F[te], n_modes, **gp)
-    K = C.shape[1]
-    if rep == "global":
-        Cp = Pp + Yhat[:, :3 * K].reshape(P, K, 3)
-        Wh = Rotation.from_rotvec(Yhat[:, 3 * K:].reshape(-1, 3)).as_matrix().reshape(P, K, 3, 3)
-        Rp = np.einsum("pkij,pkjl->pkil", Rpr, Wh)
-    else:
-        X = to_intrinsic(Pp, Rpr) + Yhat.reshape(P, K - 1, 6)
-        Cp, Rp = from_intrinsic(X, C[:, 0], R[:, 0])
-    return evaluate(Cp, Rp, C, R), evaluate(Pp, Rpr, C, R)
+# ── extraction from SOFA node positions ───────────────────────────────────
+
+def stations_for(n):
+    """Material stations every 5 mm along n sections: 45 for one, 89 for two, ..."""
+    return np.arange(0.0, n * L + 1e-9, 5.0)
 
 
-def main():
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--tag", required=True)
-    ap.add_argument("--L", type=float, required=True, help="section length, mm")
-    ap.add_argument("--r", type=float, required=True, help="mech prior bearing radius, mm")
-    ap.add_argument("--mu", type=float, default=10.0)
-    ap.add_argument("--base", type=float, default=0.0, help="mech prior: rigid length at each section's base, mm")
-    ap.add_argument("--top", type=float, default=0.0, help="mech prior: rigid length at each section's top, mm")
-    ap.add_argument("--modes", type=int, default=12)
-    ap.add_argument("--nu", type=float, default=2.5)
-    ap.add_argument("--restarts", type=int, default=2)
-    ap.add_argument("--joint", action="store_true", help="one GP for all modes (shared kernel)")
-    ap.add_argument("--subset", type=int, default=None)
-    ap.add_argument("--no-mirror", action="store_true")
-    ap.add_argument("--variants", nargs="+", default=["global:cc:dl", "intrinsic:mech:dl"],
-                    help="rep:prior:features, e.g. intrinsic:mech:dl+q")
-    args = ap.parse_args()
-    d = load(args.tag)
-    if args.subset:
-        keep = np.sort(np.random.default_rng(1).permutation(len(d["C"]))[:args.subset])
-        d = {k: (v[keep] if isinstance(v, np.ndarray) and v.ndim and len(v) == len(d["C"]) and k != "stations" else v)
-             for k, v in d.items()}
-    if args.no_mirror:
-        groups = np.arange(len(d["C"]))
-    else:
-        d, groups = mirror(d)
-    print(f"{args.tag}: {len(d['C'])} poses ({d['n']} sections), {len(d['stations'])} stations, "
-          f"modes {args.modes}, nu {args.nu}", flush=True)
-    for v in args.variants:
-        rep, prior, feat = v.split(":")
-        t = time.time()
-        s, s0 = run_variant(d, groups, rep, prior, feat, args.L, args.r, args.mu, args.modes,
-                            base=args.base, top=args.top, nu=args.nu, restarts=args.restarts, per_output=not args.joint)
-        print(f"{v:28s} prior only: tip {s0['tip'].mean():6.2f} mm  {s0['tip_rot'].mean():5.2f} deg | "
-              f"learned: tip {s['tip'].mean():6.2f} mm (median {np.median(s['tip']):5.2f}, 95% "
-              f"{np.percentile(s['tip'], 95):5.2f})  mean-along {s['mean_along'].mean():5.2f}  "
-              f"tip rot {s['tip_rot'].mean():5.2f} deg  [{time.time() - t:.0f}s]", flush=True)
+def node_sections(mesh_name, n_nodes):
+    """Section index of every mesh node, from the mesh title ("offsets=" or "offset=")."""
+    path = os.path.join(MESHES, str(mesh_name))
+    offsets = [0]
+    if os.path.exists(path):
+        with open(path) as f:
+            f.readline()
+            for tok in f.readline().split():
+                if tok.startswith("offsets="):
+                    offsets = [int(v) for v in tok.split("=")[1].split(",")]
+                elif tok.startswith("offset=") and len(offsets) == 1:
+                    offsets = [0, int(tok.split("=")[1])]
+    body = np.zeros(n_nodes, dtype=int)
+    for k, off in enumerate(offsets[1:], start=1):
+        body[off:] = k
+    return body
 
 
-if __name__ == "__main__":
-    main()
+def kabsch(P, Q):
+    """R, t minimising |R P + t - Q| over rows (rigid, no reflection)."""
+    mp, mq = P.mean(0), Q.mean(0)
+    H = (P - mp).T @ (Q - mq)
+    U, _, Vt = np.linalg.svd(H)
+    D = np.diag([1.0, 1.0, np.sign(np.linalg.det(Vt.T @ U.T))])
+    R = Vt.T @ D @ U.T
+    return R, mq - R @ mp
+
+
+def backbone(rest, pos, stations=STATIONS, body=None):
+    """-> centreline (P, K, 3) and cross-section rotations (P, K, 3, 3).
+
+    With several sections (body = section index per node), each station is fitted
+    only to its own section's nodes, so a slab at a joint never mixes two bodies.
+    """
+    y = rest[:, 1]
+    if body is None:
+        body = np.zeros(len(rest), dtype=int)
+    nb = body.max() + 1
+    sec = [min(int(np.ceil(s / L)) - 1, nb - 1) if s > 0 else 0 for s in stations]
+    slabs = [np.where((np.abs(y - s) <= HALF_SLAB) & (body == j))[0] for s, j in zip(stations, sec)]
+    assert min(len(i) for i in slabs) >= 10, "a slab has too few nodes for a stable fit"
+    P = pos.shape[0]
+    C = np.zeros((P, len(stations), 3)); Rs = np.zeros((P, len(stations), 3, 3))
+    for p in range(P):
+        for k, idx in enumerate(slabs):
+            R, t = kabsch(rest[idx], pos[p, idx])
+            C[p, k] = R @ np.array([0.0, stations[k], 0.0]) + t
+            Rs[p, k] = R
+    return C, Rs

@@ -5,7 +5,7 @@ import json
 import numpy as np
 import pytest
 
-from analysis.module_compliance import ModuleModel, load_set
+from tdcr.compliance import ModuleModel, load_set
 
 ZERO_HW = dict(log_axial=0.0, log_bend_x=0.0, log_bend_z=0.0, tendon_c=0.0, free_len_mm=300.0)
 

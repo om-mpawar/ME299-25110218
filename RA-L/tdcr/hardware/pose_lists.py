@@ -1,5 +1,5 @@
 """
-Command lists for the first hardware sessions (the csv format of hardware/run_poses.py: dl1..dlN in mm, + wound in,
+Command lists for the first hardware sessions (the csv format of tdcr/hardware/run_poses.py: dl1..dlN in mm, + wound in,
 lab tendon order, dl = 0 = every tendon just taut at the homing current).
 
 Pretension p (mm) = the pull of the section-1 tendons; the tendons of section s are pulled p * pretension_pattern[s]
@@ -18,11 +18,11 @@ model (tendon stretch, ~0.005 mm for steel wire here, is neglected).
     test_4s_upright  4 modules, six targets as up-and-down passes at pretension_mm (>= the stand-up minimum)
     test_4s_hanging  the same commands hanging (calibrate small, deploy large: never used for calibration)
 
-Bends come from the lab's tendon mapping and are screened with the identified physics core (tools/make_cmd_doe.py:
+Bends come from the lab's tendon mapping and are screened with the identified physics core (tdcr/doe.py:
 predicted bend per section, axial load per module); every |dl| <= MAX_DL_MM, the limit
 run_poses checks. pretension_mm must be the stand-up minimum plus a margin: run standup_4s first and regenerate.
 
-    .venv/bin/python -m hardware.pose_lists --pretension 2.0 --out hardware/poses
+    .venv/bin/python -m tdcr.hardware.pose_lists --pretension 2.0 --out data/hardware/poses
 """
 import argparse
 import csv
@@ -32,26 +32,27 @@ import os
 
 import numpy as np
 
-from tdcr.paths import ROOT
+from tdcr.params import STD6
+from tdcr.paths import CABLES as CABLE_DIR, HARDWARE, RESULTS
 from tdcr.eb_prior import geometry_from_cables
-from tools.make_cmd_doe import HOLES6, lab_offsets, mapped, screen
+from tdcr.doe import HOLES6, lab_offsets, mapped, screen
 
-MAX_DL_MM = 15.0                       # hardware/run_poses.run refuses larger commands
+MAX_DL_MM = 15.0                       # tdcr/hardware/run_poses.run refuses larger commands
 MAX_LOAD = 1.83                        # axial load per module, tension / E (mm^2): the stable 4-section FEM set
-R_D = 9.5                              # mapping radius (channel radius, mm)
+R_D = STD6.tendon_radius_mm            # mapping radius (channel radius, mm)
 CABLES = {2: "std6_two_section_sym.cables.json", 4: "std6_four_section_sym.cables.json"}
 PASS = ((0.5, "up"), (1.0, "up"), (0.5, "down"), (0.0, "down"))     # one target's up-and-down pass (from straight)
 
 
 def _cables(n):
-    return os.path.join(ROOT, "data", "cables", CABLES[n])
+    return os.path.join(CABLE_DIR, CABLES[n])
 
 
 @functools.lru_cache(maxsize=None)
 def screen_model(n):
-    """The physics core tools/make_cmd_doe.screen uses (identified module, real-robot routing)."""
-    from analysis.module_compliance import ModuleModel
-    res = json.load(open(os.path.join(ROOT, "results", "mc_grav.json")))
+    """The physics core tdcr/doe.screen uses (identified module, real-robot routing)."""
+    from tdcr.compliance import ModuleModel
+    res = json.load(open(os.path.join(RESULTS, "mc_grav.json")))
     return ModuleModel(res["knot"]).build(np.array(res["theta"]), n, az=geometry_from_cables(_cables(n))[1],
                                           holes=HOLES6)
 
@@ -150,7 +151,7 @@ def main(argv=None):                                                    # pragma
     ap.add_argument("--pretension", type=float, required=True, help="common pull (mm): stand-up minimum + margin")
     ap.add_argument("--standup-max", type=float, default=5.0, help="top of the stand-up ramp, section-1 pull (mm)")
     ap.add_argument("--seed", type=int, default=0)
-    ap.add_argument("--out", default=os.path.join(ROOT, "hardware", "poses"))
+    ap.add_argument("--out", default=os.path.join(HARDWARE, "poses"))
     a = ap.parse_args(argv)
     for name, m in make_all(a.out, a.pretension, a.seed, a.standup_max).items():
         print(f"{name:16s} {m['rows']:3d} rows, n={m['n']}, pretension {m['pretensions']} mm, dl "

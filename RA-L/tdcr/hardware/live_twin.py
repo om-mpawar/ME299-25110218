@@ -1,18 +1,16 @@
 """
 Live digital twin: read the servos, compute the backbone shape, as fast as the bus allows.
 
-    # on the robot (after homing, hardware/homing.py, and calibration, tdcr/calibrate.py)
-    .venv/bin/python -m examples.live_twin --zeros hardware/zeros/<date>.json --calib results/calib_<s>.json \
+    # on the robot (after homing, tdcr/hardware/homing.py, and calibration, tdcr/calibrate.py)
+    .venv/bin/python -m tdcr.hardware.live_twin --zeros data/hardware/zeros/<date>.json --calib results/calib_<s>.json \
         --modules 4 --mounting hanging --port /dev/ttyUSB0
     # without hardware
-    .venv/bin/python -m examples.live_twin --fake --modules 2 --mounting upright --seconds 5
+    .venv/bin/python -m tdcr.hardware.live_twin --fake --modules 2 --mounting upright --seconds 5
 
 Each update reads every servo's present position, converts it to the tendon displacement dl = direction x (present -
 zero) in mm (+ wound in), and calls Twin.shape(dl). It prints the tip pose and the update rate twice a second.
 In your own code use tdcr.twin.Twin directly; this script is the minimal loop around it.
 """
-import os as _os, sys as _sys
-_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
 import argparse
 import json
 import math
@@ -20,8 +18,8 @@ import time
 
 import numpy as np
 
-from hardware.hysteresis_probe import mm_to_ticks, ticks_to_mm
-from hardware.run_poses import TENDON_ORDER, open_motors
+from tdcr.hardware.hysteresis_probe import mm_to_ticks, ticks_to_mm
+from tdcr.hardware.run_poses import TENDON_ORDER, open_motors
 from tdcr.twin import MOUNTINGS, Twin
 
 
@@ -46,7 +44,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--modules", type=int, required=True)
     ap.add_argument("--mounting", default="upright", help=f"one of {sorted(MOUNTINGS)}")
-    ap.add_argument("--zeros", help="homing zero file (hardware/homing.py); not needed with --fake")
+    ap.add_argument("--zeros", help="homing zero file (tdcr/hardware/homing.py); not needed with --fake")
     ap.add_argument("--calib", help="calibration file (tdcr/calibrate.py); default: the SOFA-identified module")
     ap.add_argument("--port", default="/dev/ttyUSB0")
     ap.add_argument("--baud", type=int, default=57600)

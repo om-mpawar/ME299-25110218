@@ -2,9 +2,9 @@
 same lab-order tendon displacements as the twin. Gravity is not modelled by that rod."""
 import numpy as np
 
-from analysis.cosserat_baseline import calibrate_stiffness, predict
-from analysis.hw_eval import cc_ends
-from analysis.module_compliance import load_set
+from tdcr.baselines.cosserat_rod import calibrate_stiffness, predict
+from tdcr.hw_eval import cc_ends
+from tdcr.compliance import load_set
 
 
 def test_matches_cc_without_load():

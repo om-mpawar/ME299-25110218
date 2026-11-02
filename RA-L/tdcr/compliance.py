@@ -12,40 +12,36 @@ quadratic: the pull-only problem stays a strictly convex QP and the model compos
 physics does (Camarillo 2009 coupling, slack, gravity). theta = 0 is the CAD / plane-section model; a small ridge
 pulls theta towards it. Without gravity the overall scale of the three fields cancels (only ratios are identifiable).
 
-    TDCR_SECTION_L=160 TDCR_TENDON_R=9.5 .venv/bin/python analysis/module_compliance.py --train std_1s_sym_g0 std_2s_sym_g0
+The identification itself (Table I, results/mc_std6.json) is run by scripts/module_compliance.py:
 
-Real robot (std6, 6 channels, sections 3-4 at 60/180/300 deg), trained on 1-2 modules with and without gravity:
-
-    .venv/bin/python analysis/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 \
+    .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 \
         std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json
 """
-import os as _os, sys as _sys
-_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
-import argparse
 import json
 import multiprocessing as mp
+import os
 import time
-import warnings
-warnings.simplefilter("ignore")
+
 import numpy as np
 from scipy.optimize import least_squares
 
-from analysis.model_study import load, evaluate
-from tdcr.paths import ROOT, CABLES
+from tdcr.backbones import load
 from tdcr.eb_prior import EBPrior, predict_gravity, geometry_from_cables, timoshenko_factor, Y_END
+from tdcr.params import MASS_STD, STD6
+from tdcr.paths import CABLES
 
 TESTS = ["std_1s_sym_test_g0", "std_2s_sym_test_g0", "std_4s_sym_stabletest_g0", "std_1s_sym_test", "std_2s_sym_test"]
 TESTS_STD6 = ["std6_1s_sym_test_g0", "std6_2s_sym_test_g0", "std6_4s_sym_test_g0", "std6_1s_sym_test", "std6_2s_sym_test",
               "std6_1s_sym_test_ghang", "std6_2s_sym_test_ghang", "std6_1s_sym_test_gx", "std6_2s_sym_test_gx",
               "std6_1s_sym_test_gy", "std6_2s_sym_test_gy", "std6_1s_sym_rand_g0", "std6_2s_sym_rand_g0"]
-MODULE_L = 160.0
-E_FEM = 56000.0                       # kPa, the measured TPU modulus used in the FEM; the learned field carries the rest
-G_FEM = (0.0, -9810.0, 0.0)           # gravity of the FEM sets without the _g0 suffix (upright robot)
-G_MAG = 9810.0
-MASS_STD, MASS_STD6 = 0.0346, 0.0337  # kg per module (sweeps.sh: TDCR_SECTION_MASS of the std / std6 presets)
-HOLES6 = (0.0, 60.0, 120.0, 180.0, 240.0, 300.0)
+MODULE_L = STD6.module_length_mm
+E_FEM = STD6.youngs_kpa               # kPa, the measured TPU modulus used in the FEM; the learned field carries the rest
+G_MAG = STD6.gravity_mm_s2
+G_FEM = (0.0, -G_MAG, 0.0)            # gravity of the FEM sets without the _g0 suffix (upright robot)
+MASS_STD6 = STD6.module_mass_kg       # kg per module (MASS_STD: the older std module, tdcr/params.py)
+HOLES6 = STD6.holes_deg
 CABLES_STD6 = {1: "one", 2: "two", 4: "four"}
-# gravity-direction suffix of a sweep tag (cloud/session/sweeps.sh) -> direction in the LAB frame (z along the backbone)
+# gravity-direction suffix of a sweep tag (sim/std6_sweep.sh) -> direction in the LAB frame (z along the backbone)
 G_SUFFIX = {"_ghang": (0, 0, 1), "_gx": (1, 0, 0), "_gmx": (-1, 0, 0), "_gy": (0, 1, 0), "_gmy": (0, -1, 0)}
 
 
@@ -75,7 +71,7 @@ def load_set(tag):
     d["n"] = n
     d["g"] = gravity_of(tag)
     if tag.startswith("std6_"):
-        cables = _os.path.join(CABLES, f"std6_{CABLES_STD6[n]}_section_sym.cables.json")
+        cables = os.path.join(CABLES, f"std6_{CABLES_STD6[n]}_section_sym.cables.json")
         d["az"] = geometry_from_cables(cables)[1]
         d["holes"] = HOLES6
         d["routing"] = "paired60"
@@ -222,74 +218,3 @@ def fit(model, train, ridge=0.02, h=1e-3, iters=40, procs=20, smooth=0.5, theta0
     theta = theta0.copy()
     theta[free] = r.x
     return theta
-
-
-def report(model, theta, label, tests=TESTS):
-    out = {}
-    for tag in tests:
-        if not _os.path.exists(_os.path.join(ROOT, "results", f"backbone_{tag}.npz")):
-            print(f"   {label:38s} {tag}: no backbone file, skipped")
-            continue
-        d = load_set(tag); n = d["n"]
-        C, R, lam = model.predict(theta, d)
-        s = evaluate(C, R, d["C"], d["R"])
-        out[tag] = dict(tip=float(s["tip"].mean()), tip95=float(np.percentile(s["tip"], 95)), rot=float(s["tip_rot"].mean()),
-                        along=float(s["mean_along"].mean()))
-        print(f"   {label:38s} {tag:26s} ({len(d['C']):3d}): tip {s['tip'].mean():5.2f} mm (95% {np.percentile(s['tip'], 95):5.2f}) | "
-              f"orient. {s['tip_rot'].mean():4.2f} deg | along {s['mean_along'].mean():4.2f} mm")
-    return out
-
-
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--train", nargs="+", default=["std_1s_sym_g0", "std_2s_sym_g0"])
-    ap.add_argument("--knot", type=float, default=10.0)
-    ap.add_argument("--ridge", type=float, default=0.02)
-    ap.add_argument("--iters", type=int, default=40)
-    ap.add_argument("--smooth", type=float, default=0.5)
-    ap.add_argument("--init", type=float, nargs=3, help="initial global log-scales (axial, bend x, bend z)")
-    ap.add_argument("--skip-baseline", action="store_true")
-    ap.add_argument("--shear", choices=[m for m in SHEAR_MODES if m], help="Timoshenko shear under transverse gravity")
-    ap.add_argument("--init-from", help="start from the parameters of an earlier result (json); missing entries 0")
-    ap.add_argument("--only-shear", action="store_true", help="--shear fit: fit only the shear factor, keep the rest")
-    ap.add_argument("--tests", nargs="+", help="test sets (default: the std6 tests when training on std6_* sets)")
-    ap.add_argument("--out", default="results/module_compliance.json")
-    a = ap.parse_args()
-    tests = a.tests or (TESTS_STD6 if all(t.startswith("std6_") for t in a.train) else TESTS)
-    model = ModuleModel(a.knot, a.shear)
-    train = []
-    for tag in a.train:
-        train.append(load_set(tag))
-    print(f"training on {', '.join(f'{t} ({len(d['C'])})' for t, d in zip(a.train, train))}; "
-          f"{model.n_theta} parameters (knots every {a.knot:g} mm), ridge {a.ridge}, shear {a.shear}")
-    res = dict(train=a.train, knot=a.knot, ridge=a.ridge, shear=a.shear)
-    if not a.skip_baseline:
-        res["plane_section"] = report(model, np.zeros(model.n_theta), "EB plane-section (theta = 0)", tests)
-    th0 = np.zeros(model.n_theta)
-    if a.init_from:
-        prev = np.array(json.load(open(a.init_from))["theta"])
-        th0[:min(len(prev), 3 + 3 * model.K)] = prev[:3 + 3 * model.K]
-        res["init_from"] = a.init_from
-    if a.init:
-        th0[:3] = a.init
-    free = None
-    if a.only_shear:
-        if a.shear != "fit":
-            raise SystemExit("--only-shear needs --shear fit")
-        free = np.zeros(model.n_theta, bool); free[-1] = True
-    theta = fit(model, train, ridge=a.ridge, iters=a.iters, smooth=a.smooth, theta0=th0, free=free)
-    res["learned"] = report(model, theta, "EB + learned module compliance", tests)
-    sc, f = model.split(theta)
-    print(f"   global compliance scales (axial / bend x / bend z): x{np.exp(sc[0]):.3f} x{np.exp(sc[1]):.3f} x{np.exp(sc[2]):.3f}")
-    if model.shear == "fit":
-        print(f"   notch shear compliance: x{np.exp(theta[-1]):.3f} of Timoshenko on the CAD sections")
-    print("   field multipliers at the knots (axial / bend x / bend z):")
-    for k, y in enumerate(model.knots):
-        print(f"      y {y:5.0f} mm: x{np.exp(f[0, k]):5.2f} x{np.exp(f[1, k]):5.2f} x{np.exp(f[2, k]):5.2f}")
-    res.update(knots=model.knots.tolist(), theta=theta.tolist(), smooth=a.smooth)
-    json.dump(res, open(a.out, "w"), indent=1)
-    print(f"   -> {a.out}")
-
-
-if __name__ == "__main__":
-    main()

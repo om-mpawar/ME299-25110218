@@ -3,7 +3,7 @@ import json
 
 import numpy as np
 
-from analysis.module_compliance import ModuleModel, load_set
+from tdcr.compliance import ModuleModel, load_set
 from tdcr.twin import M_SCENE_TO_LAB, MOUNTINGS, Twin, scene_to_lab
 
 

@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tdcr-twin"
+version = "0.1.0"
+description = "Sensor-free digital twin of a modular notched tendon-driven continuum robot: variable-section Euler-Bernoulli prior with pull-only tendons and gravity, identified module compliance, learned residual"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"     # SofaPython3 of SOFA 25.06 is built for Python 3.12
+dependencies = [
+    "numpy==2.5.2",
+    "scipy==1.18.1",
+    "scikit-learn==1.9.0",
+    "matplotlib==3.11.1",
+    "numba==0.68.0",
+    "llvmlite==0.50.0",
+    "threadpoolctl==3.6.0",
+]
+
+[project.optional-dependencies]
+pinn = ["torch==2.15.0"]          # tdcr/baselines/pinn.py (paper Table II); CPU wheel: --index-url https://download.pytorch.org/whl/cpu
+hardware = ["dynamixel-sdk"]      # tdcr/hardware/run_poses.py, homing.py, live_twin.py on the bench
+dev = ["pytest==9.1.1"]
+
+[tool.setuptools.packages.find]
+include = ["tdcr*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]                # sim/ (scene helpers without SOFA) and tests/ import as top-level packages

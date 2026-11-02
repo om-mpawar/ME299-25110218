@@ -5,8 +5,8 @@ import json
 import numpy as np
 import pytest
 
-from hardware.hysteresis_probe import mm_to_ticks, ticks_to_mm
-from hardware.run_poses import TENDON_ORDER, run
+from tdcr.hardware.hysteresis_probe import mm_to_ticks, ticks_to_mm
+from tdcr.hardware.run_poses import TENDON_ORDER, run
 
 HALF_TICK_MM = ticks_to_mm(0.5)
 

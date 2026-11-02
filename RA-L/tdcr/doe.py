@@ -13,7 +13,7 @@ towards +y); tendon k of section s sits at lab azimuth offset_s + 120 k, the ord
 tools/make_std_cables.py --lab-numbering. theta / alpha are stored only as metadata (the sweep needs the columns);
 every model reads dl.
 
-Screening (physics core with the identified module, tdcr/eb_prior.py + analysis/module_compliance.py, geometry read
+Screening (physics core with the identified module, tdcr/eb_prior.py + tdcr/compliance.py, geometry read
 from the cable file): a design is dropped when a section bends beyond --max-bend, when the axial load of any module
 exceeds --max-load (tension / E, mm^2; the stable 4-section FEM set reached 1.83), or, with --screen-gravity, when
 the gravity fixed point does not converge (a sign of buckling).
@@ -21,15 +21,14 @@ the gravity fixed point does not converge (a sign of buckling).
 --random S: instead of the mapping alone, add independent noise U[-S, S] mm to every tendon and a common offset
 U[-1, 3] mm per section (commands the mapping would not produce, for the generalisation test), then screen.
 
-    TDCR_SECTION_L=160 TDCR_TENDON_R=9.5 .venv/bin/python tools/make_cmd_doe.py --sections 4 --n 100 --seed 61 \
+    .venv/bin/python -m tdcr.doe --sections 4 --n 100 --seed 61 \
         --cables data/cables/std6_four_section_sym.cables.json --max-theta 45 --screen-gravity \
         --out results/configs_std6_4s_test.csv
 """
-import os as _os, sys as _sys
-_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
 import argparse
 import csv
 import json
+import os
 import warnings
 warnings.simplefilter("ignore")
 
@@ -37,10 +36,11 @@ import numpy as np
 
 from tdcr.tendon_mapping import TendonMapping
 from tdcr.eb_prior import geometry_from_cables, predict_gravity
+from tdcr.params import STD6
+from tdcr.paths import RESULTS
 
-ROOT = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
-HOLES6 = (0.0, 60.0, 120.0, 180.0, 240.0, 300.0)
-E_FEM = 56000.0
+HOLES6 = STD6.holes_deg
+E_FEM = STD6.youngs_kpa
 
 
 def lab_offsets(cables):
@@ -65,8 +65,8 @@ def mapped(theta_deg, alpha_deg, offsets, r_d):
 
 def screen(dl, cables, n, max_bend, max_load, gravity):
     """-> keep mask, per-design max bend (deg), max module load (mm^2), slack tendons, gravity iterations."""
-    from analysis.module_compliance import ModuleModel
-    res = json.load(open(_os.path.join(ROOT, "results", "mc_grav.json")))
+    from tdcr.compliance import ModuleModel
+    res = json.load(open(os.path.join(RESULTS, "mc_grav.json")))
     model = ModuleModel(res["knot"])
     _, az = geometry_from_cables(cables)
     eb = model.build(np.array(res["theta"]), n, az=az, holes=HOLES6)
@@ -80,9 +80,9 @@ def screen(dl, cables, n, max_bend, max_load, gravity):
     keep = (bend.max(1) <= max_bend) & (load.max(1) <= max_load)
     its = np.zeros(len(dl), int)
     if gravity:
-        st = np.arange(0.0, 160.0 * n + 1e-9, 5.0)
+        st = np.arange(0.0, STD6.module_length_mm * n + 1e-9, 5.0)
         for i in np.where(keep)[0]:
-            info = predict_gravity(eb, dl[i:i + 1], st, g_vec=(0.0, -9810.0, 0.0), E=E_FEM, iters=80)[3]
+            info = predict_gravity(eb, dl[i:i + 1], st, g_vec=(0.0, -STD6.gravity_mm_s2, 0.0), E=E_FEM, iters=80)[3]
             its[i] = info["iterations"] if info["converged"] else 80
         keep &= its < 80
     return keep, bend.max(1), load.max(1), slack, its
@@ -94,7 +94,7 @@ def main():
     ap.add_argument("--cables", required=True, help="cable file of the simulated robot (routing, lab numbering)")
     ap.add_argument("--n", type=int, required=True, help="designs to keep")
     ap.add_argument("--max-theta", type=float, default=45.0, help="largest target bend per section (deg)")
-    ap.add_argument("--r-d", type=float, default=9.5, help="R_D of the mapping (channel radius, mm)")
+    ap.add_argument("--r-d", type=float, default=STD6.tendon_radius_mm, help="R_D of the mapping (channel radius, mm)")
     ap.add_argument("--pretension", type=float, default=0.0, help="common pull on every tendon (mm); robot: 0")
     ap.add_argument("--random", type=float, default=0.0, help="per-tendon noise half-width (mm); 0 = mapping only")
     ap.add_argument("--max-bend", type=float, default=100.0, help="screen: predicted bend per section (deg)")

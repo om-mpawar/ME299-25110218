@@ -2,13 +2,13 @@
 Pose runs on the robot: drive the homed tendons through a command list and log every hold.
 
 Each row of the command csv (columns dl1..dlN, mm, + wound in, - paid out, lab tendon order; e.g. the designs from
-tools/make_cmd_doe.py) is sent as goal = zero + mm_to_ticks(dl) to every tendon's servo. The run waits settle_s for
-the robot to come to rest, then holds for hold_s (the window the motion capture averages over, hardware/mocap.py) and
+tdcr/doe.py) is sent as goal = zero + mm_to_ticks(dl) to every tendon's servo. The run waits settle_s for
+the robot to come to rest, then holds for hold_s (the window the motion capture averages over, tdcr/hardware/mocap.py) and
 logs, per tendon, the hold's wall-clock start and end, goal and present ticks, present current, and the commanded
 and reached displacement (dl_cmd_mm, dl_meas_mm = present - zero; the model's input is the reached one).
 
-    .venv/bin/python -m hardware.run_poses --commands results/configs_std6_2s_train.csv \
-        --zeros hardware/zeros/<date>.json --port /dev/ttyUSB0 --out data/hw/<session>
+    .venv/bin/python -m tdcr.hardware.run_poses --commands results/configs_std6_2s_train.csv \
+        --zeros data/hardware/zeros/<date>.json --port /dev/ttyUSB0 --out data/hw/<session>
 
 All commands are checked before anything moves (width against the motors, |dl| <= max_dl_mm). Clocks: the log uses
 time.time() of this PC; the motion-capture PC's clock must be synchronised to it (or offset measured) for mocap.py.
@@ -21,7 +21,7 @@ import time
 
 import numpy as np
 
-from hardware.hysteresis_probe import Dynamixel, mm_to_ticks, ticks_to_mm
+from tdcr.hardware.hysteresis_probe import Dynamixel, mm_to_ticks, ticks_to_mm
 
 TENDON_ORDER = [f"s{s}t{k}" for s in range(1, 5) for k in range(1, 4)]       # lab order, as the cable files
 LOG_COLUMNS = ["row", "rep", "t_start", "t_end", "tendon", "goal_ticks", "present_ticks", "current_ma", "dl_cmd_mm",
@@ -37,7 +37,7 @@ def read_commands(path):
 
 
 def read_zeros(path, names):
-    """Zero ticks of the named tendons from a hardware/homing.py zero file (other keys are ignored)."""
+    """Zero ticks of the named tendons from a tdcr/hardware/homing.py zero file (other keys are ignored)."""
     z = json.load(open(path))
     missing = [n for n in names if n not in z]
     if missing:

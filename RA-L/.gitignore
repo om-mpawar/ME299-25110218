@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+# caches and run outputs (regenerated)
+results/eb_profile_*.npz
+results/sweeps/
+results/study_guide/
+results/pinn/*.log
+results/hw_pred_*.npz
+results/calib_*.json
+# large inputs that live outside the repository (data/README.md)
+data/meshes/
+data/hardware/zeros/
+data/hw/

@@ -7,7 +7,7 @@ import time
 import numpy as np
 import pytest
 
-from analysis.module_compliance import E_FEM, ModuleModel, lab_to_scene, load_set
+from tdcr.compliance import E_FEM, ModuleModel, lab_to_scene, load_set
 from tdcr.eb_prior import _rodrigues, predict_gravity
 
 

@@ -29,7 +29,7 @@ def test_cache_tracks_cad_contents_and_resolution(tmp_path, monkeypatch):
 
 def test_explicit_design_changes_twin_compliance():
     old = Twin(1, (0, 0, 0))
-    new = Twin(1, (0, 0, 0), cad_json="cad/std6_tdcr_L150_D40.json")
+    new = Twin(1, (0, 0, 0), cad_json="data/cad/std6_tdcr_L150_D40.json")
     assert not np.allclose(old.eb.cX, new.eb.cX)
     assert not np.allclose(old.eb.cA, new.eb.cA)
     assert np.all(np.isfinite(new.shape([1., 0., 0.]).positions))

@@ -4,8 +4,8 @@ direction."""
 import numpy as np
 import pytest
 
-from hardware import pose_lists as pl
-from hardware.run_poses import read_commands
+from tdcr.hardware import pose_lists as pl
+from tdcr.hardware.run_poses import read_commands
 from tdcr.twin import direction_from_sequence
 
 

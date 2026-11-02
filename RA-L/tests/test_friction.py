@@ -4,7 +4,7 @@ servo winds the tendon in, -1 while it pays out. mu = 0 is the frictionless twin
 import numpy as np
 import pytest
 
-from analysis.module_compliance import MASS_STD6
+from tdcr.compliance import MASS_STD6
 from tdcr.eb_prior import EBPrior, capstan_factors, lcp_pull_only, predict_gravity
 from tdcr.twin import Twin, direction_from_sequence
 

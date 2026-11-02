@@ -54,8 +54,8 @@ import numpy as np
 from tdcr.cc_kinematics import TENDON_R, THETA_DEG
 from tdcr.multisection import SECTION_LENGTHS, SECTION_GAMMAS, section_lengths_for, gammas_for
 
-from tdcr.paths import ROOT as _DIR  # paths below are relative to the repo root
-DEFAULT_OUT = os.path.join(_DIR, "data", "cables", "two_section.cables.json")
+from tdcr.paths import CABLES
+DEFAULT_OUT = os.path.join(CABLES, "two_section.cables.json")
 
 SERVO_Y = -10.0          # pull points sit below the base, where the servos are
 END_INSET = 5.0          # keep points off section boundaries (see below)
@@ -142,7 +142,7 @@ if __name__ == "__main__":
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--out", default=DEFAULT_OUT)
     ap.add_argument("--sections", type=int, default=len(SECTION_LENGTHS),
-                    help="number of stacked sections (each the same 220 mm module)")
+                    help="number of stacked sections (each the same module)")
     ap.add_argument("--radius", type=float, nargs="+", default=[TENDON_R],
                     help="groove radius in mm; one value, or one per section")
     ap.add_argument("--azimuths", type=float, nargs="+", default=list(THETA_DEG),

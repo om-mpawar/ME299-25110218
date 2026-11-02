@@ -9,7 +9,7 @@ backbone shape.
     s.rotations                 # (K, 3, 3) cross-section frames, lab frame (identity when the robot is straight)
 
 The model is the variable-section Euler-Bernoulli core (tdcr/eb_prior.py) with the module compliance identified from
-SOFA FEM (analysis/module_compliance.py -> results/mc_std6.json) and, optionally, the few-shot hardware calibration
+SOFA FEM (tdcr/compliance.py, scripts/module_compliance.py -> results/mc_std6.json) and, optionally, the few-shot hardware calibration
 (tdcr/calibrate.py). Pull-only tendons, coupling between sections and gravity from the mounting are solved together;
 consecutive calls warm-start the gravity solve, so following the servos live costs a few milliseconds.
 
@@ -34,13 +34,14 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from analysis.module_compliance import G_MAG, HOLES6, MASS_STD6, ModuleModel, lab_to_scene
+from tdcr.compliance import G_MAG, HOLES6, MASS_STD6, ModuleModel, lab_to_scene
 from tdcr.eb_prior import geometry_from_cables, predict_gravity
+from tdcr.params import STD6
 from tdcr.paths import CABLES, ROOT
 
 MOUNTINGS = {"upright": (0.0, 0.0, -1.0), "hanging": (0.0, 0.0, 1.0),
              "horizontal_x": (1.0, 0.0, 0.0), "horizontal_y": (0.0, 1.0, 0.0)}
-MODULE_L = 160.0
+MODULE_L = STD6.module_length_mm
 _CABLE_FILES = {1: "one", 2: "two", 4: "four"}
 # lab = M @ scene for vectors; body frames are re-expressed with the same change of axes: R_lab = M R_scene M^T
 M_SCENE_TO_LAB = np.array([[1.0, 0.0, 0.0], [0.0, 0.0, -1.0], [0.0, 1.0, 0.0]])
