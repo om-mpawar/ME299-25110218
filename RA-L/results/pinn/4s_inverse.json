@@ -1,0 +1,27 @@
+{
+ "source": "results/pinn/2s_inverse_w10.json",
+ "variant": "inverse",
+ "w_phys": 10.0,
+ "train_seconds_4s": 585.4645936489105,
+ "notch_factors": [
+  9.029358742865341,
+  2.935067937119741,
+  2.693686630883042
+ ],
+ "tests_4s": {
+  "std6_4s_sym_test_g0": {
+   "tip": 54.405944786815,
+   "tip95": 115.34526065258916,
+   "along": 19.258762892260002,
+   "poses": 100
+  }
+ },
+ "exact_same_physics": {
+  "std6_4s_sym_test_g0": {
+   "tip": 6.792652419304274,
+   "tip95": 12.823932474400545,
+   "along": 2.7317739296919425,
+   "poses": 100
+  }
+ }
+}

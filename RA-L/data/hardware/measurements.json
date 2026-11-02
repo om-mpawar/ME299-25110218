@@ -1,0 +1,27 @@
+{
+  "_note": "Bench measurements of the printed robot (grams, millimetres). Calibration takes masses from here, not from CAD.",
+  "body_tpu_mass_g": {
+    "2026-10-25": [
+      30.4
+    ],
+    "_cad_100pct_g": 31.5,
+    "_cad_volume_cm3": 26.02,
+    "_note": "TPU body ALONE (confirmed by Om 25 Oct); effective density 30.4 / 26.02 = 1.17 g/cm3 vs 1.21 nominal (-3.5 %), so expect the print a few % softer than E = 56 MPa; weigh all four bodies"
+  },
+  "joint_mass_g": {
+    "_cad_estimate": {
+      "coupler_7mm": 3.0,
+      "dowel": 1.5,
+      "plug_each": 0.1,
+      "per_joint_with_3_plugs": 4.6
+    },
+    "_note": "to weigh: one coupler + dowel + 3 plugs; enters the twin as a point mass at each joint"
+  },
+  "homing_repeatability_mm": {
+    "_note": "to measure: home all tendons 5 times, log the zero spread (target < 0.05 mm)"
+  },
+  "stand_up_test": {
+    "2026-10-25": "4 modules do NOT stand with slack tendons; stand only with a good amount of pretension",
+    "_note": "pretension must be a known servo command (common pull on every tendon after homing), not set by hand; record the smallest pretension at which the stack stands"
+  }
+}

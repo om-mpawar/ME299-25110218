@@ -1,0 +1,118 @@
+{
+ "pretension_mm": 2.0,
+ "seed": 0,
+ "standup_max_mm": 5.0,
+ "theta_2s_deg": 35.0,
+ "theta_4s_deg": 25.0,
+ "mapping": "tools/make_cmd_doe.mapped (lab, pure pay-out) + pretension",
+ "order": [
+  "standup_4s",
+  "calib_2s (upright, then horizontal_x)",
+  "heldout_2s",
+  "test_4s_upright",
+  "test_4s_hanging"
+ ],
+ "lists": {
+  "standup_4s": {
+   "csv": "standup_4s.csv",
+   "n": 4,
+   "rows": 41,
+   "pretensions": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.25,
+    1.5,
+    1.75,
+    2.0,
+    2.25,
+    2.5,
+    2.75,
+    3.0,
+    3.25,
+    3.5,
+    3.75,
+    4.0,
+    4.25,
+    4.5,
+    4.75,
+    5.0
+   ],
+   "max_bend_deg": 0.5,
+   "pred_bend_max_deg": 1.8923379749921434e-14,
+   "pred_load_max": 0.21934146372858127,
+   "all_pass_screen": true,
+   "dl_range_mm": [
+    0.0,
+    12.535956503361867
+   ]
+  },
+  "calib_2s": {
+   "csv": "calib_2s.csv",
+   "n": 2,
+   "rows": 50,
+   "pretensions": [
+    1.0,
+    2.0
+   ],
+   "max_bend_deg": 52.5,
+   "pred_bend_max_deg": 25.559443211021414,
+   "pred_load_max": 0.12355801065126557,
+   "all_pass_screen": true,
+   "dl_range_mm": [
+    -5.619080028164364,
+    11.912846429927136
+   ]
+  },
+  "heldout_2s": {
+   "csv": "heldout_2s.csv",
+   "n": 2,
+   "rows": 37,
+   "pretensions": [
+    2.0
+   ],
+   "max_bend_deg": 52.5,
+   "pred_bend_max_deg": 26.2980840957103,
+   "pred_load_max": 0.13477709648260386,
+   "all_pass_screen": true,
+   "dl_range_mm": [
+    -6.030782141729754,
+    10.871957597807604
+   ]
+  },
+  "test_4s_upright": {
+   "csv": "test_4s_upright.csv",
+   "n": 4,
+   "rows": 25,
+   "pretensions": [
+    2.0
+   ],
+   "max_bend_deg": 37.5,
+   "pred_bend_max_deg": 14.425637293999158,
+   "pred_load_max": 0.1196918937315899,
+   "all_pass_screen": true,
+   "dl_range_mm": [
+    -2.7037106613376682,
+    11.712918263499525
+   ]
+  },
+  "test_4s_hanging": {
+   "csv": "test_4s_hanging.csv",
+   "n": 4,
+   "rows": 25,
+   "pretensions": [
+    2.0
+   ],
+   "max_bend_deg": 37.5,
+   "pred_bend_max_deg": 14.425637293999158,
+   "pred_load_max": 0.1196918937315899,
+   "all_pass_screen": true,
+   "dl_range_mm": [
+    -2.7037106613376682,
+    11.712918263499525
+   ]
+  }
+ }
+}

@@ -1,0 +1,20 @@
+{
+ "cables": "data/cables/std6_one_section_sym.cables.json",
+ "lab_offsets": [
+  0.0
+ ],
+ "mapping": "tdcr/tendon_mapping.py (lab), pure pay-out",
+ "r_d": 9.5,
+ "pretension": 0.0,
+ "random": 0.0,
+ "max_theta": 90.0,
+ "seed": 61,
+ "screen": {
+  "max_bend": 100.0,
+  "max_load": 4.0,
+  "gravity": true
+ },
+ "tried": 616,
+ "kept": 150,
+ "frame": "theta/alpha: lab frame, metadata only; dl in lab tendon order"
+}

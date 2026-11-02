@@ -1,0 +1,27 @@
+{
+ "source": "results/pinn/2s_forward_w0.1.json",
+ "variant": "forward",
+ "w_phys": 0.1,
+ "train_seconds_4s": 562.074479341507,
+ "notch_factors": [
+  1.0,
+  1.0,
+  1.0
+ ],
+ "tests_4s": {
+  "std6_4s_sym_test_g0": {
+   "tip": 72.50172797116679,
+   "tip95": 145.62129228555068,
+   "along": 27.74535646772927,
+   "poses": 100
+  }
+ },
+ "exact_same_physics": {
+  "std6_4s_sym_test_g0": {
+   "tip": 61.73361865481524,
+   "tip95": 121.91919114043087,
+   "along": 25.110047001905627,
+   "poses": 100
+  }
+ }
+}
