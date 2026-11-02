@@ -48,7 +48,8 @@ Y_START, Y_END = 5.0, 155.0        # tendon path within its section (cable files
 
 def timoshenko_factor(nu=STD6.poisson, ri=STD6.inner_radius_mm, ro=STD6.outer_radius_mm):
     """E / (kappa G) for the bored tube: 2 (1 + nu) / kappa, with Cowper's shear coefficient of a hollow circle
-    kappa = 6 (1 + nu) (1 + m^2)^2 / ((7 + 6 nu) (1 + m^2)^2 + (20 + 12 nu) m^2), m = ri / ro."""
+    kappa = 6 (1 + nu) (1 + m^2)^2 / ((7 + 6 nu) (1 + m^2)^2 + (20 + 12 nu) m^2), m = ri / ro.
+    Source: Cowper, J. Appl. Mech. 1966 (refs.bib: cowper1966)."""
     m2 = (ri / ro) ** 2
     kappa = 6 * (1 + nu) * (1 + m2) ** 2 / ((7 + 6 * nu) * (1 + m2) ** 2 + (20 + 12 * nu) * m2)
     return 2 * (1 + nu) / kappa
@@ -208,7 +209,8 @@ class EBPrior:
 
     def assemble(self):
         """Bending compliance tensor per cell in the base frame (module axes rotated by phi), then G (plus the tendon
-        stretch on its diagonal) and its Cholesky factor. Call again after changing cA, cX, cZ or tendon_compliance."""
+        stretch on its diagonal) and its Cholesky factor. Call again after changing cA, cX, cZ or tendon_compliance.
+        Source: the coupled tendon compliance map of Camarillo et al., T-RO 2008 (refs.bib: camarillo2008)."""
         c, s = np.cos(self.phi), np.sin(self.phi)
         self.cXX = self.cX * c * c + self.cZ * s * s
         self.cZZ = self.cX * s * s + self.cZ * c * c
@@ -225,14 +227,17 @@ class EBPrior:
         return self.cXX * Mx + self.cXZ * Mz, self.cXZ * Mx + self.cZZ * Mz
 
     def tensions(self, dl):
-        """dl (P, 3n) -> lambda (P, 3n) >= 0 (tension / E, mm^2): pull-only complementarity via NNLS."""
+        """dl (P, 3n) -> lambda (P, 3n) >= 0 (tension / E, mm^2): pull-only complementarity via NNLS.
+        Source: slack in the coupled tendon forward map, Camarillo et al., T-RO 2009 (refs.bib: camarillo2009)."""
         dl = np.atleast_2d(dl)
         b = np.linalg.solve(self.Lc, dl.T).T                     # min |Lc^T lam - Lc^-1 dl|, lam >= 0
         return np.array([nnls(self.Lc.T, bi)[0] for bi in b])
 
     def strains(self, lam, f=None):
         """lambda (P, 3n) -> per cell: rotation vector (P, nc, 3) and axial shortening (P, nc). f (P, 3n, nc): tension
-        factors along each tendon (capstan_factors), None = no friction."""
+        factors along each tendon (capstan_factors), None = no friction.
+        Source: tendon load = moment T d plus axial force T on every section passed, Camarillo et al., T-RO 2008
+        (refs.bib: camarillo2008); Rucker & Webster, T-RO 2011 (rucker2011)."""
         Tl = lam[:, :, None] * self.through[None].astype(float)       # (P, 3n, nc)
         if f is not None:
             Tl = Tl * f
@@ -277,7 +282,8 @@ class EBPrior:
 
 def capstan_factors(eb, w, sigma, mu):
     """Tension factor of every tendon in every cell, f = exp(-sigma mu Theta), Theta the turning |w| accumulated along
-    the tendon's path from the base to the cell centre. w (P, nc, 3) cell rotation vectors, sigma (P, 3n) -> (P, 3n, nc)."""
+    the tendon's path from the base to the cell centre. w (P, nc, 3) cell rotation vectors, sigma (P, 3n) -> (P, 3n, nc).
+    Source: the capstan (Euler-Eytelwein) equation applied cell by cell."""
     T = eb.through.astype(float)
     turn = T[None] * np.linalg.norm(w, axis=-1)[:, None, :]
     theta = np.cumsum(turn, 2) - 0.5 * turn
@@ -287,7 +293,8 @@ def capstan_factors(eb, w, sigma, mu):
 def lcp_pull_only(M, b, iters=500):
     """Pull-only tensions for a tendon map M that need not be symmetric: lambda >= 0, M lambda >= b,
     lambda . (M lambda - b) = 0. Murty's least-index principal pivoting, finite for P-matrices (M = G scaled by positive
-    tension factors); started from the tendons with b > 0. Agrees with EBPrior.tensions when M = G."""
+    tension factors); started from the tendons with b > 0. Agrees with EBPrior.tensions when M = G.
+    Source: Murty, Linear Complementarity, Linear and Nonlinear Programming, 1988 (refs.bib: murty1988)."""
     b = np.asarray(b, float)
     S = b > 0
     tb = 1e-12 * max(np.abs(b).max(), 1e-300)

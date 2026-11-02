@@ -183,3 +183,33 @@ to `data/meshes/`, both done in this checkout's `.venv`; without them 88 pass an
 `d363e90`, run the same way, has 97 tests: these 94 plus the 3 of `test_mor_snapshots.py` (MOR not ported).
 Test bodies are unchanged except their imports, the CAD paths (`data/cad/`), and the mesh-skip in
 `test_scene_mass.py`.
+
+## 6. For the release (W6): what a README / demo needs
+
+The current `README.md` is a working setup note written during packaging; W6 owns the real README and LICENSE
+(there is none yet: the code has no licence, and `pyproject.toml` declares none).
+
+- **Install**: Python 3.12 only (`requires-python = ">=3.12,<3.13"`, to match SofaPython3); `pip install -e ".[dev]"`;
+  the PINN baseline needs `.[pinn]` with torch's CPU index (`--extra-index-url https://download.pytorch.org/whl/cpu`);
+  the bench tools need `.[hardware]` (`dynamixel-sdk`, imported lazily, so the rest works without it).
+- **Smallest demo, no hardware, no SOFA** (checked 3 Nov 2026):
+  `.venv/bin/python -m tdcr.hardware.live_twin --fake --modules 2 --mounting upright --seconds 5`
+  prints the tip pose at ~1500 Hz on this laptop. The very first run spends ~2 s compiling the numba kernels
+  (`cache=True`, so later runs start warm); a demo should say so or warm up first.
+- **Library entry point**: `tdcr.twin.Twin(n_modules, mounting, calib_json=None).shape(dl)` -> `TwinShape`
+  (`positions`, `rotations`, `tensions`, `converged`, `solve_ms`); mountings `upright`, `hanging`, `horizontal_x`,
+  `horizontal_y` or a gravity vector; 1, 2 or 4 modules (the cable files that exist). It reads
+  `results/mc_std6.json`, so a pip install outside the repository would also need that file packaged.
+- **Hardware workflow** (all `python -m`): `tdcr.hardware.homing` (servo zeros -> `data/hardware/zeros/`),
+  `tdcr.hardware.pose_lists` (command lists), `tdcr.hardware.run_poses` (drive the robot), `tdcr.hardware.mocap`
+  (`make_dataset`), `tdcr.calibrate` (few-shot calibration -> `results/calib_<session>.json`), `tdcr.hw_eval`
+  (every model against motion capture), `tdcr.hardware.live_twin` (live loop on the robot).
+- **Paper reproduction**: the table in `README.md`. Run times: `n_transfer.py` ~2 h (8 threads),
+  `module_compliance.py` ~80 s, figures seconds, PINN hours. `OMP_NUM_THREADS` changes the last digits of
+  `mc_std6.json` (1e-10), not its numbers.
+- **Data a release would need to point at**: the std6 meshes (28 MB, needed only for SOFA and backbone
+  re-extraction) and the raw std6 sweeps (lab PC only, no GitHub release; `data/README.md`).
+- **Method references** are now in the docstrings of the functions that implement them (Camarillo 2008/2009:
+  `EBPrior.assemble`, `strains`, `tensions`; Cowper 1966: `timoshenko_factor`; Murty 1988: `lcp_pull_only`;
+  Rucker & Webster 2011: `cosserat._vu_from_tendons`, `integrate`; Oliver-Butler 2019:
+  `cosserat.solve_for_displacements`; capstan equation: `capstan_factors`), with their `paper/refs.bib` keys.

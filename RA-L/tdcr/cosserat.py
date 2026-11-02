@@ -177,7 +177,8 @@ def tendon_offsets(section_index, r=TENDON_R, gammas=SECTION_GAMMAS):
 
 def _vu_from_tendons(_R_unused, tendons, Kse, Kbt, v_star, u_star,
                      iters=40, tol=1e-14):
-    """Solve the implicit constitutive relation for (v, u) at one station."""
+    """Solve the implicit constitutive relation for (v, u) at one station.
+    Source: tendon-driven Cosserat statics, Rucker & Webster, T-RO 2011 (refs.bib: rucker2011)."""
     v = v_star.copy()
     u = u_star.copy()
     for _ in range(iters):
@@ -218,6 +219,7 @@ def _section_transform(v, u, L):
 def integrate(tau, section_lengths=SECTION_LENGTHS, r=TENDON_R,
               gammas=SECTION_GAMMAS, gravity=GRAVITY, n_eval=25, **kw):
     """Base to tip for the given six tendon tensions, in closed form.
+    Source: Rucker & Webster, T-RO 2011 (refs.bib: rucker2011).
 
     -> (frames, tendon_lengths). Signature unchanged from the ODE version so
     callers do not care which is underneath.
@@ -428,7 +430,8 @@ def refine_tension(dl_cmd, n_iter=6, tol=1e-3, section_lengths=SECTION_LENGTHS,
 def solve_for_displacements(dl, section_lengths=SECTION_LENGTHS, r=TENDON_R,
                             gammas=SECTION_GAMMAS, gravity=GRAVITY,
                             tau0=None, **kw):
-    """Tensions consistent with the commanded tendon pull-ins.
+    """Tensions consistent with the commanded tendon pull-ins (prescribed tendon displacements with slack, as in
+    Oliver-Butler et al., T-RO 2019; refs.bib: oliverbutler2019).
 
     This is a COMPLEMENTARITY problem, not an equality-constrained solve, and
     getting that wrong is what made 101 of 152 DOE commands look unreachable.
