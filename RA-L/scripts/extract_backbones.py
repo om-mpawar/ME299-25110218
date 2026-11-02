@@ -3,22 +3,20 @@ Compact backbones (centreline + cross-section rotations every 5 mm) straight fro
 directory, for whatever poses exist so far (a sweep still running is fine).
 
 Writes results/backbone_<tag>.npz with theta, alpha, dl, rows, stations, C, R, settle_mm, mesh --
-the format analysis/model_study.py and analysis/fit_mech_prior.py read (dl included, so no
-shape file is needed).
+the format tdcr/backbones.load reads (dl included, so no shape file is needed). The mesh named in the pose
+directory's rest.npz must be in data/meshes (see data/README.md).
 
-    TDCR_SECTION_L=160 .venv/bin/python analysis/extract_backbones.py --sections 4 \
-        --dir results/sweeps/std_4s_sym_g0 --tag std_4s_sym_g0_partial
+    .venv/bin/python scripts/extract_backbones.py --sections 4 \
+        --dir results/sweeps/std6_4s_sym_test_g0 --tag std6_4s_sym_test_g0
 """
-import os as _os, sys as _sys
-_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))  # repo root, for `import tdcr`
 import argparse
 import glob
 import os
 
 import numpy as np
 
-from analysis.shape_analysis import backbone, node_sections, stations_for
-from tdcr.paths import ROOT
+from tdcr.backbones import backbone, node_sections, stations_for
+from tdcr.paths import RESULTS
 
 
 def main():
@@ -37,7 +35,7 @@ def main():
     st = stations_for(args.sections)
     body = node_sections(mesh, len(rest["rest"]))
     C, R = backbone(np.asarray(rest["rest"], float), pos, st, body)
-    out = os.path.join(ROOT, "results", f"backbone_{args.tag}.npz")
+    out = os.path.join(RESULTS, f"backbone_{args.tag}.npz")
     np.savez_compressed(out, theta=np.array([p["theta"] for p in P]), alpha=np.array([p["alpha"] for p in P]),
                         dl=np.array([p["dl"] for p in P]), rows=np.array([int(p["row"]) for p in P]),
                         source=np.array([os.path.basename(os.path.dirname(f)) for f in files]),

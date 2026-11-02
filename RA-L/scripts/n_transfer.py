@@ -2,11 +2,11 @@
 Does a learned correction trained on 1-2 modules carry to 4? Section count N as an input vs local physics features.
 
 Physics (L0 + L1): the variable-section Euler-Bernoulli module with the identified compliance profile
-(analysis/module_compliance.py -> results/mc_std6.json), the real robot's routing and channel holes, pull-only tendons,
+(tdcr/compliance.py, scripts/module_compliance.py -> results/mc_std6.json), the real robot's routing and channel holes, pull-only tendons,
 gravity in any direction. It composes to any N by construction.
 
 Learned correction (L3, strain form): for each module, the residual of the local 5-mm segment increments (rotation and
-translation in the cross-section frame, analysis/model_study.to_intrinsic) between the FEM and the physics, compressed
+translation in the cross-section frame, tdcr/backbones.to_intrinsic) between the FEM and the physics, compressed
 to PCA modes and regressed by one GP (Matern 5/2, automatic relevance determination). The corrected increments are
 chained from the base, so a module's correction acts wherever the modules below have turned it. Trained on 1- and
 2-module FEM sets only; every module of every training pose is one sample. The variants differ only in the GP inputs:
@@ -34,14 +34,13 @@ Coverage: for every test set, the share of module samples with a local feature o
 median nearest-neighbour distance to the training features relative to the training set's own (1 = as dense as
 training; standardised features).
 
-    .venv/bin/python analysis/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 \\
+    .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 \\
         std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json          # L1, once
-    OMP_NUM_THREADS=8 .venv/bin/python analysis/n_transfer.py --mc results/mc_std6.json
+    OMP_NUM_THREADS=8 .venv/bin/python scripts/n_transfer.py --mc results/mc_std6.json
 """
-import os as _os, sys as _sys
-_sys.path.insert(0, _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
 import argparse
 import json
+import os
 import time
 import warnings
 warnings.simplefilter("ignore")
@@ -50,10 +49,11 @@ import numpy as np
 from scipy.spatial import cKDTree
 from scipy.spatial.transform import Rotation
 
-from analysis.model_study import mirror, to_intrinsic, from_intrinsic, evaluate
-from analysis.module_compliance import ModuleModel, load_set, TESTS_STD6, G_MAG, E_FEM, MASS_STD
+from tdcr.backbones import ModesGP, evaluate, from_intrinsic, mirror, to_intrinsic
+from tdcr.compliance import E_FEM, G_MAG, TESTS_STD6, ModuleModel, load_set
 from tdcr.eb_prior import predict_gravity
-from tdcr.paths import ROOT
+from tdcr.params import MASS_STD
+from tdcr.paths import ROOT, RESULTS
 
 TRAIN = ["std6_1s_sym_train_g0", "std6_2s_sym_train_g0", "std6_1s_sym_train", "std6_2s_sym_train"]
 SEG = 32                                   # 5-mm segments per 160-mm module
@@ -137,27 +137,6 @@ def module_features(d, C, R, lam, eb):
     return {"local": loc, "local+N": np.concatenate([loc, nj], -1), "naive-N": nai}
 
 
-class ModesGP:
-    """PCA modes of the standardised residuals + one GP over all modes (as analysis/model_study.modes_fit_predict),
-    fitted once and reused for every test set."""
-
-    def __init__(self, Y, F, n_modes, nu=2.5, restarts=1):
-        from sklearn.decomposition import PCA
-        from sklearn.gaussian_process import GaussianProcessRegressor
-        from sklearn.gaussian_process.kernels import ConstantKernel, Matern, WhiteKernel
-        from sklearn.preprocessing import StandardScaler
-        self.mean, self.sd = Y.mean(0), Y.std(0) + 1e-12
-        self.pca = PCA(n_components=min(n_modes, len(Y) - 1)).fit((Y - self.mean) / self.sd)
-        Z = self.pca.transform((Y - self.mean) / self.sd)
-        self.sc = StandardScaler().fit(F)
-        k = ConstantKernel(1.0, (1e-3, 1e3)) * Matern(np.ones(F.shape[1]), (1e-2, 1e3), nu=nu) + WhiteKernel(1e-4, (1e-9, 1e0))
-        self.gp = GaussianProcessRegressor(k, normalize_y=True, n_restarts_optimizer=restarts, random_state=0)
-        self.gp.fit(self.sc.transform(F), Z)
-
-    def predict(self, F):
-        return self.mean + (self.gp.predict(self.sc.transform(F)) @ self.pca.components_) * self.sd
-
-
 def coverage(Ftr, Fte):
     """Share of test samples outside the training range in any feature; NN distance ratio (standardised; features
     that are constant in training, e.g. gravity in gravity-free data, are scaled by 1)."""
@@ -195,7 +174,7 @@ def main():
     ap.add_argument("--out", default="results/n_transfer.json")
     a = ap.parse_args()
 
-    mc = json.load(open(_os.path.join(ROOT, a.mc)))
+    mc = json.load(open(os.path.join(ROOT, a.mc)))
     model, theta = ModuleModel.from_result(mc)
     if not all(t.startswith("std6_") for t in mc.get("train", [])):
         print(f"WARNING: {a.mc} was not identified on std6 sets (train: {mc.get('train')}); the physics is then the old "
@@ -249,7 +228,7 @@ def main():
     head = f"{'test set':26s} {'poses':>5s}  {'model':24s} {'tip mm':>7s} {'95%':>6s} {'max':>6s} {'orient deg':>10s} {'along mm':>8s}"
     lines = [head, "-" * len(head)]
     for tag in a.tests:
-        if not _os.path.exists(_os.path.join(ROOT, "results", f"backbone_{tag}.npz")):
+        if not os.path.exists(os.path.join(RESULTS, f"backbone_{tag}.npz")):
             print(f"{tag}: no backbone file, skipped")
             continue
         d = load_set(tag)
@@ -282,7 +261,7 @@ def main():
                      f"NN distance x{nn_ratio:.1f} of training")
         print(f"{tag}: done in {time.time() - t1:.0f} s")
     print("\n" + "\n".join(lines))
-    json.dump(res, open(_os.path.join(ROOT, a.out), "w"), indent=1)
+    json.dump(res, open(os.path.join(ROOT, a.out), "w"), indent=1)
     print(f"\n-> {a.out}")
 
 

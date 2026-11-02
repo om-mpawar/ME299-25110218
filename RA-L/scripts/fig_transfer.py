@@ -1,7 +1,8 @@
-"""Figures of the RA-L draft from the result files (run from the repository root):
-    .venv/bin/python paper_ral/figures/make_figs.py
+"""Fig. 2 of the paper from the result files:
+    .venv/bin/python scripts/fig_transfer.py            # -> paper/figures/fig_transfer.pdf (and .png)
 fig_transfer.pdf: mean tip error per test configuration (FEM, real routing) for plane-section Euler-Bernoulli, the
 identified physics (results/mc_std6.json) and the physics with a learned module residual (results/n_transfer.json)."""
+import argparse
 import json
 import os
 
@@ -9,9 +10,16 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-OUT = os.path.dirname(os.path.abspath(__file__))
-mc = json.load(open("results/mc_std6.json"))
-nt = json.load(open("results/n_transfer.json"))["tests"]
+from tdcr.paths import FIGURES, RESULTS
+
+ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+ap.add_argument("--mc", default=os.path.join(RESULTS, "mc_std6.json"))
+ap.add_argument("--nt", default=os.path.join(RESULTS, "n_transfer.json"))
+ap.add_argument("--out-dir", default=FIGURES)
+a = ap.parse_args()
+OUT = a.out_dir
+mc = json.load(open(a.mc))
+nt = json.load(open(a.nt))["tests"]
 
 CASES = [("std6_1s_sym_test_g0", "1 module", True), ("std6_2s_sym_test_g0", "2 modules", True),
          ("std6_1s_sym_test", "1 upright", True), ("std6_2s_sym_test", "2 upright", True),

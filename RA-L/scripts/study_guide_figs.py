@@ -1,10 +1,11 @@
-"""Figures of the study guide, computed from the code and the result files (run from the repository root):
-    .venv/bin/python docs/study_guide/make_figs.py
-Every number in a figure comes from tdcr/ or results/; nothing is drawn by hand."""
+"""Figures of the study guide, computed from the code and the result files:
+    .venv/bin/python scripts/study_guide_figs.py
+Every number in a figure comes from tdcr/ or results/; nothing is drawn by hand. The paper takes Proposition 1 (tip
+moves 4.5 mm), Proposition 2 (the calibration Jacobian's singular values) and the run times from
+results/study_guide/numbers.json; the figures go to results/study_guide/."""
 import json
 import math
 import os
-import sys
 import time
 import warnings
 
@@ -13,17 +14,18 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-warnings.simplefilter("ignore")
-ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, ROOT)
-os.chdir(ROOT)
-OUT = os.path.join(ROOT, "docs", "study_guide", "figs")
-os.makedirs(OUT, exist_ok=True)
+from tdcr import eb_prior as ebp
+from tdcr.compliance import HOLES6, MASS_STD6, ModuleModel, load_set
+from tdcr.eb_prior import EBPrior, capstan_factors, predict_gravity, section_profile
+from tdcr.params import STD6
+from tdcr.paths import CAD, RESULTS, ROOT
+from tdcr.twin import Twin
 
-from analysis.module_compliance import HOLES6, MASS_STD6, ModuleModel, load_set   # noqa: E402
-from tdcr import eb_prior as ebp                                                  # noqa: E402
-from tdcr.eb_prior import EBPrior, capstan_factors, predict_gravity, section_profile  # noqa: E402
-from tdcr.twin import Twin                                                        # noqa: E402
+warnings.simplefilter("ignore")
+os.chdir(ROOT)                                   # the result files below are read relative to the repository root
+OUT = os.path.join(RESULTS, "study_guide")
+E_N_MM2 = STD6.youngs_kpa / 1000.0            # E in N/mm^2: tension = E_N_MM2 * lambda (N)
+os.makedirs(OUT, exist_ok=True)
 
 INK, MUTED, GRID = "#222222", "#6b6a66", "#e2e1dc"
 BLUE, ORANGE, AQUA, YELLOW, VIOLET, GREY = "#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#6250d6", "#8a8984"
@@ -53,7 +55,8 @@ def fig_sections():
     X, Z = np.meshgrid(xs, xs, indexing="ij")
     ring = (np.hypot(X, Z) >= ri) & (np.hypot(X, Z) <= R)
     for h in HOLES6:
-        ring &= np.hypot(X - 9.5 * math.cos(math.radians(h)), Z - 9.5 * math.sin(math.radians(h))) >= 0.9
+        ring &= np.hypot(X - STD6.tendon_radius_mm * math.cos(math.radians(h)),
+                         Z - STD6.tendon_radius_mm * math.sin(math.radians(h))) >= STD6.hole_dia_mm / 2
     hz = np.where(np.abs(Z) > e, rd - np.sqrt(np.maximum(rd ** 2 - Z ** 2, 0)), -1.0)
     hx = np.where(np.abs(X) > e, rd - np.sqrt(np.maximum(rd ** 2 - X ** 2, 0)), -1.0)
     cases = [("plain sleeve\n$y=5$ mm", 5.0), ("A notch\n(centre)", ca[1]),
@@ -77,11 +80,11 @@ def fig_sections():
 
 # ------------------------------------------------------------------ 2. D30 vs D40 profiles
 def fig_disc():
-    from analysis.module_compliance import HOLES6 as H
+    from tdcr.compliance import HOLES6 as H
     y30, A30, Jx30, _ = section_profile(holes=H)
     ebp_json, ebp_cache = ebp.CAD_JSON, ebp.CACHE
-    ebp.CAD_JSON = os.path.join(ROOT, "cad", "std6_tdcr_L150_D40.json")
-    ebp.CACHE = os.path.join(ROOT, "results", "eb_profile_D40.npz")
+    ebp.CAD_JSON = os.path.join(CAD, "std6_tdcr_L150_D40.json")
+    ebp.CACHE = os.path.join(RESULTS, "eb_profile_D40.npz")
     y40, A40, Jx40, _ = section_profile(holes=H)
     ebp.CAD_JSON, ebp.CACHE = ebp_json, ebp_cache
     fig, axs = plt.subplots(2, 1, figsize=(6.4, 2.9), sharex=True)
@@ -144,7 +147,7 @@ def fig_qp():
 
 # ------------------------------------------------------------------ 5. Proposition 1: same commands, other stiffness
 def fig_prop1():
-    st = np.arange(0.0, 160.0 + 1e-9, 0.5)
+    st = np.arange(0.0, STD6.module_length_mm + 1e-9, 0.5)
     dl = np.array([[3.0, 0.5, 0.5]])
     eb = EBPrior(1, holes=HOLES6)
     C0, R0, lam0 = eb.predict(dl, st)
@@ -179,7 +182,7 @@ def fig_slack():
     fig, ax = plt.subplots(figsize=(3.3, 2.1))
     w = 0.25
     for k, (lab, dl) in enumerate(cases):
-        lam = eb.tensions(np.array([dl]))[0] * 56.0
+        lam = eb.tensions(np.array([dl]))[0] * E_N_MM2
         for i in range(3):
             ax.bar(k + (i - 1) * w, lam[i], w * 0.9, color=(BLUE, ORANGE, AQUA)[i],
                    label=f"tendon {i + 1}" if k == 0 else None)
@@ -200,10 +203,10 @@ def fig_fixedpoint():
     for k in range(1, 13):
         C, *_ = predict_gravity(tw.eb, np.zeros((1, 6)), tw.stations, g_vec=tw.g_scene, mass=tw.mass, iters=k,
                                 tol=0.0, relax=0.5)
-        rows.append(320.0 - C[0, -1, 1])
+        rows.append(2 * STD6.module_length_mm - C[0, -1, 1])
     Cf, *_ = predict_gravity(tw.eb, np.zeros((1, 6)), tw.stations, g_vec=tw.g_scene, mass=tw.mass, tol=1e-12,
                              iters=400, relax=1.0)
-    exact = 320.0 - Cf[0, -1, 1]
+    exact = 2 * STD6.module_length_mm - Cf[0, -1, 1]
     dl = np.zeros(6); dl[0] = 3.0; dl[3] = 1.5
     tips = []
     for k in range(1, 41):
@@ -253,10 +256,10 @@ def fig_capstan():
 
 # ------------------------------------------------------------------ 9. pretension: equal pulls vs equal tension
 def fig_pretension():
-    from hardware.pose_lists import pretension_pattern, screen_model
+    from tdcr.hardware.pose_lists import pretension_pattern, screen_model
     eb = screen_model(4)
-    flat = eb.tensions(np.full((1, 12), 2.0))[0] * 56.0
-    pat = eb.tensions((2.0 * pretension_pattern(4))[None])[0] * 56.0
+    flat = eb.tensions(np.full((1, 12), 2.0))[0] * E_N_MM2
+    pat = eb.tensions((2.0 * pretension_pattern(4))[None])[0] * E_N_MM2
     fig, ax = plt.subplots(figsize=(3.4, 2.1))
     x = np.arange(12)
     ax.bar(x - 0.2, flat, 0.38, color=GREY, label="every tendon pulled 2 mm")
