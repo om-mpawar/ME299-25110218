@@ -65,7 +65,7 @@ STEPS = [
          about="slowest twin call (25 ms), Cosserat 280 ms per pose"),
     step("geometry_sensitivity", [PY, "scripts/geometry_sensitivity.py"], ["results/geometry_sensitivity.json"],
          about="D30 vs D40: 2.9 / 1.9 mm, 3 %; 6.5 vs 1.4 mm between notches"),
-    step("calib_synthetic", [PY, "scripts/calib_synthetic.py"], ["results/calib_synthetic.json"],
+    step("calib_synthetic", [PY, "scripts/calib_synthetic.py"], ["results/synthetic_calib.json"],
          about="calibration on synthetic data: bending scale 0.003, mu 0.244, mass drift 60 %"),
     step("mc_ablation", [PY, "scripts/mc_ablation.py"], ["results/mc_ablation.json"],
          about="footnote: one module only 6.5 mm, +10 two-module poses 0.73 mm (older robot)"),

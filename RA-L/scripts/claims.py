@@ -285,7 +285,7 @@ def define():
                         + str(J("results/study_guide/numbers.json")["svd"]["v"]) + ": the three scales up, the mass down."))
     claim("Calibration: free mass drift (synthetic, 0.3 mm noise)", "A free mass drifts by 60", "60",
           lambda: 100 * calib_mass(0.3)["mass_relative_error"], "calib_synthetic",
-          "calib_synthetic.json mass, noise 0.3: exp(log_mass_fit - 0.1) - 1, %",
+          "synthetic_calib.json mass, noise 0.3: exp(log_mass_fit - 0.1) - 1, %",
           note=lambda: (f"Fitted log-mass {calib_mass(0.3)['log_mass']:.3f} for a true 0.1 (log error "
                         f"{calib_mass(0.3)['log_mass_error']:+.3f}), with the compliance scales "
                         f"{calib_mass(0.3)['log_axial']:+.2f} / {calib_mass(0.3)['log_bend_x'] - 0.2:+.2f} / "
@@ -312,9 +312,9 @@ def define():
                            "(gravity-free, upright)", note=lambda: W3["R1"]())
     claim("Calibration (synthetic): bending scale recovered to within", "recovered the bending scale to within 0.003",
           "0.003", lambda: calib_fric(0.3)["bend_x_error"], "calib_synthetic",
-          "calib_synthetic.json friction, noise 0.3: |log_bend_x - 0.2|")
+          "synthetic_calib.json friction, noise 0.3: |log_bend_x - 0.2|")
     claim("Calibration (synthetic): mu = 0.25 recovered as", "$\\mu=0.25$ as 0.244", "0.244",
-          lambda: calib_fric(0.3)["mu"], "calib_synthetic", "calib_synthetic.json friction, noise 0.3: mu",
+          lambda: calib_fric(0.3)["mu"], "calib_synthetic", "synthetic_calib.json friction, noise 0.3: mu",
           note="One synthetic test, as the paper says (noise 0 / 0.1 mm rows in the same file).")
 
     # ---------------- simulation setup (Sec. VI-A)
@@ -579,11 +579,11 @@ def ablation(prefix, k):
 
 
 def calib_mass(noise):
-    return next(r for r in J("results/calib_synthetic.json")["mass"]["runs"] if r["noise_mm"] == noise)
+    return next(r for r in J("results/synthetic_calib.json")["mass"]["runs"] if r["noise_mm"] == noise)
 
 
 def calib_fric(noise):
-    return next(r for r in J("results/calib_synthetic.json")["friction"]["runs"] if r["noise_mm"] == noise)
+    return next(r for r in J("results/synthetic_calib.json")["friction"]["runs"] if r["noise_mm"] == noise)
 
 
 def geo(run, key):

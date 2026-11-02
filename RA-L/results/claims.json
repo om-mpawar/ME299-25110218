@@ -691,7 +691,7 @@
    "status": "differs",
    "step": "calib_synthetic",
    "command": ".venv/bin/python scripts/calib_synthetic.py",
-   "source": "calib_synthetic.json mass, noise 0.3: exp(log_mass_fit - 0.1) - 1, %",
+   "source": "synthetic_calib.json mass, noise 0.3: exp(log_mass_fit - 0.1) - 1, %",
    "regenerated_in_last_run": true,
    "note": "Fitted log-mass 0.600 for a true 0.1 (log error +0.500), with the compliance scales -0.50 / -0.50 / -0.50 off their true values; the original run (old repo, 20 Oct) gave the same log-mass 0.5997, i.e. +65 % in mass; the paper's '60 %' appears to read the fitted log-mass 0.60 as a percentage.",
    "last_run": {
@@ -844,7 +844,7 @@
    "status": "reproduced",
    "step": "calib_synthetic",
    "command": ".venv/bin/python scripts/calib_synthetic.py",
-   "source": "calib_synthetic.json friction, noise 0.3: |log_bend_x - 0.2|",
+   "source": "synthetic_calib.json friction, noise 0.3: |log_bend_x - 0.2|",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
@@ -865,7 +865,7 @@
    "status": "reproduced",
    "step": "calib_synthetic",
    "command": ".venv/bin/python scripts/calib_synthetic.py",
-   "source": "calib_synthetic.json friction, noise 0.3: mu",
+   "source": "synthetic_calib.json friction, noise 0.3: mu",
    "regenerated_in_last_run": true,
    "note": "One synthetic test, as the paper says (noise 0 / 0.1 mm rows in the same file).",
    "last_run": {

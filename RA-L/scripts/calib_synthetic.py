@@ -12,7 +12,7 @@ copied below) and motion-capture noise.
 
 Both were one-off runs in the old repository; the computations are reproduced here with the packaged calibration.
 
-    .venv/bin/python scripts/calib_synthetic.py          # ~1 min -> results/calib_synthetic.json
+    .venv/bin/python scripts/calib_synthetic.py          # ~1 min -> results/synthetic_calib.json
 """
 import argparse
 import json
@@ -97,7 +97,7 @@ def mass(tmp):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--out", default=os.path.join(RESULTS, "calib_synthetic.json"))
+    ap.add_argument("--out", default=os.path.join(RESULTS, "synthetic_calib.json"))
     a = ap.parse_args()
     with tempfile.TemporaryDirectory() as tmp:
         res = dict(friction=friction(tmp), mass=mass(tmp))

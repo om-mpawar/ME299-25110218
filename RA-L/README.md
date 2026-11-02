@@ -70,7 +70,7 @@ corrections as notes. No SOFA, hardware or network is needed; Table II's first a
 | Prop. 1 (4.5 mm), Prop. 2 Jacobian, run-time medians and p95 | `study_guide_figs.py` | `results/study_guide/numbers.json` |
 | Slowest call, Cosserat time per pose | `runtime.py` | `results/runtime.json` |
 | D30 vs D40 sensitivity | `geometry_sensitivity.py` | `results/geometry_sensitivity.json` |
-| Calibration on synthetic data (0.003, 0.244, mass drift) | `calib_synthetic.py` | `results/calib_synthetic.json` |
+| Calibration on synthetic data (0.003, 0.244, mass drift) | `calib_synthetic.py` | `results/synthetic_calib.json` |
 | Ablation footnote (older robot) | `mc_ablation.py` | `results/mc_ablation.json` |
 | FEM nodal mass vs the part ("2 %") | `fem_mass.py` (needs the std6 meshes, `data/README.md`) | `results/fem_mass.json` |
 | FEM mesh error (0.6 mm) | `mesh_error.py` (stub: needs SOFA; collects the stored old-robot values) | `results/mesh_error.json` |
