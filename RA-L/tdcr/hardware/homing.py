@@ -21,7 +21,7 @@ import time
 
 import numpy as np
 
-from tdcr.hardware.hysteresis_probe import PULLEY_R_MM, mm_to_ticks, ticks_to_mm
+from tdcr.hardware.hysteresis_probe import GOAL_RANGE, PULLEY_R_MM, mm_to_ticks, ticks_to_mm
 from tdcr.paths import HARDWARE
 
 ZERO_DIR = os.path.join(HARDWARE, "zeros")
@@ -31,15 +31,21 @@ class HomingError(RuntimeError):
     """A tendon never reached the threshold current within the allowed travel (unhooked, broken or far too slack)."""
 
 
-def home_tendon(motor, threshold_ma, step_mm=0.05, max_travel_mm=15.0, settle_s=0.05, direction=1):
+def home_tendon(motor, threshold_ma, step_mm=0.05, max_travel_mm=15.0, settle_s=0.05, direction=1,
+                goal_range=GOAL_RANGE):
     """Wind the tendon in by step_mm at a time until |present current| >= threshold_ma -> the present position (ticks).
-    Never moves more than max_travel_mm from the start; on failure the motor is sent back to the start and
-    HomingError is raised."""
+    Never moves more than max_travel_mm from the start, nor outside goal_range; on failure the motor is sent back to
+    the start and HomingError is raised."""
     start = int(motor.position())
     step = max(1, mm_to_ticks(step_mm))
     n_steps = int(math.floor(mm_to_ticks(max_travel_mm) / step))
     for k in range(1, n_steps + 1):
-        motor.goal(start + direction * k * step)
+        g = start + direction * k * step
+        if not goal_range[0] <= g <= goal_range[1]:
+            motor.goal(start)
+            raise HomingError(f"homing would leave the servo range {goal_range[0]}..{goal_range[1]} (start {start}, "
+                              f"direction {direction:+d}): re-seat the pulley horn")
+        motor.goal(g)
         if settle_s:
             time.sleep(settle_s)
         if abs(motor.current_ma()) >= threshold_ma:

@@ -12,14 +12,13 @@ zero) in mm (+ wound in), and calls Twin.shape(dl). It prints the tip pose and t
 In your own code use tdcr.twin.Twin directly; this script is the minimal loop around it.
 """
 import argparse
-import json
 import math
 import time
 
 import numpy as np
 
-from tdcr.hardware.hysteresis_probe import mm_to_ticks, ticks_to_mm
-from tdcr.hardware.run_poses import TENDON_ORDER, open_motors
+from tdcr.hardware.hysteresis_probe import mm_to_ticks
+from tdcr.hardware.run_poses import TENDON_ORDER, dl_from_ticks, open_motors, read_zeros
 from tdcr.twin import MOUNTINGS, Twin
 
 
@@ -33,11 +32,6 @@ class FakeServo:
     def position(self):
         t = time.perf_counter() - self.t0
         return self.zero + mm_to_ticks(1.5 * math.sin(0.5 * t + 2.1 * self.k))
-
-
-def dl_from_ticks(present, zeros, directions, names):
-    """Present ticks -> tendon displacements (mm, + wound in) in the order of names."""
-    return np.array([directions.get(n, 1) * ticks_to_mm(present[n] - zeros[n]) for n in names])
 
 
 def main(argv=None):
@@ -57,8 +51,7 @@ def main(argv=None):
         motors = {n: FakeServo(k) for k, n in enumerate(names)}
         zeros, directions = {n: 2048 for n in names}, {}
     else:                                                               # pragma: no cover (hardware)
-        z = json.load(open(a.zeros))
-        zeros, directions = {n: int(z[n]) for n in names}, z.get("directions", {})
+        zeros, directions = read_zeros(a.zeros, names)
         motors = open_motors(a.port, a.baud, a.ids or list(range(1, len(names) + 1)), names)
     tw = Twin(a.modules, a.mounting, calib_json=a.calib)
     t_start = t_print = time.perf_counter()

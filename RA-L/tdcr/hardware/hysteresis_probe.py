@@ -64,6 +64,7 @@ from tdcr.paths import RESULTS as RESULTS_DIR
 # cylinder_scene.py, so r = 5 mm and 1 rad of motor rotation pays out 5 mm.
 PULLEY_R_MM = 5.0
 TICKS_PER_REV = 4096          # XM/XL series, 0..4095 over 360 deg
+GOAL_RANGE = (0, TICKS_PER_REV - 1)   # goals the servo accepts in position mode 3 (enable): one pulley turn
 
 # ── Dynamixel control table (Protocol 2.0, XM430 / XL430 family) ──────────
 # CHECK THESE AGAINST YOUR MODEL. They differ between series, and writing a
@@ -137,7 +138,10 @@ class Dynamixel:
         self._write("goal_position", ticks)
 
     def position(self):
-        return self._read("present_position")
+        raw = self._read("present_position")
+        if raw > 0x7FFFFFFF:                      # signed 32-bit
+            raw -= 0x100000000
+        return raw
 
     def current_ma(self):
         raw = self._read("present_current")

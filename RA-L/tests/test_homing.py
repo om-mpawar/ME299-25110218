@@ -71,3 +71,11 @@ def test_direction_minus_winds_down():
     m.current_ma = lambda: 3.0 + max(0, 1600 - m.pos) * 60.0                # this servo winds in with decreasing ticks
     zero = home_tendon(m, threshold_ma=50.0, settle_s=0.0, direction=-1)
     assert abs(zero - 1600) <= mm_to_ticks(0.05) and ticks_to_mm(abs(zero - 1600)) <= 0.05
+
+
+def test_homing_never_leaves_the_servo_range():
+    """A start near the end of the turn: stop at the range limit and go back to the start (code review H2)."""
+    m = FakeTendonMotor(start=4050, taut_ticks=4500)
+    with pytest.raises(HomingError, match="servo range"):
+        home_tendon(m, threshold_ma=50.0, settle_s=0.0)
+    assert max(m.goals) <= 4095 and m.goals[-1] == 4050
