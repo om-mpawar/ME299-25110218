@@ -9,7 +9,8 @@ Models (MODELS):
   gp               pure learning: GP from dl to module-end positions and rotation vectors, trained on the same
                    calibration poses; only for test sets with the same number of modules (otherwise not applicable)
   cosserat, sofa_mor, sofa_calibrated
-                   predictions read from <pred_dir>/hw_pred_<model>_<dataset>.npz (key T_ends), made by
+                   predictions read from prediction_path(pred_dir, model, dataset) (key T_ends, named by the dataset's
+                   file name and content hash, which the file also stores and which is checked before scoring), made by
                    tdcr/baselines/cosserat_rod.py (sim/mor/run_reduced.py and sim/calibrate_sofa.py of the old repository are
                    not ported); skipped with a note
                    when the file is missing
@@ -152,6 +153,24 @@ def _sha256(path):
     return h.hexdigest()
 
 
+def prediction_path(pred_dir, model, dataset_path):
+    """Where a file-based baseline stores its predictions for one test dataset: hw_pred_<model>_<stem>_<hash>.npz,
+    hash = the first 12 hex digits of the dataset file's SHA-256. Sessions that all name their file dataset.npz get
+    different names, and a prediction cannot be scored against another session's truth."""
+    stem = os.path.splitext(os.path.basename(dataset_path))[0]
+    return os.path.join(pred_dir, f"hw_pred_{model}_{stem}_{_sha256(dataset_path)[:12]}.npz")
+
+
+def load_prediction(path, dataset_path, n_poses):
+    """T_ends of a prediction file, after checking it was made for this dataset -> (P, n, 4, 4); ValueError if not."""
+    f = np.load(path)
+    if "source_sha256" not in f or str(f["source_sha256"]) != _sha256(dataset_path):
+        raise ValueError(f"{path} was not made from {dataset_path}")
+    if len(f["T_ends"]) != n_poses:
+        raise ValueError(f"{path} has {len(f['T_ends'])} poses, the dataset {n_poses}")
+    return f["T_ends"]
+
+
 def shared_commands(d, calib_data, atol=1e-6):
     """(P,) bool: poses of test dataset d whose commanded dl equals, to atol mm, a pose of any calibration dataset with
     the same module count."""
@@ -187,7 +206,7 @@ def run_eval(calib_paths, test_paths, n_poses=15, seed=0, mass_kg=MASS_STD6, pre
     cdata = load_datasets(calib_paths)
     train = [(cdata[i], p) for i, p in calib["poses_used"]]
     results = {}
-    for name, d in zip(names, load_datasets(test_paths)):
+    for name, path, d in zip(names, test_paths, load_datasets(test_paths)):
         length, preds = MODULE_L * d["n"] + calib["gap_mm"] * (d["n"] - 1), {}
         shared = shared_commands(d, cdata)
         if shared.any():
@@ -201,9 +220,9 @@ def run_eval(calib_paths, test_paths, n_poses=15, seed=0, mass_kg=MASS_STD6, pre
         else:
             preds["gp"] = g
         for m in FILE_MODELS:
-            f = os.path.join(pred_dir, f"hw_pred_{m}_{name}.npz")
+            f = prediction_path(pred_dir, m, path) if os.path.exists(path) else "(dataset not on disk)"
             if os.path.exists(f):
-                preds[m] = np.load(f)["T_ends"]
+                preds[m] = load_prediction(f, path, len(d["dl"]))
             else:
                 print(f"{name}: {m} skipped (no {f})")
         truth_ok = np.asarray(d["valid"], bool) & ~shared & np.all(np.isfinite(d["T_ends"]), axis=(1, 2, 3))

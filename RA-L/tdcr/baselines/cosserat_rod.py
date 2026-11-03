@@ -13,7 +13,7 @@ What it is and is not (to state in the paper):
     in the lab frame like the twin's.
 
     .venv/bin/python -m tdcr.baselines.cosserat_rod --calib data/hw/c1/dataset.npz --test data/hw/t2_up/dataset.npz
-    -> results/hw_pred_cosserat_<test name>.npz (read by tdcr/hw_eval.py)
+    -> results/hw_pred_cosserat_<test name>_<hash>.npz (tdcr.hw_eval.prediction_path; read by tdcr/hw_eval.py)
 """
 import argparse
 import math
@@ -26,6 +26,7 @@ from scipy.spatial.transform import Rotation
 
 from tdcr import cosserat
 from tdcr.calibrate import load_datasets, select_poses
+from tdcr.hw_eval import _sha256, prediction_path
 from tdcr.params import STD6
 from tdcr.paths import RESULTS
 from tdcr.twin import M_SCENE_TO_LAB, scene_to_lab
@@ -90,7 +91,8 @@ def calibrate_stiffness(datasets, n_poses=15, seed=0):
 
 
 def write_predictions(test_paths, calib, pred_dir=RESULTS):
-    """Predict every 1-2 module test dataset -> list of written hw_pred_cosserat_<name>.npz paths (others skipped)."""
+    """Predict every 1-2 module test dataset -> list of written prediction files (hw_eval.prediction_path; others
+    skipped). Each file stores the SHA-256 of its dataset, which hw_eval checks."""
     out = []
     for d in load_datasets(test_paths):
         name = os.path.splitext(os.path.basename(d["path"]))[0]
@@ -98,8 +100,9 @@ def write_predictions(test_paths, calib, pred_dir=RESULTS):
             print(f"{name}: Cosserat baseline skipped ({d['n']} modules; it covers 1-2)")
             continue
         T, tau, ms = predict(d["dl"], d["mounting"], calib["log_ratio"])
-        path = os.path.join(pred_dir, f"hw_pred_cosserat_{name}.npz")
-        np.savez(path, T_ends=T, tensions=tau, solve_ms=ms, log_ratio=calib["log_ratio"])
+        path = prediction_path(pred_dir, "cosserat", d["path"])
+        np.savez(path, T_ends=T, tensions=tau, solve_ms=ms, log_ratio=calib["log_ratio"], source_path=d["path"],
+                 source_sha256=_sha256(d["path"]))
         print(f"{name}: Cosserat {np.mean(ms):.1f} ms per pose -> {path}")
         out.append(path)
     return out

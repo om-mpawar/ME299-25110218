@@ -46,3 +46,24 @@ def test_calibration_recovers_axial_to_bending_ratio(tmp_path):
              mounting=np.zeros(3), rows=np.arange(len(dl)), reps=np.zeros(len(dl), int))
     calib = calibrate_stiffness([str(tmp_path / "d.npz")], n_poses=6)
     assert abs(calib["log_ratio"] - np.log(0.3)) < 0.05
+
+
+def test_predictions_of_two_sessions_do_not_collide(tmp_path, monkeypatch):
+    """Code review W2: every session's file is dataset.npz; their predictions used to overwrite each other, and
+    hw_eval scored one session's predictions against another's truth."""
+    import pytest
+    import tdcr.baselines.cosserat_rod as cr
+    from tdcr.hw_eval import load_prediction, prediction_path
+    from tests.test_calibrate import _dataset
+    cmd = load_set("std6_2s_sym_test_g0")["dl"]
+    paths = []
+    for k, s in enumerate(("t_up", "t_hx")):
+        (tmp_path / s).mkdir()
+        paths.append(_dataset(tmp_path / s / "dataset.npz", 1, "upright", cmd[4 * k:4 * k + 4, :3]))
+    monkeypatch.setattr(cr, "predict", lambda dl, mounting, log_ratio: (np.zeros((len(dl), 1, 4, 4)),
+                                                                         np.zeros((len(dl), 3)), np.ones(len(dl))))
+    out = cr.write_predictions(paths, dict(log_ratio=0.0), pred_dir=str(tmp_path))
+    assert len(set(out)) == 2 and out == [prediction_path(str(tmp_path), "cosserat", p) for p in paths]
+    assert load_prediction(out[0], paths[0], 4).shape == (4, 1, 4, 4)
+    with pytest.raises(ValueError, match="was not made from"):
+        load_prediction(out[0], paths[1], 4)
