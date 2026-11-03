@@ -48,14 +48,15 @@ STATIONS_PER_MODULE = 32                                   # twin stations every
 
 
 def load_datasets(paths):
-    """-> list of dicts (n, mounting, dl, T_ends, valid, sigma) from tdcr/hardware/mocap.make_dataset files. sigma: friction
-    direction of every pose from the commanded sequence (poses are stored in run order)."""
+    """-> list of dicts (n, mounting, dl, dl_cmd, T_ends, valid, sigma) from tdcr/hardware/mocap.make_dataset files.
+    sigma: friction direction of every pose from the commanded sequence (poses are stored in run order)."""
     out = []
     for p in paths:
         d = np.load(p)
+        cmd = d["dl_cmd"] if "dl_cmd" in d else d["dl"]
         out.append(dict(path=str(p), n=d["T_ends"].shape[1], mounting=tuple(d["mounting"].tolist()), dl=d["dl"],
-                        T_ends=d["T_ends"], valid=d["valid"].astype(bool),
-                        sigma=direction_from_sequence(d["dl_cmd"] if "dl_cmd" in d else d["dl"])))
+                        dl_cmd=cmd, T_ends=d["T_ends"], valid=d["valid"].astype(bool),
+                        sigma=direction_from_sequence(cmd)))
     return out
 
 

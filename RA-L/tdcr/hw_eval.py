@@ -15,13 +15,17 @@ Models (MODELS):
                    when the file is missing
 
 Metrics (evaluate): tip = last module end; tip_mm, tip_pct (of the robot length), tip_deg (geodesic angle), ends_mm
-(mean over all module ends), with 95th percentiles; invalid poses (NaN in the ground truth) are left out.
+(mean over all module ends), with 95th percentiles; invalid poses (NaN in the ground truth) are left out. run_eval
+scores every model on the same poses: those every model predicted (n_poses); n_failed_predictions counts each model's
+failures. Test poses whose command equals a calibration command (the straight rows of the pose lists) are not test
+poses: they are left out and counted (n_shared_with_calibration).
 
     .venv/bin/python -m tdcr.hw_eval --calib data/hw/c1/dataset.npz data/hw/c2/dataset.npz \
         --test data/hw/t4_hang/dataset.npz data/hw/t2_up/dataset.npz --n-poses 15 --mass-kg <weighed> \
         --out results/hw_eval.json
 """
 import argparse
+import hashlib
 import json
 import math
 import os
@@ -140,6 +144,25 @@ def gp_ends(train, d):
     return out
 
 
+def _sha256(path):
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for block in iter(lambda: f.read(1 << 20), b""):
+            h.update(block)
+    return h.hexdigest()
+
+
+def shared_commands(d, calib_data, atol=1e-6):
+    """(P,) bool: poses of test dataset d whose commanded dl equals, to atol mm, a pose of any calibration dataset with
+    the same module count."""
+    x = np.asarray(d.get("dl_cmd", d["dl"]), float)
+    ref = [np.asarray(c.get("dl_cmd", c["dl"]), float) for c in calib_data if c["n"] == d["n"]]
+    if not ref:
+        return np.zeros(len(x), bool)
+    ref = np.concatenate(ref)
+    return np.array([bool(np.any(np.all(np.abs(ref - r) <= atol, axis=1))) for r in x], bool)
+
+
 def run_eval(calib_paths, test_paths, n_poses=15, seed=0, mass_kg=MASS_STD6, pred_dir=RESULTS, max_nfev=None,
              **fit_kw):
     """Calibrate once, then every model on every test set -> (results {test name: {model: metrics}}, table text).
@@ -148,6 +171,11 @@ def run_eval(calib_paths, test_paths, n_poses=15, seed=0, mass_kg=MASS_STD6, pre
     calib_paths, test_paths = list(calib_paths), list(test_paths)
     if set(map(os.path.realpath, calib_paths)) & set(map(os.path.realpath, test_paths)):
         raise ValueError("calibration and test datasets must be separate files")
+    hashes = {p: _sha256(p) for p in calib_paths + test_paths if os.path.exists(p)}
+    same = {hashes[p] for p in calib_paths if p in hashes} & {hashes[p] for p in test_paths if p in hashes}
+    if same:
+        raise ValueError("a test dataset has the same contents as a calibration dataset: "
+                         + ", ".join(p for p in test_paths if hashes.get(p) in same))
     # Session files commonly share the basename dataset.npz. Keep distinct IDs,
     # and use those same IDs for externally supplied baseline prediction files.
     stems = [os.path.splitext(os.path.basename(p))[0] for p in test_paths]
@@ -161,6 +189,9 @@ def run_eval(calib_paths, test_paths, n_poses=15, seed=0, mass_kg=MASS_STD6, pre
     results = {}
     for name, d in zip(names, load_datasets(test_paths)):
         length, preds = MODULE_L * d["n"] + calib["gap_mm"] * (d["n"] - 1), {}
+        shared = shared_commands(d, cdata)
+        if shared.any():
+            print(f"{name}: {int(shared.sum())} of {len(shared)} poses repeat a calibration command; left out")
         preds["cc"] = np.array([cc_ends(x, d["n"]) for x in d["dl"]])
         preds["physics"] = twin_ends(d, None, mass_kg, **{k: calib[k] for k in JOINT})   # same measured joint
         preds["calibrated"] = twin_ends(d, calib)
@@ -175,17 +206,27 @@ def run_eval(calib_paths, test_paths, n_poses=15, seed=0, mass_kg=MASS_STD6, pre
                 preds[m] = np.load(f)["T_ends"]
             else:
                 print(f"{name}: {m} skipped (no {f})")
-        results[name] = {m: evaluate(preds[m], d["T_ends"], length, d["valid"]) for m in MODELS if m in preds}
+        truth_ok = np.asarray(d["valid"], bool) & ~shared & np.all(np.isfinite(d["T_ends"]), axis=(1, 2, 3))
+        done = {m: np.all(np.isfinite(preds[m]), axis=(1, 2, 3)) for m in preds}
+        common = truth_ok & np.logical_and.reduce(list(done.values()))
+        results[name] = {}
+        for m in MODELS:
+            if m in preds:
+                r = evaluate(preds[m], d["T_ends"], length, common)
+                r.update(n_valid_truth=int(truth_ok.sum()), n_failed_predictions=int((truth_ok & ~done[m]).sum()),
+                         n_shared_with_calibration=int(shared.sum()))
+                results[name][m] = r
     cols = [m for m in MODELS if any(m in r for r in results.values())]
     lines = [f"{'test set (tip mm / deg)':28s}" + "".join(f"{m:>18s}" for m in cols)]
     for name, r in results.items():
         lines.append(f"{name:28s}" + "".join(f"{r[m]['tip_mm']:9.2f} /{r[m]['tip_deg']:6.2f}"
                                              if m in r and r[m]['tip_mm'] is not None else f"{'-':>18s}"
                                              for m in cols))
-        for m, metrics in r.items():
-            if metrics["n_failed_predictions"]:
-                lines.append(f"  {m}: {metrics['n_failed_predictions']}/{metrics['n_valid_truth']} valid poses failed; "
-                             "errors above describe successful predictions only")
+        failed = {m: v["n_failed_predictions"] for m, v in r.items() if v["n_failed_predictions"]}
+        if failed:
+            first = next(iter(r.values()))
+            lines.append(f"  every model scored on the {first['n_poses']} of {first['n_valid_truth']} valid poses all "
+                         "models predicted; failed: " + ", ".join(f"{m} {k}" for m, k in failed.items()))
     return results, "\n".join(lines)
 
 
