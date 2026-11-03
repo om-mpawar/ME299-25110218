@@ -29,10 +29,46 @@ def test_matches_reference(model):
     # same fixed point, solved tight: since 29 Oct the iteration also waits for the axial strains, so at the live
     # tolerance it stops later than the reference (closer to the fixed point), not at the same iterate
     C0, R0, lam0, _ = reference_predict_gravity(eb, dl, st, g_vec=d["g"], E=E_FEM, mass=d["mass"], tol=1e-10, iters=400)
-    C1, R1, lam1, info = predict_gravity(eb, dl, st, g_vec=d["g"], E=E_FEM, mass=d["mass"], tol=1e-10, iters=400)
+    # tighter here: every pose now stops at its own tolerance, the reference at the batch's slowest pose
+    C1, R1, lam1, info = predict_gravity(eb, dl, st, g_vec=d["g"], E=E_FEM, mass=d["mass"], tol=1e-12, iters=1000)
     assert np.abs(C1 - C0).max() < 1e-6
-    assert np.abs(R1 - R0).max() < 1e-9
+    assert np.abs(R1 - R0).max() < 1e-8                 # the reference itself stops ~1e-9 from the fixed point
     assert info["converged"] and info["iterations"] > 1
+
+
+def test_batch_equals_one_at_a_time(model):
+    """Code review W4: a pose's prediction must not depend on the other poses solved with it."""
+    eb, d = _eb(model, "std6_2s_sym_test")
+    dl, st = d["dl"][:12], d["stations"]
+    kw = dict(g_vec=d["g"], E=E_FEM, mass=d["mass"])
+    C, R, lam, info = predict_gravity(eb, dl, st, **kw)
+    one = [predict_gravity(eb, x[None], st, **kw) for x in dl]
+    assert np.abs(C - np.concatenate([o[0] for o in one])).max() < 1e-12
+    assert np.abs(lam - np.concatenate([o[2] for o in one])).max() < 1e-12
+    assert info["converged_poses"].all() and info["iterations"] == max(o[3]["iterations"] for o in one)
+
+
+def test_a_diverging_pose_does_not_stop_the_others(model):
+    """Code review W4: a pose past buckling used to stop the iteration of the whole batch. Upright, 1e8 times the
+    weight: the bent pose blows up (NaN, failed), the straight one (an equilibrium, if unstable) still converges."""
+    eb, d = _eb(model, "std6_4s_sym_test_g0")
+    kw = dict(g_vec=lab_to_scene((0.0, 0.0, -9810.0)), E=E_FEM, mass=1e8 * d["mass"])
+    dl = np.zeros((2, 12))
+    dl[1, 0] = 3.0
+    C, R, lam, info = predict_gravity(eb, dl, d["stations"], **kw)
+    assert list(info["failed_poses"]) == [False, True] and list(info["converged_poses"]) == [True, False]
+    assert np.isnan(C[1]).all() and np.isnan(lam[1]).all() and np.isfinite(info["state"]["wg"]).all()
+    assert np.abs(C[0] - predict_gravity(eb, dl[:1], d["stations"], **kw)[0][0]).max() < 1e-12
+
+
+def test_zero_iterations():
+    """Code review L9: iters=0 used to raise NameError; it returns the tendon-only shape, not converged."""
+    m, th = ModuleModel.from_result(json.load(open("results/mc_std6.json")))
+    d = load_set("std6_2s_sym_test")
+    eb = m.build(th, d["n"], d["routing"], d["az"], d["holes"])
+    C, _, _, info = predict_gravity(eb, d["dl"][:2], d["stations"], g_vec=d["g"], iters=0)
+    assert not info["converged"] and info["iterations"] == 0
+    np.testing.assert_allclose(C, eb.predict(d["dl"][:2], d["stations"])[0], atol=1e-12)
 
 
 def test_warm_start_fewer_iterations(model):
@@ -160,3 +196,10 @@ def reference_predict_gravity(eb, dl, stations, g_vec=(0.0, -9810.0, 0.0), E=560
             C[:, k_out], Rs[:, k_out] = p, R
             k_out += 1
     return C, Rs, lam, it + 1
+
+
+def test_station_off_the_cell_edges_raises(model):
+    """Code review L3: a station between cell edges used to come back as the origin with a zero rotation matrix."""
+    eb, d = _eb(model, "std6_2s_sym_test_g0")
+    with pytest.raises(ValueError, match="not a cell edge"):
+        eb.predict(d["dl"][:1], [0.0, 5.25])

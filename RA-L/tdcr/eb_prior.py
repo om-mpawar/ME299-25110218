@@ -40,7 +40,7 @@ from tdcr.params import MASS_STD, STD6
 from tdcr.paths import CAD, RESULTS
 
 CAD_JSON = os.path.join(CAD, "std_tdcr_L150.json")   # std6 geometry: the same module; its holes are cut via `holes`
-CACHE = os.path.join(RESULTS, "eb_profile_std.npz")
+CACHE = os.path.join(os.environ.get("TDCR_CACHE", RESULTS), "eb_profile_std.npz")   # TDCR_CACHE: e.g. ~/.cache/tdcr
 PSI = np.radians([0.0, 120.0, 240.0])
 R_BEAR = STD6.bearing_radius_mm   # tendon bearing radius: cable points in the channel wall (data/cables/std_*)
 Y_START, Y_END = 5.0, 155.0        # tendon path within its section (cable files: first / last point)
@@ -101,8 +101,13 @@ def section_profile(dy=0.02, dc=0.1, force=False, holes=None, hole_r=STD6.tendon
             A[i0 + k] = keep.sum() * da
             Jx[i0 + k] = (x[keep] ** 2).sum() * da
             Jz[i0 + k] = (z[keep] ** 2).sum() * da
-    os.makedirs(os.path.dirname(cache), exist_ok=True)
-    np.savez_compressed(cache, y=y, A=A, Jx=Jx, Jz=Jz)
+    try:                                       # write-then-rename: a reader never sees a half-written file
+        os.makedirs(os.path.dirname(cache), exist_ok=True)
+        tmp = f"{cache}.{os.getpid()}.tmp.npz"
+        np.savez_compressed(tmp, y=y, A=A, Jx=Jx, Jz=Jz)
+        os.replace(tmp, cache)
+    except OSError:                            # read-only install: recompute next time
+        pass
     return y, A, Jx, Jz
 
 
@@ -278,13 +283,14 @@ class EBPrior:
 
     def at_stations(self, pe, Re, stations):
         """Edge positions (P, nc + 1, 3) and frames (P, nc + 1, 3, 3) from _march -> those at the stations (cell edges,
-        the first matching edge, i.e. before a joint gap); stations off the edges stay zero."""
+        the first matching edge, i.e. before a joint gap). A station off the cell edges raises ValueError."""
         st = np.asarray(stations, float)
         C, Rs = np.zeros((len(pe), len(st), 3)), np.zeros((len(pe), len(st), 3, 3))
         for k, y in enumerate(st):
             j = np.flatnonzero(np.abs(self.edges - y) < 1e-6)
-            if len(j):
-                C[:, k], Rs[:, k] = pe[:, j[0]], Re[:, j[0]]
+            if not len(j):
+                raise ValueError(f"station {y:g} mm is not a cell edge (cell {self.cell:g} mm)")
+            C[:, k], Rs[:, k] = pe[:, j[0]], Re[:, j[0]]
         return C, Rs
 
     def predict(self, dl, stations):
@@ -410,10 +416,15 @@ def predict_gravity(eb, dl, stations, g_vec=(0.0, -STD6.gravity_mm_s2, 0.0), E=S
     The relaxation `relax` is halved (down to 0.05) whenever the change grows between iterations: heavy stacks
     oscillate at 0.5 (4 modules hanging) and converge at smaller steps; well-behaved cases never trigger it.
 
-    -> C (P, K, 3), R (P, K, 3, 3), lam (P, 3n), info = {"iterations", "converged", "state"}. Passing the previous
-    call's info["state"] (same number of poses) starts the fixed point from its gravity strains: a live twin following
-    slowly changing commands then needs only a few iterations. converged is False when the iteration hit `iters` or
-    left the finite range (a stack past its buckling load); C and R are then the last iterate."""
+    Every pose iterates on its own (its own relaxation and convergence test) and stops once it has converged, so a
+    pose's result is the same whether it is solved alone or in a batch.
+
+    -> C (P, K, 3), R (P, K, 3, 3), lam (P, 3n), info = {"iterations" (the most any pose took), "converged" (every
+    pose), "converged_poses" (P,), "failed_poses" (P,), "state"}. Passing the previous call's info["state"] (same
+    number of poses) starts the fixed point from its gravity strains: a live twin following slowly changing commands
+    then needs only a few iterations. A pose that hit `iters` is not converged and returns its last iterate; a pose
+    that left the finite range (a stack past its buckling load) is failed and returns NaN, its state the last finite
+    iterate."""
     dl = np.atleast_2d(dl)
     P, nc = len(dl), len(eb.yc)
     # mass per cell from the CAD area: A_cell * cell / (sum over a module) * mass
@@ -443,14 +454,20 @@ def predict_gravity(eb, dl, stations, g_vec=(0.0, -STD6.gravity_mm_s2, 0.0), E=S
         sxz = np.zeros((P, nc, 2))                                      # shear offset per cell (x, z), cell frame
         lam = eb.tensions(dl)
     w_t, sh_t = eb.strains(lam)
-    converged, last_change, relax_min = False, np.inf, 0.05
+    # every pose iterates on its own (own relaxation, own convergence test) and stops when it has converged, so a
+    # pose's result does not depend on the other poses in the batch
+    relax, last_change, relax_min = np.full(P, float(relax)), np.full(P, np.inf), 0.05
+    converged, failed, iterations = np.zeros(P, bool), np.zeros(P, bool), np.zeros(P, int)
     for it in range(iters):
+        a = np.flatnonzero(~converged & ~failed)
+        if not len(a):
+            break
         # current frames at cell centres
-        w, sh = w_t + wg, sh_t + shg
-        pc, Rc, _, _ = _march(w, sh, sxz, float(eb.cell), eb.gap_after)
+        w, sh = w_t[a] + wg[a], sh_t[a] + shg[a]
+        pc, Rc, _, _ = _march(w, sh, sxz[a], float(eb.cell), eb.gap_after)
         # distal weight and its moment about each cell centre (world), then in the cell frame
         mom_all = np.cumsum(np.cross(pc, Fg[None])[:, ::-1], 1)[:, ::-1]    # sum_{c'>=c} p_c' x F_c'
-        mom_dist = np.concatenate([mom_all[:, 1:], np.zeros((P, 1, 3))], 1)
+        mom_dist = np.concatenate([mom_all[:, 1:], np.zeros((len(a), 1, 3))], 1)
         Mw = mom_dist - np.cross(pc, Fdist[None])                           # sum_{c'>c} (p_c' - p_c) x F_c'
         Ml = np.einsum("pcji,pcj->pci", Rc, Mw)                             # in the cell frame
         Fl = np.einsum("pcji,cj->pci", Rc, Fdist)
@@ -459,33 +476,42 @@ def predict_gravity(eb, dl, stations, g_vec=(0.0, -STD6.gravity_mm_s2, 0.0), E=S
         shg_new = -Fl[..., 1] * eb.cA                                       # compression when the distal weight pushes down
         sxz_new = Fl[..., [0, 2]] * eb.cS[None, :, None]                    # shear along the transverse distal force
         h = path_shift(shg_new, kx, kz)
-        if not np.all(np.isfinite(h)):                                     # diverged (past the buckling load)
-            break
+        ok = np.isfinite(h).all(1) & np.isfinite(wg_new).all((1, 2))
+        if not ok.all():                                                   # diverged (past the buckling load)
+            failed[a[~ok]] = True
+            iterations[a[~ok]] = it + 1
+            a, w, wg_new, shg_new, sxz_new, h = a[ok], w[ok], wg_new[ok], shg_new[ok], sxz_new[ok], h[ok]
+            if not len(a):
+                continue
         if mu:                                                             # factors from the current shape
-            f = capstan_factors(eb, w, sigma, mu)
+            f = capstan_factors(eb, w, sigma[a], mu)
             M = eb.friction_map(f)
-            lam_new = np.array([lcp_pull_only(M[q], b) for q, b in enumerate(dl - h)])
+            lam_new = np.array([lcp_pull_only(M[q], b) for q, b in enumerate(dl[a] - h)])
             w_t_new, sh_t_new = eb.strains(lam_new, f)
         else:
-            lam_new = eb.tensions(dl - h)                                  # pull-only tensions with that offset
+            lam_new = eb.tensions(dl[a] - h)                               # pull-only tensions with that offset
             w_t_new, sh_t_new = eb.strains(lam_new)
         # A straight hanging robot can change only in extension: rotations alone
         # incorrectly reported convergence after one under-relaxed update.
         # Normalize translations by cell length so tol bounds strain as well as rotation.
-        change = max(np.abs(wg_new - wg).max() + np.abs(w_t_new - w_t).max(),
-                     (np.abs(shg_new - shg).max() + np.abs(sh_t_new - sh_t).max()) / eb.cell,
-                     np.abs(sxz_new - sxz).max() / eb.cell)
-        if change > last_change:                                       # oscillating or growing: smaller steps
-            relax = max(0.5 * relax, relax_min)
-        last_change = change
-        wg, shg = (1 - relax) * wg + relax * wg_new, (1 - relax) * shg + relax * shg_new
-        sxz = (1 - relax) * sxz + relax * sxz_new
-        w_t, sh_t, lam = (1 - relax) * w_t + relax * w_t_new, (1 - relax) * sh_t + relax * sh_t_new, lam_new
-        if change < tol:
-            converged = True
-            break
-    # final frames at the stations (cell edges)
+        change = np.maximum.reduce([np.abs(wg_new - wg[a]).max((1, 2)) + np.abs(w_t_new - w_t[a]).max((1, 2)),
+                                    (np.abs(shg_new - shg[a]).max(1) + np.abs(sh_t_new - sh_t[a]).max(1)) / eb.cell,
+                                    np.abs(sxz_new - sxz[a]).max((1, 2)) / eb.cell])
+        grow = change > last_change[a]                                     # oscillating or growing: smaller steps
+        relax[a[grow]] = np.maximum(0.5 * relax[a[grow]], relax_min)
+        last_change[a] = change
+        r = relax[a]
+        r3, r2 = r[:, None, None], r[:, None]
+        wg[a], shg[a] = (1 - r3) * wg[a] + r3 * wg_new, (1 - r2) * shg[a] + r2 * shg_new
+        sxz[a] = (1 - r3) * sxz[a] + r3 * sxz_new
+        w_t[a], sh_t[a] = (1 - r3) * w_t[a] + r3 * w_t_new, (1 - r2) * sh_t[a] + r2 * sh_t_new
+        lam[a] = (1 - r2) * lam[a] + r2 * lam_new                          # the tensions of the relaxed strains
+        iterations[a] = it + 1
+        converged[a[change < tol]] = True
+    # final frames at the stations (cell edges); a diverged pose is NaN
     _, _, pe, Re = _march(w_t + wg, sh_t + shg, sxz, float(eb.cell), eb.gap_after)
     C, Rs = eb.at_stations(pe, Re, stations)
-    info = dict(iterations=it + 1, converged=converged, state=dict(wg=wg, shg=shg, sxz=sxz))
+    C[failed], Rs[failed], lam[failed] = np.nan, np.nan, np.nan
+    info = dict(iterations=int(iterations.max(initial=0)), converged=bool(converged.all()), converged_poses=converged,
+                failed_poses=failed, state=dict(wg=wg, shg=shg, sxz=sxz))
     return C, Rs, lam, info
