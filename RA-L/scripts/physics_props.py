@@ -152,8 +152,12 @@ def prop2():
         eb = build(2)
         C0 = solve(eb, dl, d["g"])[0]
         k = 2.0
+        cT = eb.cT.copy()
         eb.cA, eb.cX, eb.cZ = eb.cA * k, eb.cX * k, eb.cZ * k             # every compliance but the shear one
         eb.assemble()
+        C1 = solve(eb, dl, d["g"], mass=MASS_STD6 / k)[0]
+        res[f"{shear}_torsion_unscaled"] = float(np.linalg.norm(C1 - C0, axis=2).max())
+        eb.cT = cT * k                                                    # the torsion compliance too (3 Nov 2026)
         C1 = solve(eb, dl, d["g"], mass=MASS_STD6 / k)[0]
         res[str(shear)] = float(np.linalg.norm(C1 - C0, axis=2).max())
         if shear:

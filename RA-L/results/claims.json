@@ -1,6 +1,6 @@
 {
  "meta": {
-  "generated": "2026-11-03 12:44",
+  "generated": "2026-11-03 13:23",
   "paper": "paper/main.tex",
   "machine": "Intel(R) Core(TM) Ultra 9 185H, 22 logical cores, Python 3.12.3, numba 0.68.0",
   "statuses": [
@@ -11,8 +11,8 @@
    "hardware pending"
   ],
   "counts": {
-   "reproduced": 143,
-   "differs": 6,
+   "reproduced": 132,
+   "differs": 17,
    "stored, not re-run": 17,
    "not reproducible here": 5,
    "hardware pending": 6
@@ -24,20 +24,20 @@
    "line": 57,
    "context": "predicts unseen four-module robots to 0.50",
    "printed": "0.50",
-   "regenerated": 0.498556801916996,
-   "regenerated_str": "0.499",
-   "delta": -0.001443198083004027,
+   "regenerated": 0.4998053530886808,
+   "regenerated_str": "0.500",
+   "delta": -0.0001946469113192073,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/std6_4s_sym_test_g0/tip",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -45,20 +45,20 @@
    "line": 57,
    "context": "(0.08\\,\\% of length)",
    "printed": "0.08",
-   "regenerated": 0.07789950029953062,
+   "regenerated": 0.07809458642010637,
    "regenerated_str": "0.078",
-   "delta": -0.0021004997004693826,
+   "delta": -0.0019054135798936278,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "tip / 640 mm x 100",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -66,20 +66,20 @@
    "line": 58,
    "context": "and unseen hanging robots to 0.21",
    "printed": "0.21",
-   "regenerated": 0.20741251082776338,
-   "regenerated_str": "0.207",
-   "delta": -0.0025874891722366122,
+   "regenerated": 0.21005307359647754,
+   "regenerated_str": "0.210",
+   "delta": 5.307359647754861e-05,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/2s ghang/tip",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -164,13 +164,13 @@
    "context": "The twin takes 0.9--3.7",
    "printed": "0.9--3.7",
    "regenerated": [
-    0.899,
-    3.681
+    0.89,
+    3.582
    ],
-   "regenerated_str": "0.90--3.68",
+   "regenerated_str": "0.89--3.58",
    "delta": [
-    -0.0010000000000000009,
-    -0.019000000000000128
+    -0.010000000000000009,
+    -0.11800000000000033
    ],
    "status": "reproduced",
    "step": "study_guide",
@@ -180,9 +180,9 @@
    "note": "Timing: machine- and load-dependent (paper: Intel Core Ultra 9 185H laptop); checked to a relative tolerance.",
    "last_run": {
     "ok": true,
-    "seconds": 6.3,
+    "seconds": 6.2,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:19"
+    "finished": "2026-11-03 13:11:54"
    }
   },
   {
@@ -206,13 +206,13 @@
    "context": "in 0.9--3.7\\,ms per pose for one to four modules",
    "printed": "0.9--3.7",
    "regenerated": [
-    0.899,
-    3.681
+    0.89,
+    3.582
    ],
-   "regenerated_str": "0.90--3.68",
+   "regenerated_str": "0.89--3.58",
    "delta": [
-    -0.0010000000000000009,
-    -0.019000000000000128
+    -0.010000000000000009,
+    -0.11800000000000033
    ],
    "status": "reproduced",
    "step": "study_guide",
@@ -222,9 +222,9 @@
    "note": "Timing: machine- and load-dependent (paper: Intel Core Ultra 9 185H laptop); checked to a relative tolerance.",
    "last_run": {
     "ok": true,
-    "seconds": 6.3,
+    "seconds": 6.2,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:19"
+    "finished": "2026-11-03 13:11:54"
    }
   },
   {
@@ -395,7 +395,7 @@
     "ok": true,
     "seconds": 1.2,
     "mode": "fast",
-    "finished": "2026-11-03 01:55:57"
+    "finished": "2026-11-03 13:10:33"
    }
   },
   {
@@ -416,7 +416,7 @@
     "ok": true,
     "seconds": 1.2,
     "mode": "fast",
-    "finished": "2026-11-03 01:55:57"
+    "finished": "2026-11-03 13:10:33"
    }
   },
   {
@@ -459,15 +459,15 @@
    "delta": 0.0,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json knots",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -475,20 +475,20 @@
    "line": 247,
    "context": "The fit gives axial $\\times20.2$ and bending $\\times5.9$",
    "printed": "20.2",
-   "regenerated": 20.20618085136792,
+   "regenerated": 20.20817711697794,
    "regenerated_str": "20.21",
-   "delta": 0.0061808513679224575,
+   "delta": 0.008177116977940102,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "exp(mc_std6.json theta[0])",
    "regenerated_in_last_run": true,
    "note": "W3 K3: the FEM's uniform nodal mass puts +4.2 % / +2.1 % gravity moment on 1 / 2 modules; refitted with the FEM's own mass distribution the scales are x19.66 / 5.72 / 5.18 (about 2.7 % lower): the identified values carry this bias against a real, volume-weighted part. W3 K2: FEM stiffness is not shown mesh-converged for std6 (P1 tets at nu 0.48 lock); the absolute scales describe the mesh as much as the module.",
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -496,20 +496,20 @@
    "line": 247,
    "context": "The fit gives axial $\\times20.2$ and bending $\\times5.9$",
    "printed": "5.9",
-   "regenerated": 5.873495384387897,
+   "regenerated": 5.872752474503892,
    "regenerated_str": "5.87",
-   "delta": -0.0265046156121036,
+   "delta": -0.027247525496107983,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "exp(mc_std6.json theta[1])",
    "regenerated_in_last_run": true,
    "note": "W3 K3: the FEM's uniform nodal mass puts +4.2 % / +2.1 % gravity moment on 1 / 2 modules; refitted with the FEM's own mass distribution the scales are x19.66 / 5.72 / 5.18 (about 2.7 % lower): the identified values carry this bias against a real, volume-weighted part. W3 K2: FEM stiffness is not shown mesh-converged for std6 (P1 tets at nu 0.48 lock); the absolute scales describe the mesh as much as the module.",
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -517,20 +517,20 @@
    "line": 247,
    "context": "The fit gives axial $\\times20.2$ and bending $\\times5.9$",
    "printed": "5.3",
-   "regenerated": 5.324470517123339,
+   "regenerated": 5.324951768549433,
    "regenerated_str": "5.32",
-   "delta": 0.02447051712333881,
+   "delta": 0.024951768549433595,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "exp(mc_std6.json theta[2])",
    "regenerated_in_last_run": true,
    "note": "W3 K3: the FEM's uniform nodal mass puts +4.2 % / +2.1 % gravity moment on 1 / 2 modules; refitted with the FEM's own mass distribution the scales are x19.66 / 5.72 / 5.18 (about 2.7 % lower): the identified values carry this bias against a real, volume-weighted part. W3 K2: FEM stiffness is not shown mesh-converged for std6 (P1 tets at nu 0.48 lock); the absolute scales describe the mesh as much as the module.",
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -549,9 +549,9 @@
    "note": "W3 C1: Prop. 1's premise (every tendon taut) holds for none of the FEM poses (1s_sym_train_g0: 0/150 all taut, 1s_sym_train: 0/150 all taut, 2s_sym_train_g0: 0/200 all taut, 2s_sym_train: 0/175 all taut, 1s_sym_test: 0/60 all taut, 2s_sym_test: 0/69 all taut, 4s_sym_test_g0: 0/100 all taut). With slack tendons one module DOES identify the axial/bending ratio: the 1-module gravity-free residual's Jacobian w.r.t. the three notch scales has singular values 622 / 545 / 0.41 (weak direction = overall scale only); on the pay-out pose (3, -1.5, -1.5) doubling the axial compliance moves the tip 3.2 mm. The 4.5 mm example itself is reproduced (identified module: 4.56 mm), on an all-taut command.",
    "last_run": {
     "ok": true,
-    "seconds": 21.9,
+    "seconds": 21.3,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:13"
+    "finished": "2026-11-03 13:11:48"
    }
   },
   {
@@ -570,9 +570,9 @@
    "note": "Printed as a statement; regenerated tip-angle change in degrees.",
    "last_run": {
     "ok": true,
-    "seconds": 6.3,
+    "seconds": 6.2,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:19"
+    "finished": "2026-11-03 13:11:54"
    }
   },
   {
@@ -591,9 +591,9 @@
    "note": "W3 C1: Prop. 1's premise (every tendon taut) holds for none of the FEM poses (1s_sym_train_g0: 0/150 all taut, 1s_sym_train: 0/150 all taut, 2s_sym_train_g0: 0/200 all taut, 2s_sym_train: 0/175 all taut, 1s_sym_test: 0/60 all taut, 2s_sym_test: 0/69 all taut, 4s_sym_test_g0: 0/100 all taut). With slack tendons one module DOES identify the axial/bending ratio: the 1-module gravity-free residual's Jacobian w.r.t. the three notch scales has singular values 622 / 545 / 0.41 (weak direction = overall scale only); on the pay-out pose (3, -1.5, -1.5) doubling the axial compliance moves the tip 3.2 mm. The 4.5 mm example itself is reproduced (identified module: 4.56 mm), on an all-taut command.",
    "last_run": {
     "ok": true,
-    "seconds": 6.3,
+    "seconds": 6.2,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:19"
+    "finished": "2026-11-03 13:11:54"
    }
   },
   {
@@ -612,9 +612,9 @@
    "note": "Older robot variant with three shared channels (std_* sets), as the footnote says.",
    "last_run": {
     "ok": true,
-    "seconds": 25.4,
+    "seconds": 25.1,
     "mode": "fast",
-    "finished": "2026-11-03 01:55:55"
+    "finished": "2026-11-03 13:10:31"
    }
   },
   {
@@ -633,9 +633,9 @@
    "note": "Older robot variant with three shared channels (std_* sets).",
    "last_run": {
     "ok": true,
-    "seconds": 25.4,
+    "seconds": 25.1,
     "mode": "fast",
-    "finished": "2026-11-03 01:55:55"
+    "finished": "2026-11-03 13:10:31"
    }
   },
   {
@@ -654,9 +654,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 6.3,
+    "seconds": 6.2,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:19"
+    "finished": "2026-11-03 13:11:54"
    }
   },
   {
@@ -664,9 +664,9 @@
    "line": 282,
    "context": "with a singular value 2000 times below",
    "printed": "2000",
-   "regenerated": 1935.3912760416667,
-   "regenerated_str": "1935",
-   "delta": -64.60872395833326,
+   "regenerated": 1973.943820224719,
+   "regenerated_str": "1974",
+   "delta": -26.056179775280953,
    "status": "reproduced",
    "step": "study_guide",
    "command": ".venv/bin/python scripts/study_guide_figs.py",
@@ -675,9 +675,9 @@
    "note": "Weakest direction (log_axial, log_bend_x, log_bend_z, tendon_c, log_mass) = [0.498, 0.498, 0.498, 0.095, -0.496]: the three scales up, the mass down.",
    "last_run": {
     "ok": true,
-    "seconds": 6.3,
+    "seconds": 6.2,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:19"
+    "finished": "2026-11-03 13:11:54"
    }
   },
   {
@@ -685,20 +685,20 @@
    "line": 283,
    "context": "A free mass drifts by 60",
    "printed": "60",
-   "regenerated": -28.461790778629958,
-   "regenerated_str": "-28.5",
-   "delta": -88.46179077862996,
+   "regenerated": -42.5868813207526,
+   "regenerated_str": "-42.6",
+   "delta": -102.58688132075261,
    "status": "differs",
    "step": "calib_synthetic",
    "command": ".venv/bin/python scripts/calib_synthetic.py",
    "source": "synthetic_calib.json mass, noise 0.3: exp(log_mass_fit - 0.1) - 1, %",
    "regenerated_in_last_run": true,
-   "note": "Fitted log-mass -0.235 for a true 0.1 (log error -0.335), with the compliance scales +0.33 / +0.33 / +0.33 off their true values. With the paper's four parameters (no moment arm) the original run (old repo, 20 Oct) and the packaged code gave log-mass 0.5997, i.e. +65 % in mass (the paper's '60 %' appears to read the log-mass 0.60 as a percentage); with the moment arm fitted too (3 Nov) the same data drive the free mass the other way. Either way shape data do not fix the mass.",
+   "note": "Fitted log-mass -0.455 for a true 0.1 (log error -0.555), with the compliance scales +0.55 / +0.55 / +0.55 off their true values. With the paper's four parameters (no moment arm) the original run (old repo, 20 Oct) and the packaged code gave log-mass 0.5997, i.e. +65 % in mass (the paper's '60 %' appears to read the log-mass 0.60 as a percentage); with the moment arm fitted too (3 Nov) the same data drive the free mass the other way. Either way shape data do not fix the mass.",
    "last_run": {
     "ok": true,
-    "seconds": 56.9,
+    "seconds": 99.0,
     "mode": "fast",
-    "finished": "2026-11-03 01:55:30"
+    "finished": "2026-11-03 13:13:33"
    }
   },
   {
@@ -717,9 +717,9 @@
    "note": "From the identified G (gravity-free): 1.5026; upright with gravity: 1.4862. W3: Prop. 3 correct.",
    "last_run": {
     "ok": true,
-    "seconds": 21.9,
+    "seconds": 21.3,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:13"
+    "finished": "2026-11-03 13:11:48"
    }
   },
   {
@@ -738,9 +738,9 @@
    "note": "From the identified G (gravity-free): 1.7539; upright with gravity: 1.7467. W3: Prop. 3 correct.",
    "last_run": {
     "ok": true,
-    "seconds": 21.9,
+    "seconds": 21.3,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:13"
+    "finished": "2026-11-03 13:11:48"
    }
   },
   {
@@ -759,9 +759,9 @@
    "note": "From the identified G (gravity-free): 2.2565; upright with gravity: 2.2347. W3: Prop. 3 correct.",
    "last_run": {
     "ok": true,
-    "seconds": 21.9,
+    "seconds": 21.3,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:13"
+    "finished": "2026-11-03 13:11:48"
    }
   },
   {
@@ -780,9 +780,9 @@
    "note": "From the identified G (gravity-free): 2.5078; upright with gravity: 2.4640. W3: Prop. 3 correct.",
    "last_run": {
     "ok": true,
-    "seconds": 21.9,
+    "seconds": 21.3,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:13"
+    "finished": "2026-11-03 13:11:48"
    }
   },
   {
@@ -790,9 +790,9 @@
    "line": 293,
    "context": "estimated at 0.005\\,mm",
    "printed": "0.005",
-   "regenerated": 0.006430838587288841,
+   "regenerated": 0.006430496499936695,
    "regenerated_str": "0.0064",
-   "delta": 0.001430838587288841,
+   "delta": 0.0014304964999366952,
    "status": "differs",
    "step": "physics_props",
    "command": ".venv/bin/python scripts/physics_props.py",
@@ -801,9 +801,9 @@
    "note": "W3 C7: the 0.005 mm holds only for the wire inside the robot: at the 2 mm equal-tension pretension (section-1 tension 1.63 N, one module) 0.5 mm steel stretches 0.0064 mm inside the robot and 0.019 mm with the 300 mm free length the calibration assumes; 0.4 mm wire 0.010-0.029 mm. Still <= 1.5 % of the pull, so 'neglected' stands.",
    "last_run": {
     "ok": true,
-    "seconds": 21.9,
+    "seconds": 21.3,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:13"
+    "finished": "2026-11-03 13:11:48"
    }
   },
   {
@@ -812,13 +812,13 @@
    "context": "For $\\mu=0.3$ the model predicts 0.3--0.7",
    "printed": "0.3--0.7",
    "regenerated": [
-    3.389668821888552,
-    4.16749837483287
+    3.389216303054994,
+    4.179963828459343
    ],
-   "regenerated_str": "3.39--4.17",
+   "regenerated_str": "3.39--4.18",
    "delta": [
-    3.089668821888552,
-    3.4674983748328696
+    3.0892163030549944,
+    3.4799638284593426
    ],
    "status": "differs",
    "step": "physics_props",
@@ -828,9 +828,9 @@
    "note": "W3 R1/C2: the paper's range needs every tendon taut; on pretensioned all-taut 2-module poses (equal tension at 2 mm plus a 0.5 / 1.0 / 1.5 mm bend, upright) the model gives 0.13 / 0.27 / 0.41 mm. On the paper's own 2-module test commands (approached winding in, left paying out) the median is 3.4 mm gravity-free and 4.2 mm upright (p10-p90 1.1-13.6 mm, 93 % above 0.7 mm): about 10x the paper's range, so the hardware argument built on it does not hold.",
    "last_run": {
     "ok": true,
-    "seconds": 21.9,
+    "seconds": 21.3,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:13"
+    "finished": "2026-11-03 13:11:48"
    }
   },
   {
@@ -838,9 +838,9 @@
    "line": 311,
    "context": "recovered the bending scale to within 0.003",
    "printed": "0.003",
-   "regenerated": 0.0025171190909018815,
+   "regenerated": 0.002527629843167789,
    "regenerated_str": "0.0025",
-   "delta": -0.0004828809090981186,
+   "delta": -0.000472370156832211,
    "status": "reproduced",
    "step": "calib_synthetic",
    "command": ".venv/bin/python scripts/calib_synthetic.py",
@@ -849,9 +849,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 56.9,
+    "seconds": 99.0,
     "mode": "fast",
-    "finished": "2026-11-03 01:55:30"
+    "finished": "2026-11-03 13:13:33"
    }
   },
   {
@@ -859,9 +859,9 @@
    "line": 311,
    "context": "$\\mu=0.25$ as 0.244",
    "printed": "0.244",
-   "regenerated": 0.2437393790896272,
+   "regenerated": 0.2437455768671732,
    "regenerated_str": "0.2437",
-   "delta": -0.0002606209103727941,
+   "delta": -0.000254423132826781,
    "status": "reproduced",
    "step": "calib_synthetic",
    "command": ".venv/bin/python scripts/calib_synthetic.py",
@@ -870,9 +870,9 @@
    "note": "One synthetic test, as the paper says (noise 0 / 0.1 mm rows in the same file).",
    "last_run": {
     "ok": true,
-    "seconds": 56.9,
+    "seconds": 99.0,
     "mode": "fast",
-    "finished": "2026-11-03 01:55:30"
+    "finished": "2026-11-03 13:13:33"
    }
   },
   {
@@ -923,7 +923,7 @@
     "ok": true,
     "seconds": 0.0,
     "mode": "fast",
-    "finished": "2026-11-03 01:55:56"
+    "finished": "2026-11-03 13:10:31"
    }
   },
   {
@@ -931,10 +931,10 @@
    "line": 326,
    "context": "\\includegraphics[width=\\columnwidth]{figures/fig_transfer.pdf}",
    "printed": "figure",
-   "regenerated": 1.0,
-   "regenerated_str": "pixel-identical",
+   "regenerated": 0.0,
+   "regenerated_str": "differs",
    "delta": null,
-   "status": "reproduced",
+   "status": "differs",
    "step": "fig_transfer",
    "command": ".venv/bin/python scripts/fig_transfer.py --out-dir results/figures",
    "source": "results/figures/fig_transfer.pdf vs paper/figures/",
@@ -944,7 +944,7 @@
     "ok": true,
     "seconds": 1.1,
     "mode": "fast",
-    "finished": "2026-11-03 01:55:58"
+    "finished": "2026-11-03 13:10:34"
    }
   },
   {
@@ -972,15 +972,15 @@
    "delta": -0.017286109035680397,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json plane_section/std6_1s_sym_test_g0/tip",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -988,20 +988,20 @@
    "line": 344,
    "context": "1 module, no gravity      &",
    "printed": "0.24",
-   "regenerated": 0.23547106877933546,
-   "regenerated_str": "0.235",
-   "delta": -0.004528931220664528,
+   "regenerated": 0.23568161680589295,
+   "regenerated_str": "0.236",
+   "delta": -0.004318383194107045,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/std6_1s_sym_test_g0/tip",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1009,20 +1009,20 @@
    "line": 344,
    "context": "1 module, no gravity      &",
    "printed": "0.54",
-   "regenerated": 0.5440523295820512,
+   "regenerated": 0.5440912909024065,
    "regenerated_str": "0.544",
-   "delta": 0.004052329582051151,
+   "delta": 0.0040912909024064525,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/std6_1s_sym_test_g0/tip95",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1030,20 +1030,20 @@
    "line": 344,
    "context": "1 module, no gravity      &",
    "printed": "0.37",
-   "regenerated": 0.37359664441450197,
-   "regenerated_str": "0.374",
-   "delta": 0.0035966444145019705,
+   "regenerated": 0.37293271871037104,
+   "regenerated_str": "0.373",
+   "delta": 0.0029327187103710406,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/std6_1s_sym_test_g0/rot",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1087,15 +1087,15 @@
    "delta": -0.036303540955490377,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json plane_section/std6_2s_sym_test_g0/tip",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1103,20 +1103,20 @@
    "line": 345,
    "context": "2 modules, no gravity     &",
    "printed": "0.24",
-   "regenerated": 0.24155547952275655,
+   "regenerated": 0.24170043290124166,
    "regenerated_str": "0.242",
-   "delta": 0.0015554795227565588,
+   "delta": 0.0017004329012416664,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/std6_2s_sym_test_g0/tip",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1124,20 +1124,20 @@
    "line": 345,
    "context": "2 modules, no gravity     &",
    "printed": "0.55",
-   "regenerated": 0.5516394391601875,
-   "regenerated_str": "0.552",
-   "delta": 0.0016394391601874947,
+   "regenerated": 0.5490849765439991,
+   "regenerated_str": "0.549",
+   "delta": -0.0009150234560009185,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/std6_2s_sym_test_g0/tip95",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1145,20 +1145,20 @@
    "line": 345,
    "context": "2 modules, no gravity     &",
    "printed": "0.17",
-   "regenerated": 0.16617626685943424,
+   "regenerated": 0.16560448424216298,
    "regenerated_str": "0.166",
-   "delta": -0.003823733140565777,
+   "delta": -0.004395515757837032,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/std6_2s_sym_test_g0/rot",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1197,20 +1197,20 @@
    "line": 346,
    "context": "1 module, upright         &",
    "printed": "17.1",
-   "regenerated": 17.09637523808991,
+   "regenerated": 17.096376031514996,
    "regenerated_str": "17.10",
-   "delta": -0.0036247619100926443,
+   "delta": -0.0036239684850052356,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json plane_section/std6_1s_sym_test/tip",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1218,20 +1218,20 @@
    "line": 346,
    "context": "1 module, upright         &",
    "printed": "0.23",
-   "regenerated": 0.23364334035419596,
+   "regenerated": 0.23372446461977145,
    "regenerated_str": "0.234",
-   "delta": 0.0036433403541959453,
+   "delta": 0.0037244646197714393,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/std6_1s_sym_test/tip",
    "regenerated_in_last_run": true,
    "note": "W3 R2: Table I uses the gravity solver's default tolerance 1e-4; at 1e-11 this entry is 0.235 mm mean / 0.57 mm p95 (results/tol_reeval.json).",
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1239,20 +1239,20 @@
    "line": 346,
    "context": "1 module, upright         &",
    "printed": "0.56",
-   "regenerated": 0.5623654145476067,
+   "regenerated": 0.5619228420778513,
    "regenerated_str": "0.562",
-   "delta": 0.002365414547606637,
+   "delta": 0.0019228420778512056,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/std6_1s_sym_test/tip95",
    "regenerated_in_last_run": true,
    "note": "W3 R2: Table I uses the gravity solver's default tolerance 1e-4; at 1e-11 this entry is 0.235 mm mean / 0.57 mm p95 (results/tol_reeval.json).",
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1260,20 +1260,20 @@
    "line": 346,
    "context": "1 module, upright         &",
    "printed": "0.38",
-   "regenerated": 0.3845377424289835,
-   "regenerated_str": "0.385",
-   "delta": 0.004537742428983471,
+   "regenerated": 0.3838575053469089,
+   "regenerated_str": "0.384",
+   "delta": 0.003857505346908874,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/std6_1s_sym_test/rot",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1312,20 +1312,20 @@
    "line": 347,
    "context": "2 modules, upright        &",
    "printed": "10.5",
-   "regenerated": 10.503408528662385,
-   "regenerated_str": "10.50",
-   "delta": 0.0034085286623852795,
+   "regenerated": 10.511948800108728,
+   "regenerated_str": "10.51",
+   "delta": 0.011948800108728008,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json plane_section/std6_2s_sym_test/tip",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1333,20 +1333,20 @@
    "line": 347,
    "context": "2 modules, upright        &",
    "printed": "0.37",
-   "regenerated": 0.37121372582676354,
-   "regenerated_str": "0.371",
-   "delta": 0.0012137258267635453,
+   "regenerated": 0.3740546382355139,
+   "regenerated_str": "0.374",
+   "delta": 0.0040546382355138855,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/std6_2s_sym_test/tip",
    "regenerated_in_last_run": true,
-   "note": "W3 R2: Table I uses the gravity solver's default tolerance 1e-4; at 1e-11 this entry is 0.386 mm mean / 1.08 mm p95 (results/tol_reeval.json).",
+   "note": "W3 R2: Table I uses the gravity solver's default tolerance 1e-4; at 1e-11 this entry is 0.390 mm mean / 1.08 mm p95 (results/tol_reeval.json).",
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1354,20 +1354,20 @@
    "line": 347,
    "context": "2 modules, upright        &",
    "printed": "1.04",
-   "regenerated": 1.039147577406823,
-   "regenerated_str": "1.039",
-   "delta": -0.0008524225931769713,
+   "regenerated": 1.0415043152373291,
+   "regenerated_str": "1.042",
+   "delta": 0.0015043152373290791,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/std6_2s_sym_test/tip95",
    "regenerated_in_last_run": true,
-   "note": "W3 R2: Table I uses the gravity solver's default tolerance 1e-4; at 1e-11 this entry is 0.386 mm mean / 1.08 mm p95 (results/tol_reeval.json).",
+   "note": "W3 R2: Table I uses the gravity solver's default tolerance 1e-4; at 1e-11 this entry is 0.390 mm mean / 1.08 mm p95 (results/tol_reeval.json).",
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1375,20 +1375,20 @@
    "line": 347,
    "context": "2 modules, upright        &",
    "printed": "0.21",
-   "regenerated": 0.21216210585694897,
-   "regenerated_str": "0.212",
-   "delta": 0.0021621058569489815,
+   "regenerated": 0.20700685482982614,
+   "regenerated_str": "0.207",
+   "delta": -0.00299314517017385,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/std6_2s_sym_test/rot",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1432,15 +1432,15 @@
    "delta": 0.033618654815235516,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json plane_section/std6_4s_sym_test_g0/tip",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1448,20 +1448,20 @@
    "line": 350,
    "context": "4 modules, no gravity     &",
    "printed": "0.50",
-   "regenerated": 0.498556801916996,
-   "regenerated_str": "0.499",
-   "delta": -0.001443198083004027,
+   "regenerated": 0.4998053530886808,
+   "regenerated_str": "0.500",
+   "delta": -0.0001946469113192073,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/std6_4s_sym_test_g0/tip",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1469,20 +1469,20 @@
    "line": 350,
    "context": "4 modules, no gravity     &",
    "printed": "1.01",
-   "regenerated": 1.0111456404920536,
-   "regenerated_str": "1.011",
-   "delta": 0.0011456404920535679,
-   "status": "reproduced",
+   "regenerated": 1.018891488210867,
+   "regenerated_str": "1.019",
+   "delta": 0.008891488210867049,
+   "status": "differs",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/std6_4s_sym_test_g0/tip95",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1490,20 +1490,20 @@
    "line": 350,
    "context": "4 modules, no gravity     &",
    "printed": "0.09",
-   "regenerated": 0.08824903465673958,
+   "regenerated": 0.08814072156027067,
    "regenerated_str": "0.088",
-   "delta": -0.0017509653432604133,
+   "delta": -0.0018592784397293283,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/std6_4s_sym_test_g0/rot",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1542,20 +1542,20 @@
    "line": 351,
    "context": "2 modules, hanging        &",
    "printed": "43.6",
-   "regenerated": 43.62828458766814,
-   "regenerated_str": "43.63",
-   "delta": 0.02828458766813924,
+   "regenerated": 43.62173521340092,
+   "regenerated_str": "43.62",
+   "delta": 0.02173521340091611,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json plane_section/std6_2s_sym_test_ghang/tip",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1563,20 +1563,20 @@
    "line": 351,
    "context": "2 modules, hanging        &",
    "printed": "0.21",
-   "regenerated": 0.20741251082776338,
-   "regenerated_str": "0.207",
-   "delta": -0.0025874891722366122,
+   "regenerated": 0.21005307359647754,
+   "regenerated_str": "0.210",
+   "delta": 5.307359647754861e-05,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/std6_2s_sym_test_ghang/tip",
    "regenerated_in_last_run": true,
-   "note": "W3 R2: Table I uses the gravity solver's default tolerance 1e-4; at 1e-11 this entry is 0.207 mm mean / 0.46 mm p95 (results/tol_reeval.json).",
+   "note": "W3 R2: Table I uses the gravity solver's default tolerance 1e-4; at 1e-11 this entry is 0.209 mm mean / 0.46 mm p95 (results/tol_reeval.json).",
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1584,20 +1584,20 @@
    "line": 351,
    "context": "2 modules, hanging        &",
    "printed": "0.47",
-   "regenerated": 0.46727404093469144,
-   "regenerated_str": "0.467",
-   "delta": -0.0027259590653085364,
+   "regenerated": 0.4658070314945127,
+   "regenerated_str": "0.466",
+   "delta": -0.004192968505487282,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/std6_2s_sym_test_ghang/tip95",
    "regenerated_in_last_run": true,
-   "note": "W3 R2: Table I uses the gravity solver's default tolerance 1e-4; at 1e-11 this entry is 0.207 mm mean / 0.46 mm p95 (results/tol_reeval.json).",
+   "note": "W3 R2: Table I uses the gravity solver's default tolerance 1e-4; at 1e-11 this entry is 0.209 mm mean / 0.46 mm p95 (results/tol_reeval.json).",
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1605,20 +1605,20 @@
    "line": 351,
    "context": "2 modules, hanging        &",
    "printed": "0.14",
-   "regenerated": 0.1410010730224383,
-   "regenerated_str": "0.141",
-   "delta": 0.0010010730224382924,
+   "regenerated": 0.13919495223920322,
+   "regenerated_str": "0.139",
+   "delta": -0.0008050477607967899,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/std6_2s_sym_test_ghang/rot",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1657,20 +1657,20 @@
    "line": 352,
    "context": "2 modules, horizontal $x$ &",
    "printed": "68.4",
-   "regenerated": 68.42160444836732,
-   "regenerated_str": "68.42",
-   "delta": 0.02160444836731301,
-   "status": "reproduced",
+   "regenerated": 67.9652508178772,
+   "regenerated_str": "67.97",
+   "delta": -0.43474918212280045,
+   "status": "differs",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json plane_section/std6_2s_sym_test_gx/tip",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1678,20 +1678,20 @@
    "line": 352,
    "context": "2 modules, horizontal $x$ &",
    "printed": "1.20",
-   "regenerated": 1.197599810425744,
-   "regenerated_str": "1.198",
-   "delta": -0.0024001895742560286,
-   "status": "reproduced",
+   "regenerated": 0.40871265385766564,
+   "regenerated_str": "0.409",
+   "delta": -0.7912873461423343,
+   "status": "differs",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/std6_2s_sym_test_gx/tip",
    "regenerated_in_last_run": true,
-   "note": "W3 R2: Table I uses the gravity solver's default tolerance 1e-4; at 1e-11 this entry is 1.190 mm mean / 3.81 mm p95 (results/tol_reeval.json). W3 C3: the paper blames the horizontal error partly on the FEM's uniform nodal mass; W3 finds the cause is mainly the model's missing torsion (torsional compliance x2-3 of plane-section cuts it to 0.33-0.46 mm; a mass refit makes it slightly worse).",
+   "note": "W3 R2: Table I uses the gravity solver's default tolerance 1e-4; at 1e-11 this entry is 0.411 mm mean / 0.70 mm p95 (results/tol_reeval.json). W3 C3: the paper blames the horizontal error partly on the FEM's uniform nodal mass; W3 finds the cause is mainly the model's missing torsion (torsional compliance x2-3 of plane-section cuts it to 0.33-0.46 mm; a mass refit makes it slightly worse).",
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1699,20 +1699,20 @@
    "line": 352,
    "context": "2 modules, horizontal $x$ &",
    "printed": "3.83",
-   "regenerated": 3.8268087742185637,
-   "regenerated_str": "3.827",
-   "delta": -0.00319122578143638,
-   "status": "reproduced",
+   "regenerated": 0.7190197823658069,
+   "regenerated_str": "0.719",
+   "delta": -3.110980217634193,
+   "status": "differs",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/std6_2s_sym_test_gx/tip95",
    "regenerated_in_last_run": true,
-   "note": "W3 R2: Table I uses the gravity solver's default tolerance 1e-4; at 1e-11 this entry is 1.190 mm mean / 3.81 mm p95 (results/tol_reeval.json). W3 C3: the paper blames the horizontal error partly on the FEM's uniform nodal mass; W3 finds the cause is mainly the model's missing torsion (torsional compliance x2-3 of plane-section cuts it to 0.33-0.46 mm; a mass refit makes it slightly worse).",
+   "note": "W3 R2: Table I uses the gravity solver's default tolerance 1e-4; at 1e-11 this entry is 0.411 mm mean / 0.70 mm p95 (results/tol_reeval.json). W3 C3: the paper blames the horizontal error partly on the FEM's uniform nodal mass; W3 finds the cause is mainly the model's missing torsion (torsional compliance x2-3 of plane-section cuts it to 0.33-0.46 mm; a mass refit makes it slightly worse).",
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1720,20 +1720,20 @@
    "line": 352,
    "context": "2 modules, horizontal $x$ &",
    "printed": "0.85",
-   "regenerated": 0.851418738843599,
-   "regenerated_str": "0.851",
-   "delta": 0.001418738843598999,
-   "status": "reproduced",
+   "regenerated": 0.22955638387867142,
+   "regenerated_str": "0.230",
+   "delta": -0.6204436161213286,
+   "status": "differs",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/std6_2s_sym_test_gx/rot",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1772,20 +1772,20 @@
    "line": 353,
    "context": "2 modules, horizontal $y$ &",
    "printed": "58.5",
-   "regenerated": 58.46849175515857,
-   "regenerated_str": "58.47",
-   "delta": -0.031508244841433,
-   "status": "reproduced",
+   "regenerated": 58.12664430246734,
+   "regenerated_str": "58.13",
+   "delta": -0.3733556975326593,
+   "status": "differs",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json plane_section/std6_2s_sym_test_gy/tip",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1793,20 +1793,20 @@
    "line": 353,
    "context": "2 modules, horizontal $y$ &",
    "printed": "1.08",
-   "regenerated": 1.078565111366148,
-   "regenerated_str": "1.079",
-   "delta": -0.001434888633851994,
-   "status": "reproduced",
+   "regenerated": 0.3181998728857438,
+   "regenerated_str": "0.318",
+   "delta": -0.7618001271142563,
+   "status": "differs",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/std6_2s_sym_test_gy/tip",
    "regenerated_in_last_run": true,
-   "note": "W3 R2: Table I uses the gravity solver's default tolerance 1e-4; at 1e-11 this entry is 1.067 mm mean / 2.63 mm p95 (results/tol_reeval.json). W3 C3: the paper blames the horizontal error partly on the FEM's uniform nodal mass; W3 finds the cause is mainly the model's missing torsion (torsional compliance x2-3 of plane-section cuts it to 0.33-0.46 mm; a mass refit makes it slightly worse).",
+   "note": "W3 R2: Table I uses the gravity solver's default tolerance 1e-4; at 1e-11 this entry is 0.307 mm mean / 0.91 mm p95 (results/tol_reeval.json). W3 C3: the paper blames the horizontal error partly on the FEM's uniform nodal mass; W3 finds the cause is mainly the model's missing torsion (torsional compliance x2-3 of plane-section cuts it to 0.33-0.46 mm; a mass refit makes it slightly worse).",
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1814,20 +1814,20 @@
    "line": 353,
    "context": "2 modules, horizontal $y$ &",
    "printed": "2.63",
-   "regenerated": 2.6332219105919683,
-   "regenerated_str": "2.633",
-   "delta": 0.0032219105919684132,
-   "status": "reproduced",
+   "regenerated": 0.9074022634907607,
+   "regenerated_str": "0.907",
+   "delta": -1.7225977365092393,
+   "status": "differs",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/std6_2s_sym_test_gy/tip95",
    "regenerated_in_last_run": true,
-   "note": "W3 R2: Table I uses the gravity solver's default tolerance 1e-4; at 1e-11 this entry is 1.067 mm mean / 2.63 mm p95 (results/tol_reeval.json). W3 C3: the paper blames the horizontal error partly on the FEM's uniform nodal mass; W3 finds the cause is mainly the model's missing torsion (torsional compliance x2-3 of plane-section cuts it to 0.33-0.46 mm; a mass refit makes it slightly worse).",
+   "note": "W3 R2: Table I uses the gravity solver's default tolerance 1e-4; at 1e-11 this entry is 0.307 mm mean / 0.91 mm p95 (results/tol_reeval.json). W3 C3: the paper blames the horizontal error partly on the FEM's uniform nodal mass; W3 finds the cause is mainly the model's missing torsion (torsional compliance x2-3 of plane-section cuts it to 0.33-0.46 mm; a mass refit makes it slightly worse).",
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1835,20 +1835,20 @@
    "line": 353,
    "context": "2 modules, horizontal $y$ &",
    "printed": "0.62",
-   "regenerated": 0.624818922821471,
-   "regenerated_str": "0.625",
-   "delta": 0.004818922821471006,
-   "status": "reproduced",
+   "regenerated": 0.178857408676183,
+   "regenerated_str": "0.179",
+   "delta": -0.441142591323817,
+   "status": "differs",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/std6_2s_sym_test_gy/rot",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1892,15 +1892,15 @@
    "delta": -0.029290097898531542,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json plane_section/std6_1s_sym_rand_g0/tip",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1908,20 +1908,20 @@
    "line": 354,
    "context": "1 module, random $\\dl$    &",
    "printed": "0.25",
-   "regenerated": 0.25450664650597815,
+   "regenerated": 0.2548368447715423,
    "regenerated_str": "0.255",
-   "delta": 0.004506646505978151,
+   "delta": 0.004836844771542281,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/std6_1s_sym_rand_g0/tip",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1929,20 +1929,20 @@
    "line": 354,
    "context": "1 module, random $\\dl$    &",
    "printed": "0.51",
-   "regenerated": 0.5143363859759578,
-   "regenerated_str": "0.514",
-   "delta": 0.004336385975957757,
+   "regenerated": 0.5148563610582696,
+   "regenerated_str": "0.515",
+   "delta": 0.004856361058269587,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/std6_1s_sym_rand_g0/tip95",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1950,20 +1950,20 @@
    "line": 354,
    "context": "1 module, random $\\dl$    &",
    "printed": "0.38",
-   "regenerated": 0.38165267992040697,
-   "regenerated_str": "0.382",
-   "delta": 0.001652679920406963,
+   "regenerated": 0.3809604941678473,
+   "regenerated_str": "0.381",
+   "delta": 0.00096049416784727,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/std6_1s_sym_rand_g0/rot",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -1988,25 +1988,25 @@
    "context": "has no fitted parameters, errs by 10--70",
    "printed": "10--70",
    "regenerated": [
-    10.503408528662385,
-    68.42160444836732
+    10.511948800108728,
+    67.9652508178772
    ],
-   "regenerated_str": "10.5--68.4",
+   "regenerated_str": "10.5--68.0",
    "delta": [
-    0.5034085286623853,
-    -1.5783955516326813
+    0.511948800108728,
+    -2.0347491821227948
    ],
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json plane_section tip, min-max over Table I's sets",
    "regenerated_in_last_run": true,
    "note": "A range rounded to tens (checked to +-5 mm): 10.5-68.4 mm.",
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -2014,20 +2014,20 @@
    "line": 364,
    "context": "modules, never seen, is 0.50\\,mm",
    "printed": "0.50",
-   "regenerated": 0.498556801916996,
-   "regenerated_str": "0.499",
-   "delta": -0.001443198083004027,
+   "regenerated": 0.4998053530886808,
+   "regenerated_str": "0.500",
+   "delta": -0.0001946469113192073,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/4s g0/tip",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -2035,20 +2035,20 @@
    "line": 364,
    "context": "(0.08\\,\\% of the 640\\,mm length)",
    "printed": "0.08",
-   "regenerated": 0.07789950029953062,
+   "regenerated": 0.07809458642010637,
    "regenerated_str": "0.078",
-   "delta": -0.0021004997004693826,
+   "delta": -0.0019054135798936278,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "tip / 640 mm x 100",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -2071,20 +2071,20 @@
    "line": 364,
    "context": "and $0.09^\\circ$",
    "printed": "0.09",
-   "regenerated": 0.08824903465673958,
+   "regenerated": 0.08814072156027067,
    "regenerated_str": "0.088",
-   "delta": -0.0017509653432604133,
+   "delta": -0.0018592784397293283,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/4s g0/rot",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -2105,7 +2105,7 @@
     "ok": true,
     "seconds": 0.0,
     "mode": "fast",
-    "finished": "2026-11-03 01:55:56"
+    "finished": "2026-11-03 13:10:31"
    }
   },
   {
@@ -2113,20 +2113,20 @@
    "line": 365,
    "context": "Hanging, also never seen, gives 0.21",
    "printed": "0.21",
-   "regenerated": 0.20741251082776338,
-   "regenerated_str": "0.207",
-   "delta": -0.0025874891722366122,
+   "regenerated": 0.21005307359647754,
+   "regenerated_str": "0.210",
+   "delta": 5.307359647754861e-05,
    "status": "reproduced",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned/2s ghang/tip",
    "regenerated_in_last_run": true,
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -2135,25 +2135,25 @@
    "context": "Horizontal mountings are hardest (1.1--1.2",
    "printed": "1.1--1.2",
    "regenerated": [
-    1.078565111366148,
-    1.197599810425744
+    0.3181998728857438,
+    0.40871265385766564
    ],
-   "regenerated_str": "1.08--1.20",
+   "regenerated_str": "0.32--0.41",
    "delta": [
-    -0.02143488863385201,
-    -0.0024001895742560286
+    -0.7818001271142563,
+    -0.7912873461423343
    ],
-   "status": "reproduced",
+   "status": "differs",
    "step": "module_compliance",
-   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json",
+   "command": "OMP_NUM_THREADS=1 .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 std6_1s_sym_train std6_2s_sym_train --torsion-json results/torsion_std6.json --out results/mc_std6.json",
    "source": "mc_std6.json learned 2s gy, gx",
    "regenerated_in_last_run": true,
    "note": "W3 C3: the paper blames the horizontal error partly on the FEM's uniform nodal mass; W3 finds the cause is mainly the model's missing torsion (torsional compliance x2-3 of plane-section cuts it to 0.33-0.46 mm; a mass refit makes it slightly worse).",
    "last_run": {
     "ok": true,
-    "seconds": 73.4,
+    "seconds": 73.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:04"
+    "finished": "2026-11-03 13:23:42"
    }
   },
   {
@@ -2161,20 +2161,20 @@
    "line": 365,
    "context": "robot's tip sags 96",
    "printed": "96",
-   "regenerated": 95.9269034177997,
+   "regenerated": 95.9281946385903,
    "regenerated_str": "95.9",
-   "delta": -0.07309658220029291,
+   "delta": -0.07180536140970162,
    "status": "reproduced",
    "step": "physics_props",
    "command": ".venv/bin/python scripts/physics_props.py",
    "source": "physics_props.json sag twin_live_horizontal_x_tip_lateral_mm (Twin(2, 'horizontal_x'), zero command)",
    "regenerated_in_last_run": true,
-   "note": "As computed for the paper (26 Oct): lateral tip position of the twin at its live tolerance, mounting x. Tight solve 95.9 mm; mounting y 85.8 mm. W3 C6 measures the distance from the straight tip instead: 97.9 (x) / 87.2 (y) mm.",
+   "note": "As computed for the paper (26 Oct): lateral tip position of the twin at its live tolerance, mounting x. Tight solve 96.0 mm; mounting y 86.0 mm. W3 C6 measures the distance from the straight tip instead: 97.9 (x) / 87.4 (y) mm.",
    "last_run": {
     "ok": true,
-    "seconds": 21.9,
+    "seconds": 21.3,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:13"
+    "finished": "2026-11-03 13:11:48"
    }
   },
   {
@@ -2193,9 +2193,9 @@
    "note": "the FEM mesh data/meshes/std6_two_section_sym.vtk is not in the repository (data/README.md: copy the std6 meshes into data/meshes/ and rerun scripts/reproduce.py --only fem_mass claims). One module, regenerated here: +4.2 %. W3 (with the old repository's meshes): +4.2 % (1 module) / +2.1 % (2 modules) base moment; notched cells hold 90.1 % of the FEM's mass vs 84.4 % of the part's. W3 C3: the paper blames the horizontal error partly on the FEM's uniform nodal mass; W3 finds the cause is mainly the model's missing torsion (torsional compliance x2-3 of plane-section cuts it to 0.33-0.46 mm; a mass refit makes it slightly worse).",
    "last_run": {
     "ok": true,
-    "seconds": 0.6,
+    "seconds": 0.5,
     "mode": "fast",
-    "finished": "2026-11-03 01:55:56"
+    "finished": "2026-11-03 13:10:31"
    }
   },
   {
@@ -2504,9 +2504,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 41.6,
+    "seconds": 41.1,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:51"
+    "finished": "2026-11-03 13:07:51"
    }
   },
   {
@@ -2525,9 +2525,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 41.6,
+    "seconds": 41.1,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:51"
+    "finished": "2026-11-03 13:07:51"
    }
   },
   {
@@ -2546,9 +2546,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 41.6,
+    "seconds": 41.1,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:51"
+    "finished": "2026-11-03 13:07:51"
    }
   },
   {
@@ -2556,9 +2556,9 @@
    "line": 389,
    "context": "finds $\\times20.2/5.8/5.3$ in 80",
    "printed": "80",
-   "regenerated": 36.7796847820282,
+   "regenerated": 36.82295036315918,
    "regenerated_str": "36.8",
-   "delta": -43.2203152179718,
+   "delta": -43.17704963684082,
    "status": "differs",
    "step": "exact_global3",
    "command": "OMP_NUM_THREADS=2 NUMBA_NUM_THREADS=2 .venv/bin/python scripts/exact_global3.py",
@@ -2567,9 +2567,9 @@
    "note": "Wall time of a least-squares fit (10 function evaluations, 2 threads); machine- and load-dependent. Faster here than printed; the point of the sentence (seconds, against the PINNs' hours) holds.",
    "last_run": {
     "ok": true,
-    "seconds": 41.6,
+    "seconds": 41.1,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:51"
+    "finished": "2026-11-03 13:07:51"
    }
   },
   {
@@ -2588,9 +2588,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 41.6,
+    "seconds": 41.1,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:51"
+    "finished": "2026-11-03 13:07:51"
    }
   },
   {
@@ -2609,9 +2609,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 41.6,
+    "seconds": 41.1,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:51"
+    "finished": "2026-11-03 13:07:51"
    }
   },
   {
@@ -2630,9 +2630,9 @@
    "note": "Rounding: the value (also 10.849 in the stored 2s_inverse_w10.json exact_same_physics) rounds to 10.8, not 10.9.",
    "last_run": {
     "ok": true,
-    "seconds": 41.6,
+    "seconds": 41.1,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:51"
+    "finished": "2026-11-03 13:07:51"
    }
   },
   {
@@ -2651,9 +2651,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 41.6,
+    "seconds": 41.1,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:51"
+    "finished": "2026-11-03 13:07:51"
    }
   },
   {
@@ -2672,9 +2672,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 41.6,
+    "seconds": 41.1,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:51"
+    "finished": "2026-11-03 13:07:51"
    }
   },
   {
@@ -2853,9 +2853,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 41.6,
+    "seconds": 41.1,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:51"
+    "finished": "2026-11-03 13:07:51"
    }
   },
   {
@@ -2874,9 +2874,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 41.6,
+    "seconds": 41.1,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:51"
+    "finished": "2026-11-03 13:07:51"
    }
   },
   {
@@ -2895,9 +2895,9 @@
    "note": "Rounding: the value (also 10.849 in the stored 2s_inverse_w10.json exact_same_physics) rounds to 10.8, not 10.9.",
    "last_run": {
     "ok": true,
-    "seconds": 41.6,
+    "seconds": 41.1,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:51"
+    "finished": "2026-11-03 13:07:51"
    }
   },
   {
@@ -2916,9 +2916,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 41.6,
+    "seconds": 41.1,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:51"
+    "finished": "2026-11-03 13:07:51"
    }
   },
   {
@@ -2937,9 +2937,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 41.6,
+    "seconds": 41.1,
     "mode": "fast",
-    "finished": "2026-11-03 01:53:51"
+    "finished": "2026-11-03 13:07:51"
    }
   },
   {
@@ -2960,7 +2960,7 @@
     "ok": true,
     "seconds": 2.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:33"
+    "finished": "2026-11-03 13:08:33"
    }
   },
   {
@@ -2981,7 +2981,7 @@
     "ok": true,
     "seconds": 2.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:33"
+    "finished": "2026-11-03 13:08:33"
    }
   },
   {
@@ -2989,9 +2989,9 @@
    "line": 415,
    "context": "moves the predicted tip by 2.9",
    "printed": "2.9",
-   "regenerated": 2.901278602397931,
+   "regenerated": 2.900937034539421,
    "regenerated_str": "2.90",
-   "delta": 0.0012786023979312056,
+   "delta": 0.0009370345394210666,
    "status": "reproduced",
    "step": "geometry_sensitivity",
    "command": ".venv/bin/python scripts/geometry_sensitivity.py",
@@ -3002,7 +3002,7 @@
     "ok": true,
     "seconds": 2.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:33"
+    "finished": "2026-11-03 13:08:33"
    }
   },
   {
@@ -3010,9 +3010,9 @@
    "line": 415,
    "context": "(3\\,\\% of the tip travel)",
    "printed": "3",
-   "regenerated": 3.0236363650261815,
+   "regenerated": 3.0233406914234044,
    "regenerated_str": "3.0",
-   "delta": 0.023636365026181494,
+   "delta": 0.023340691423404447,
    "status": "reproduced",
    "step": "geometry_sensitivity",
    "command": ".venv/bin/python scripts/geometry_sensitivity.py",
@@ -3023,7 +3023,7 @@
     "ok": true,
     "seconds": 2.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:33"
+    "finished": "2026-11-03 13:08:33"
    }
   },
   {
@@ -3031,9 +3031,9 @@
    "line": 415,
    "context": "and 1.9\\,mm hanging",
    "printed": "1.9",
-   "regenerated": 1.9077179523567507,
+   "regenerated": 1.9075463184473673,
    "regenerated_str": "1.91",
-   "delta": 0.007717952356750768,
+   "delta": 0.007546318447367417,
    "status": "reproduced",
    "step": "geometry_sensitivity",
    "command": ".venv/bin/python scripts/geometry_sensitivity.py",
@@ -3044,7 +3044,7 @@
     "ok": true,
     "seconds": 2.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:33"
+    "finished": "2026-11-03 13:08:33"
    }
   },
   {
@@ -3052,9 +3052,9 @@
    "line": 420,
    "context": "one pose costs 0.87, 1.73 and 3.7",
    "printed": "0.87",
-   "regenerated": 0.899,
-   "regenerated_str": "0.899",
-   "delta": 0.029000000000000026,
+   "regenerated": 0.89,
+   "regenerated_str": "0.890",
+   "delta": 0.020000000000000018,
    "status": "reproduced",
    "step": "study_guide",
    "command": ".venv/bin/python scripts/study_guide_figs.py",
@@ -3063,9 +3063,9 @@
    "note": "Timing: machine- and load-dependent (paper: Intel Core Ultra 9 185H laptop); checked to a relative tolerance.",
    "last_run": {
     "ok": true,
-    "seconds": 6.3,
+    "seconds": 6.2,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:19"
+    "finished": "2026-11-03 13:11:54"
    }
   },
   {
@@ -3073,9 +3073,9 @@
    "line": 420,
    "context": "one pose costs 0.87, 1.73 and 3.7",
    "printed": "1.73",
-   "regenerated": 1.711,
-   "regenerated_str": "1.711",
-   "delta": -0.018999999999999906,
+   "regenerated": 1.691,
+   "regenerated_str": "1.691",
+   "delta": -0.038999999999999924,
    "status": "reproduced",
    "step": "study_guide",
    "command": ".venv/bin/python scripts/study_guide_figs.py",
@@ -3084,9 +3084,9 @@
    "note": "Timing: machine- and load-dependent (paper: Intel Core Ultra 9 185H laptop); checked to a relative tolerance.",
    "last_run": {
     "ok": true,
-    "seconds": 6.3,
+    "seconds": 6.2,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:19"
+    "finished": "2026-11-03 13:11:54"
    }
   },
   {
@@ -3094,9 +3094,9 @@
    "line": 420,
    "context": "one pose costs 0.87, 1.73 and 3.7",
    "printed": "3.7",
-   "regenerated": 3.681,
-   "regenerated_str": "3.68",
-   "delta": -0.019000000000000128,
+   "regenerated": 3.582,
+   "regenerated_str": "3.58",
+   "delta": -0.11800000000000033,
    "status": "reproduced",
    "step": "study_guide",
    "command": ".venv/bin/python scripts/study_guide_figs.py",
@@ -3105,9 +3105,9 @@
    "note": "Timing: machine- and load-dependent (paper: Intel Core Ultra 9 185H laptop); checked to a relative tolerance.",
    "last_run": {
     "ok": true,
-    "seconds": 6.3,
+    "seconds": 6.2,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:19"
+    "finished": "2026-11-03 13:11:54"
    }
   },
   {
@@ -3115,9 +3115,9 @@
    "line": 421,
    "context": "(median; about 1150, 580 and 270\\,Hz)",
    "printed": "1150",
-   "regenerated": 1112.3470522803113,
-   "regenerated_str": "1112",
-   "delta": -37.652947719688655,
+   "regenerated": 1123.5955056179776,
+   "regenerated_str": "1124",
+   "delta": -26.40449438202245,
    "status": "reproduced",
    "step": "study_guide",
    "command": ".venv/bin/python scripts/study_guide_figs.py",
@@ -3126,9 +3126,9 @@
    "note": "Timing: machine- and load-dependent (paper: Intel Core Ultra 9 185H laptop); checked to a relative tolerance.",
    "last_run": {
     "ok": true,
-    "seconds": 6.3,
+    "seconds": 6.2,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:19"
+    "finished": "2026-11-03 13:11:54"
    }
   },
   {
@@ -3136,9 +3136,9 @@
    "line": 421,
    "context": "(median; about 1150, 580 and 270\\,Hz)",
    "printed": "580",
-   "regenerated": 584.4535359438925,
-   "regenerated_str": "584",
-   "delta": 4.4535359438924615,
+   "regenerated": 591.3660555884092,
+   "regenerated_str": "591",
+   "delta": 11.366055588409154,
    "status": "reproduced",
    "step": "study_guide",
    "command": ".venv/bin/python scripts/study_guide_figs.py",
@@ -3147,9 +3147,9 @@
    "note": "Timing: machine- and load-dependent (paper: Intel Core Ultra 9 185H laptop); checked to a relative tolerance.",
    "last_run": {
     "ok": true,
-    "seconds": 6.3,
+    "seconds": 6.2,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:19"
+    "finished": "2026-11-03 13:11:54"
    }
   },
   {
@@ -3157,9 +3157,9 @@
    "line": 421,
    "context": "(median; about 1150, 580 and 270\\,Hz)",
    "printed": "270",
-   "regenerated": 271.66530834012497,
-   "regenerated_str": "272",
-   "delta": 1.665308340124966,
+   "regenerated": 279.1736460078169,
+   "regenerated_str": "279",
+   "delta": 9.173646007816899,
    "status": "reproduced",
    "step": "study_guide",
    "command": ".venv/bin/python scripts/study_guide_figs.py",
@@ -3168,9 +3168,9 @@
    "note": "Timing: machine- and load-dependent (paper: Intel Core Ultra 9 185H laptop); checked to a relative tolerance.",
    "last_run": {
     "ok": true,
-    "seconds": 6.3,
+    "seconds": 6.2,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:19"
+    "finished": "2026-11-03 13:11:54"
    }
   },
   {
@@ -3178,9 +3178,9 @@
    "line": 422,
    "context": "the 95th percentile for four modules is 16",
    "printed": "16",
-   "regenerated": 15.682,
-   "regenerated_str": "15.7",
-   "delta": -0.3179999999999996,
+   "regenerated": 14.582,
+   "regenerated_str": "14.6",
+   "delta": -1.4179999999999993,
    "status": "reproduced",
    "step": "study_guide",
    "command": ".venv/bin/python scripts/study_guide_figs.py",
@@ -3189,9 +3189,9 @@
    "note": "Timing: machine- and load-dependent (paper: Intel Core Ultra 9 185H laptop); checked to a relative tolerance.",
    "last_run": {
     "ok": true,
-    "seconds": 6.3,
+    "seconds": 6.2,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:19"
+    "finished": "2026-11-03 13:11:54"
    }
   },
   {
@@ -3199,9 +3199,9 @@
    "line": 422,
    "context": "and the slowest call 25",
    "printed": "25",
-   "regenerated": 20.925863998854766,
-   "regenerated_str": "20.9",
-   "delta": -4.074136001145234,
+   "regenerated": 21.56964300229447,
+   "regenerated_str": "21.6",
+   "delta": -3.4303569977055304,
    "status": "reproduced",
    "step": "runtime",
    "command": ".venv/bin/python scripts/runtime.py",
@@ -3210,9 +3210,9 @@
    "note": "Timing: machine- and load-dependent (paper: Intel Core Ultra 9 185H laptop); checked to a relative tolerance. The single slowest call is the noisiest number here.",
    "last_run": {
     "ok": true,
-    "seconds": 11.2,
+    "seconds": 11.0,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:30"
+    "finished": "2026-11-03 13:08:30"
    }
   },
   {
@@ -3221,13 +3221,13 @@
    "context": "Without gravity it takes 0.15--0.6",
    "printed": "0.15--0.6",
    "regenerated": [
-    0.154,
-    0.603
+    0.15,
+    0.593
    ],
-   "regenerated_str": "0.15--0.60",
+   "regenerated_str": "0.15--0.59",
    "delta": [
-    0.0040000000000000036,
-    0.0030000000000000027
+    0.0,
+    -0.007000000000000006
    ],
    "status": "reproduced",
    "step": "study_guide",
@@ -3237,9 +3237,9 @@
    "note": "Timing: machine- and load-dependent (paper: Intel Core Ultra 9 185H laptop); checked to a relative tolerance.",
    "last_run": {
     "ok": true,
-    "seconds": 6.3,
+    "seconds": 6.2,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:19"
+    "finished": "2026-11-03 13:11:54"
    }
   },
   {
@@ -3247,20 +3247,20 @@
    "line": 424,
    "context": "takes about 280\\,ms per two-module pose",
    "printed": "280",
-   "regenerated": 270.5461707997529,
+   "regenerated": 271.11079700007394,
    "regenerated_str": "271",
-   "delta": -9.453829200247128,
+   "delta": -8.889202999926056,
    "status": "reproduced",
    "step": "runtime",
    "command": ".venv/bin/python scripts/runtime.py",
    "source": "runtime.json cosserat_2s mean_ms (20 poses)",
    "regenerated_in_last_run": true,
-   "note": "Timing: machine- and load-dependent (paper: Intel Core Ultra 9 185H laptop); checked to a relative tolerance. Median 368 ms; the solve uses restarts, so the mean and median differ. W3 \u00a76: no gravity, uniform tube.",
+   "note": "Timing: machine- and load-dependent (paper: Intel Core Ultra 9 185H laptop); checked to a relative tolerance. Median 371 ms; the solve uses restarts, so the mean and median differ. W3 \u00a76: no gravity, uniform tube.",
    "last_run": {
     "ok": true,
-    "seconds": 11.2,
+    "seconds": 11.0,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:30"
+    "finished": "2026-11-03 13:08:30"
    }
   },
   {
@@ -3343,20 +3343,20 @@
    "line": 465,
    "context": "a $1^\\circ$ error moves a horizontal two-module tip by about 1.3",
    "printed": "1.3",
-   "regenerated": 1.3299614753767757,
-   "regenerated_str": "1.33",
-   "delta": 0.029961475376775626,
+   "regenerated": 1.306073881088457,
+   "regenerated_str": "1.31",
+   "delta": 0.006073881088456856,
    "status": "reproduced",
    "step": "physics_props",
    "command": ".venv/bin/python scripts/physics_props.py",
    "source": "physics_props.json mounting_error_about_axis_1deg gx test_p90_mm (no original producer; the only definition that gives 1.3)",
    "regenerated_in_last_run": true,
-   "note": "W3 C6: 1.3 mm is the 90th percentile, not typical: for a 1 deg error about the base axis on the horizontal test commands the median is 0.55 (x) / 0.85 (y) mm and the p90 1.33 / 1.73 mm; unbent 0.20 / 0.81 mm; in the vertical plane the median is 0.53 / 0.40 mm.",
+   "note": "W3 C6: 1.3 mm is the 90th percentile, not typical: for a 1 deg error about the base axis on the horizontal test commands the median is 0.55 (x) / 0.85 (y) mm and the p90 1.31 / 1.73 mm; unbent 0.21 / 0.80 mm; in the vertical plane the median is 0.53 / 0.40 mm.",
    "last_run": {
     "ok": true,
-    "seconds": 21.9,
+    "seconds": 21.3,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:13"
+    "finished": "2026-11-03 13:11:48"
    }
   },
   {
@@ -3377,7 +3377,7 @@
     "ok": true,
     "seconds": 0.0,
     "mode": "fast",
-    "finished": "2026-11-03 01:55:56"
+    "finished": "2026-11-03 13:10:31"
    }
   },
   {
@@ -3386,10 +3386,10 @@
    "context": "runs at hundreds of hertz",
    "printed": "hundreds",
    "regenerated": [
-    271.66530834012497,
-    1112.3470522803113
+    279.1736460078169,
+    1123.5955056179776
    ],
-   "regenerated_str": "272--1112",
+   "regenerated_str": "279--1124",
    "delta": null,
    "status": "reproduced",
    "step": "study_guide",
@@ -3399,9 +3399,9 @@
    "note": "Statement; regenerated rate range shown in Hz.",
    "last_run": {
     "ok": true,
-    "seconds": 6.3,
+    "seconds": 6.2,
     "mode": "fast",
-    "finished": "2026-11-03 01:54:19"
+    "finished": "2026-11-03 13:11:54"
    }
   },
   {

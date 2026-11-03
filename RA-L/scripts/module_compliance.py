@@ -78,7 +78,9 @@ def main():
     if torsion is not None:
         res.update(torsion=torsion, torsion_json=a.torsion_json)
     if not a.skip_baseline:
+        model.torsion = None if torsion is None else 1.0     # plane-section torsion too: nothing identified
         res["plane_section"] = report(model, np.zeros(model.n_theta), "EB plane-section (theta = 0)", tests)
+        model.torsion = torsion
     th0 = np.zeros(model.n_theta)
     if a.init_from:
         prev = np.array(json.load(open(a.init_from))["theta"])
