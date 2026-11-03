@@ -82,3 +82,13 @@ def test_calibration_dict_equals_file(tmp_path):
     c = Twin(2, "upright", tol=1e-9).shape(dl)
     assert np.allclose(a.positions, b.positions, atol=1e-12)
     assert np.abs(a.positions - c.positions).max() > 0.1             # the calibration does change the shape
+
+
+def test_reset_restores_the_homed_state():
+    """After reset, the twin answers as a fresh one (warm start and friction direction forgotten)."""
+    a, b = Twin(2, "upright"), Twin(2, "upright")
+    x = np.array([3.0, -1.0, 0.5, 1.0, 2.0, -0.5])
+    a.shape(-x)
+    a.reset()
+    sa, sb = a.shape(x), b.shape(x)
+    assert np.array_equal(sa.positions, sb.positions)

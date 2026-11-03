@@ -96,6 +96,10 @@ class Twin:
         az = geometry_from_cables(cables)[1]
         self.eb = model.build(theta, self.n, "paired60", az, HOLES6, hw=hw, gap=self.gap)
         self.stations = np.arange(0.0, MODULE_L * self.n + 1e-9, 5.0)
+        self.reset()
+
+    def reset(self):
+        """Forget the previous commands (warm start, friction direction): the state of a freshly homed robot."""
         self._state = None
         self._prev, self._sigma = np.zeros(3 * self.n), np.ones(3 * self.n)      # homed: zero, every tendon wound in
 

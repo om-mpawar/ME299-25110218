@@ -3,8 +3,9 @@
  "seed": 0,
  "standup_max_mm": 5.0,
  "theta_2s_deg": 35.0,
- "theta_4s_deg": 25.0,
+ "theta_4s_deg": 15.0,
  "mapping": "tools/make_cmd_doe.mapped (lab, pure pay-out) + pretension",
+ "gravity_screen": "twin (gap 2 mm, hw_eval settings) converges on every row, per mounting: {\"calib_2s\": [\"upright\", \"horizontal_x\"], \"heldout_2s\": [\"upright\"], \"test_4s\": [\"upright\", \"hanging\"]}",
  "order": [
   "standup_4s",
   "calib_2s (upright, then horizontal_x)",
@@ -47,7 +48,10 @@
    "dl_range_mm": [
     0.0,
     12.535956503361867
-   ]
+   ],
+   "stands": {
+    "upright": 41
+   }
   },
   "calib_2s": {
    "csv": "calib_2s.csv",
@@ -64,7 +68,11 @@
    "dl_range_mm": [
     -5.619080028164364,
     11.912846429927136
-   ]
+   ],
+   "stands": {
+    "upright": 50,
+    "horizontal_x": 50
+   }
   },
   "heldout_2s": {
    "csv": "heldout_2s.csv",
@@ -80,7 +88,10 @@
    "dl_range_mm": [
     -6.030782141729754,
     10.871957597807604
-   ]
+   ],
+   "stands": {
+    "upright": 37
+   }
   },
   "test_4s_upright": {
    "csv": "test_4s_upright.csv",
@@ -89,14 +100,17 @@
    "pretensions": [
     2.0
    ],
-   "max_bend_deg": 37.5,
-   "pred_bend_max_deg": 14.425637293999158,
-   "pred_load_max": 0.1196918937315899,
+   "max_bend_deg": 22.5,
+   "pred_bend_max_deg": 9.552700449488327,
+   "pred_load_max": 0.1064620897992653,
    "all_pass_screen": true,
    "dl_range_mm": [
-    -2.7037106613376682,
-    11.712918263499525
-   ]
+    0.472164065560682,
+    7.963837801812744
+   ],
+   "stands": {
+    "upright": 25
+   }
   },
   "test_4s_hanging": {
    "csv": "test_4s_hanging.csv",
@@ -105,14 +119,17 @@
    "pretensions": [
     2.0
    ],
-   "max_bend_deg": 37.5,
-   "pred_bend_max_deg": 14.425637293999158,
-   "pred_load_max": 0.1196918937315899,
+   "max_bend_deg": 22.5,
+   "pred_bend_max_deg": 9.552700449488327,
+   "pred_load_max": 0.1064620897992653,
    "all_pass_screen": true,
    "dl_range_mm": [
-    -2.7037106613376682,
-    11.712918263499525
-   ]
+    0.472164065560682,
+    7.963837801812744
+   ],
+   "stands": {
+    "hanging": 25
+   }
   }
  }
 }

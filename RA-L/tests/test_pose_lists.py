@@ -29,6 +29,30 @@ def test_every_list_is_safe_and_readable(sets):
         assert m["pred_bend_max_deg"] <= m["max_bend_deg"] + 1e-9 and m["pred_load_max"] <= pl.MAX_LOAD
 
 
+def test_every_list_stands_with_gravity(sets):
+    """Every row converges in the twin with gravity, run in order as tdcr/hw_eval.py runs it, in each mounting the list
+    is used in (the gravity-free screen alone let 18 of 25 4-module upright rows fold over: code review W1)."""
+    out, made = sets
+    for name, m in made.items():
+        assert m["stands"] and all(v == m["rows"] for v in m["stands"].values()), (name, m["stands"])
+    assert set(made["test_4s_upright"]["stands"]) == {"upright"}
+    assert set(made["calib_2s"]["stands"]) == {"upright", "horizontal_x"}
+
+
+def test_stands_rejects_a_folding_stack():
+    """Row 6 of the old 4-module upright list (a target up to 25 deg per section, 2 mm pretension) folds over."""
+    dl = np.array([1.649, 5.047, -0.696, 2.706, 4.959, 2.857, 6.3, 8.123, -0.888, 6.842, 10.905, -2.704])
+    assert not pl.stands(4, [dl], ("upright",))[0]
+    assert pl.stands(4, [dl], ("hanging",))[0]
+
+
+def test_targets_gives_up_when_nothing_stands(monkeypatch):
+    monkeypatch.setattr(pl, "MAX_DRAWS", 2)
+    monkeypatch.setattr(pl, "stands", lambda n, dl, mountings: np.zeros(len(dl), bool))
+    with pytest.raises(ValueError, match="raise the pretension or lower the bend"):
+        pl.targets(4, 2, 15.0, 0, 2.0, ("upright",))
+
+
 def test_pretension_loads_every_tendon_alike():
     """Equal pulls would leave the distal tendons slack (the proximal ones already shorten their paths)."""
     for n in (2, 4):
