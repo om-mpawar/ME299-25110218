@@ -1,6 +1,6 @@
 {
  "meta": {
-  "generated": "2026-11-03 13:23",
+  "generated": "2026-11-03 15:03",
   "paper": "paper/main.tex",
   "machine": "Intel(R) Core(TM) Ultra 9 185H, 22 logical cores, Python 3.12.3, numba 0.68.0",
   "statuses": [
@@ -11,8 +11,8 @@
    "hardware pending"
   ],
   "counts": {
-   "reproduced": 132,
-   "differs": 17,
+   "reproduced": 113,
+   "differs": 36,
    "stored, not re-run": 17,
    "not reproducible here": 5,
    "hardware pending": 6
@@ -87,32 +87,42 @@
    "line": 59,
    "context": "degrades both (1.21 and 0.59",
    "printed": "1.21",
-   "regenerated": 1.2125985963322943,
-   "regenerated_str": "1.213",
-   "delta": 0.0025985963322943118,
-   "status": "reproduced",
+   "regenerated": 1.124241567027147,
+   "regenerated_str": "1.124",
+   "delta": -0.0857584329728529,
+   "status": "differs",
    "step": "n_transfer",
    "command": "OMP_NUM_THREADS=8 .venv/bin/python scripts/n_transfer.py --mc results/mc_std6.json",
    "source": "n_transfer.json 4s g0 '+L3 local (output)'/tip",
-   "regenerated_in_last_run": false,
-   "note": "From results/n_transfer.json, the full run of 2 Nov 2026 (packaged code d51a007, ~2 h); not repeated by this run (scripts/reproduce.py --full does).",
-   "last_run": null
+   "regenerated_in_last_run": true,
+   "note": null,
+   "last_run": {
+    "ok": true,
+    "seconds": 5981.9,
+    "mode": "fast",
+    "finished": "2026-11-03 15:03:42"
+   }
   },
   {
    "where": "Abstract: learned residual, hanging",
    "line": 59,
    "context": "degrades both (1.21 and 0.59",
    "printed": "0.59",
-   "regenerated": 0.5861113542702724,
-   "regenerated_str": "0.586",
-   "delta": -0.00388864572972758,
-   "status": "reproduced",
+   "regenerated": 0.5632925139098153,
+   "regenerated_str": "0.563",
+   "delta": -0.026707486090184696,
+   "status": "differs",
    "step": "n_transfer",
    "command": "OMP_NUM_THREADS=8 .venv/bin/python scripts/n_transfer.py --mc results/mc_std6.json",
    "source": "n_transfer.json 2s ghang '+L3 local (output)'/tip",
-   "regenerated_in_last_run": false,
-   "note": "From results/n_transfer.json, the full run of 2 Nov 2026 (packaged code d51a007, ~2 h); not repeated by this run (scripts/reproduce.py --full does).",
-   "last_run": null
+   "regenerated_in_last_run": true,
+   "note": null,
+   "last_run": {
+    "ok": true,
+    "seconds": 5981.9,
+    "mode": "fast",
+    "finished": "2026-11-03 15:03:42"
+   }
   },
   {
    "where": "Abstract: PINNs on their training configurations",
@@ -942,9 +952,9 @@
    "note": "Points from mc_std6.json and n_transfer.json.",
    "last_run": {
     "ok": true,
-    "seconds": 1.1,
+    "seconds": 1.0,
     "mode": "fast",
-    "finished": "2026-11-03 13:10:34"
+    "finished": "2026-11-03 15:03:43"
    }
   },
   {
@@ -1051,16 +1061,21 @@
    "line": 344,
    "context": "1 module, no gravity      &",
    "printed": "0.15",
-   "regenerated": 0.14884729445445108,
-   "regenerated_str": "0.149",
-   "delta": -0.0011527055455489155,
-   "status": "reproduced",
+   "regenerated": 0.13823329364707213,
+   "regenerated_str": "0.138",
+   "delta": -0.01176670635292787,
+   "status": "differs",
    "step": "n_transfer",
    "command": "OMP_NUM_THREADS=8 .venv/bin/python scripts/n_transfer.py --mc results/mc_std6.json",
    "source": "n_transfer.json std6_1s_sym_test_g0 '+L3 local (output)'/tip",
-   "regenerated_in_last_run": false,
-   "note": "From results/n_transfer.json, the full run of 2 Nov 2026 (packaged code d51a007, ~2 h); not repeated by this run (scripts/reproduce.py --full does).",
-   "last_run": null
+   "regenerated_in_last_run": true,
+   "note": null,
+   "last_run": {
+    "ok": true,
+    "seconds": 5981.9,
+    "mode": "fast",
+    "finished": "2026-11-03 15:03:42"
+   }
   },
   {
    "where": "Table I, 2 modules, no gravity: poses",
@@ -1166,16 +1181,21 @@
    "line": 345,
    "context": "2 modules, no gravity     &",
    "printed": "0.38",
-   "regenerated": 0.3785038904845684,
-   "regenerated_str": "0.379",
-   "delta": -0.0014961095154316095,
-   "status": "reproduced",
+   "regenerated": 0.3638246438649604,
+   "regenerated_str": "0.364",
+   "delta": -0.01617535613503962,
+   "status": "differs",
    "step": "n_transfer",
    "command": "OMP_NUM_THREADS=8 .venv/bin/python scripts/n_transfer.py --mc results/mc_std6.json",
    "source": "n_transfer.json std6_2s_sym_test_g0 '+L3 local (output)'/tip",
-   "regenerated_in_last_run": false,
-   "note": "From results/n_transfer.json, the full run of 2 Nov 2026 (packaged code d51a007, ~2 h); not repeated by this run (scripts/reproduce.py --full does).",
-   "last_run": null
+   "regenerated_in_last_run": true,
+   "note": null,
+   "last_run": {
+    "ok": true,
+    "seconds": 5981.9,
+    "mode": "fast",
+    "finished": "2026-11-03 15:03:42"
+   }
   },
   {
    "where": "Table I, 1 module, upright: poses",
@@ -1281,16 +1301,21 @@
    "line": 346,
    "context": "1 module, upright         &",
    "printed": "0.14",
-   "regenerated": 0.1431872513209907,
-   "regenerated_str": "0.143",
-   "delta": 0.0031872513209906805,
-   "status": "reproduced",
+   "regenerated": 0.13442920674578543,
+   "regenerated_str": "0.134",
+   "delta": -0.005570793254214584,
+   "status": "differs",
    "step": "n_transfer",
    "command": "OMP_NUM_THREADS=8 .venv/bin/python scripts/n_transfer.py --mc results/mc_std6.json",
    "source": "n_transfer.json std6_1s_sym_test '+L3 local (output)'/tip",
-   "regenerated_in_last_run": false,
-   "note": "From results/n_transfer.json, the full run of 2 Nov 2026 (packaged code d51a007, ~2 h); not repeated by this run (scripts/reproduce.py --full does).",
-   "last_run": null
+   "regenerated_in_last_run": true,
+   "note": null,
+   "last_run": {
+    "ok": true,
+    "seconds": 5981.9,
+    "mode": "fast",
+    "finished": "2026-11-03 15:03:42"
+   }
   },
   {
    "where": "Table I, 2 modules, upright: poses",
@@ -1396,16 +1421,21 @@
    "line": 347,
    "context": "2 modules, upright        &",
    "printed": "0.37",
-   "regenerated": 0.3654312916069162,
-   "regenerated_str": "0.365",
-   "delta": -0.00456870839308382,
-   "status": "reproduced",
+   "regenerated": 0.3504413636805726,
+   "regenerated_str": "0.350",
+   "delta": -0.01955863631942739,
+   "status": "differs",
    "step": "n_transfer",
    "command": "OMP_NUM_THREADS=8 .venv/bin/python scripts/n_transfer.py --mc results/mc_std6.json",
    "source": "n_transfer.json std6_2s_sym_test '+L3 local (output)'/tip",
-   "regenerated_in_last_run": false,
-   "note": "From results/n_transfer.json, the full run of 2 Nov 2026 (packaged code d51a007, ~2 h); not repeated by this run (scripts/reproduce.py --full does).",
-   "last_run": null
+   "regenerated_in_last_run": true,
+   "note": null,
+   "last_run": {
+    "ok": true,
+    "seconds": 5981.9,
+    "mode": "fast",
+    "finished": "2026-11-03 15:03:42"
+   }
   },
   {
    "where": "Table I, 4 modules, no gravity: poses",
@@ -1511,16 +1541,21 @@
    "line": 350,
    "context": "4 modules, no gravity     &",
    "printed": "1.21",
-   "regenerated": 1.2125985963322943,
-   "regenerated_str": "1.213",
-   "delta": 0.0025985963322943118,
-   "status": "reproduced",
+   "regenerated": 1.124241567027147,
+   "regenerated_str": "1.124",
+   "delta": -0.0857584329728529,
+   "status": "differs",
    "step": "n_transfer",
    "command": "OMP_NUM_THREADS=8 .venv/bin/python scripts/n_transfer.py --mc results/mc_std6.json",
    "source": "n_transfer.json std6_4s_sym_test_g0 '+L3 local (output)'/tip",
-   "regenerated_in_last_run": false,
-   "note": "From results/n_transfer.json, the full run of 2 Nov 2026 (packaged code d51a007, ~2 h); not repeated by this run (scripts/reproduce.py --full does).",
-   "last_run": null
+   "regenerated_in_last_run": true,
+   "note": null,
+   "last_run": {
+    "ok": true,
+    "seconds": 5981.9,
+    "mode": "fast",
+    "finished": "2026-11-03 15:03:42"
+   }
   },
   {
    "where": "Table I, 2 modules, hanging: poses",
@@ -1626,16 +1661,21 @@
    "line": 351,
    "context": "2 modules, hanging        &",
    "printed": "0.59",
-   "regenerated": 0.5861113542702724,
-   "regenerated_str": "0.586",
-   "delta": -0.00388864572972758,
-   "status": "reproduced",
+   "regenerated": 0.5632925139098153,
+   "regenerated_str": "0.563",
+   "delta": -0.026707486090184696,
+   "status": "differs",
    "step": "n_transfer",
    "command": "OMP_NUM_THREADS=8 .venv/bin/python scripts/n_transfer.py --mc results/mc_std6.json",
    "source": "n_transfer.json std6_2s_sym_test_ghang '+L3 local (output)'/tip",
-   "regenerated_in_last_run": false,
-   "note": "From results/n_transfer.json, the full run of 2 Nov 2026 (packaged code d51a007, ~2 h); not repeated by this run (scripts/reproduce.py --full does).",
-   "last_run": null
+   "regenerated_in_last_run": true,
+   "note": null,
+   "last_run": {
+    "ok": true,
+    "seconds": 5981.9,
+    "mode": "fast",
+    "finished": "2026-11-03 15:03:42"
+   }
   },
   {
    "where": "Table I, 2 modules, horizontal $x$: poses",
@@ -1741,16 +1781,21 @@
    "line": 352,
    "context": "2 modules, horizontal $x$ &",
    "printed": "1.86",
-   "regenerated": 1.8588464087799361,
-   "regenerated_str": "1.859",
-   "delta": -0.0011535912200639764,
-   "status": "reproduced",
+   "regenerated": 1.3958905070747598,
+   "regenerated_str": "1.396",
+   "delta": -0.4641094929252403,
+   "status": "differs",
    "step": "n_transfer",
    "command": "OMP_NUM_THREADS=8 .venv/bin/python scripts/n_transfer.py --mc results/mc_std6.json",
    "source": "n_transfer.json std6_2s_sym_test_gx '+L3 local (output)'/tip",
-   "regenerated_in_last_run": false,
-   "note": "From results/n_transfer.json, the full run of 2 Nov 2026 (packaged code d51a007, ~2 h); not repeated by this run (scripts/reproduce.py --full does).",
-   "last_run": null
+   "regenerated_in_last_run": true,
+   "note": null,
+   "last_run": {
+    "ok": true,
+    "seconds": 5981.9,
+    "mode": "fast",
+    "finished": "2026-11-03 15:03:42"
+   }
   },
   {
    "where": "Table I, 2 modules, horizontal $y$: poses",
@@ -1856,16 +1901,21 @@
    "line": 353,
    "context": "2 modules, horizontal $y$ &",
    "printed": "1.30",
-   "regenerated": 1.301405980898256,
-   "regenerated_str": "1.301",
-   "delta": 0.001405980898256054,
-   "status": "reproduced",
+   "regenerated": 1.0274037528982094,
+   "regenerated_str": "1.027",
+   "delta": -0.27259624710179065,
+   "status": "differs",
    "step": "n_transfer",
    "command": "OMP_NUM_THREADS=8 .venv/bin/python scripts/n_transfer.py --mc results/mc_std6.json",
    "source": "n_transfer.json std6_2s_sym_test_gy '+L3 local (output)'/tip",
-   "regenerated_in_last_run": false,
-   "note": "From results/n_transfer.json, the full run of 2 Nov 2026 (packaged code d51a007, ~2 h); not repeated by this run (scripts/reproduce.py --full does).",
-   "last_run": null
+   "regenerated_in_last_run": true,
+   "note": null,
+   "last_run": {
+    "ok": true,
+    "seconds": 5981.9,
+    "mode": "fast",
+    "finished": "2026-11-03 15:03:42"
+   }
   },
   {
    "where": "Table I, 1 module, random $\\dl$: poses",
@@ -1971,16 +2021,21 @@
    "line": 354,
    "context": "1 module, random $\\dl$    &",
    "printed": "0.16",
-   "regenerated": 0.15686232618111706,
-   "regenerated_str": "0.157",
-   "delta": -0.003137673818882941,
-   "status": "reproduced",
+   "regenerated": 0.15303585192165062,
+   "regenerated_str": "0.153",
+   "delta": -0.006964148078349386,
+   "status": "differs",
    "step": "n_transfer",
    "command": "OMP_NUM_THREADS=8 .venv/bin/python scripts/n_transfer.py --mc results/mc_std6.json",
    "source": "n_transfer.json std6_1s_sym_rand_g0 '+L3 local (output)'/tip",
-   "regenerated_in_last_run": false,
-   "note": "From results/n_transfer.json, the full run of 2 Nov 2026 (packaged code d51a007, ~2 h); not repeated by this run (scripts/reproduce.py --full does).",
-   "last_run": null
+   "regenerated_in_last_run": true,
+   "note": null,
+   "last_run": {
+    "ok": true,
+    "seconds": 5981.9,
+    "mode": "fast",
+    "finished": "2026-11-03 15:03:42"
+   }
   },
   {
    "where": "Plane-section model errs by",
@@ -2203,96 +2258,126 @@
    "line": 370,
    "context": "reduces the one-module error from 0.24",
    "printed": "0.24",
-   "regenerated": 0.23547106877933546,
-   "regenerated_str": "0.235",
-   "delta": -0.004528931220664528,
+   "regenerated": 0.23568161680589295,
+   "regenerated_str": "0.236",
+   "delta": -0.004318383194107045,
    "status": "reproduced",
    "step": "n_transfer",
    "command": "OMP_NUM_THREADS=8 .venv/bin/python scripts/n_transfer.py --mc results/mc_std6.json",
    "source": "n_transfer.json 1s g0 L0+L1/tip",
-   "regenerated_in_last_run": false,
-   "note": "From results/n_transfer.json, the full run of 2 Nov 2026 (packaged code d51a007, ~2 h); not repeated by this run (scripts/reproduce.py --full does).",
-   "last_run": null
+   "regenerated_in_last_run": true,
+   "note": null,
+   "last_run": {
+    "ok": true,
+    "seconds": 5981.9,
+    "mode": "fast",
+    "finished": "2026-11-03 15:03:42"
+   }
   },
   {
    "where": "Learned residual: 1 module, with residual",
    "line": 371,
    "context": "from 0.24 to 0.15",
    "printed": "0.15",
-   "regenerated": 0.14884729445445108,
-   "regenerated_str": "0.149",
-   "delta": -0.0011527055455489155,
-   "status": "reproduced",
+   "regenerated": 0.13823329364707213,
+   "regenerated_str": "0.138",
+   "delta": -0.01176670635292787,
+   "status": "differs",
    "step": "n_transfer",
    "command": "OMP_NUM_THREADS=8 .venv/bin/python scripts/n_transfer.py --mc results/mc_std6.json",
    "source": "n_transfer.json 1s g0 '+L3 local (output)'/tip",
-   "regenerated_in_last_run": false,
-   "note": "From results/n_transfer.json, the full run of 2 Nov 2026 (packaged code d51a007, ~2 h); not repeated by this run (scripts/reproduce.py --full does).",
-   "last_run": null
+   "regenerated_in_last_run": true,
+   "note": null,
+   "last_run": {
+    "ok": true,
+    "seconds": 5981.9,
+    "mode": "fast",
+    "finished": "2026-11-03 15:03:42"
+   }
   },
   {
    "where": "Learned residual: 2 modules no gravity",
    "line": 371,
    "context": "two modules no better (0.38 and 0.37",
    "printed": "0.38",
-   "regenerated": 0.3785038904845684,
-   "regenerated_str": "0.379",
-   "delta": -0.0014961095154316095,
-   "status": "reproduced",
+   "regenerated": 0.3638246438649604,
+   "regenerated_str": "0.364",
+   "delta": -0.01617535613503962,
+   "status": "differs",
    "step": "n_transfer",
    "command": "OMP_NUM_THREADS=8 .venv/bin/python scripts/n_transfer.py --mc results/mc_std6.json",
    "source": "n_transfer.json 2s g0 '+L3 local (output)'/tip",
-   "regenerated_in_last_run": false,
-   "note": "From results/n_transfer.json, the full run of 2 Nov 2026 (packaged code d51a007, ~2 h); not repeated by this run (scripts/reproduce.py --full does).",
-   "last_run": null
+   "regenerated_in_last_run": true,
+   "note": null,
+   "last_run": {
+    "ok": true,
+    "seconds": 5981.9,
+    "mode": "fast",
+    "finished": "2026-11-03 15:03:42"
+   }
   },
   {
    "where": "Learned residual: 2 modules upright",
    "line": 371,
    "context": "two modules no better (0.38 and 0.37",
    "printed": "0.37",
-   "regenerated": 0.3654312916069162,
-   "regenerated_str": "0.365",
-   "delta": -0.00456870839308382,
-   "status": "reproduced",
+   "regenerated": 0.3504413636805726,
+   "regenerated_str": "0.350",
+   "delta": -0.01955863631942739,
+   "status": "differs",
    "step": "n_transfer",
    "command": "OMP_NUM_THREADS=8 .venv/bin/python scripts/n_transfer.py --mc results/mc_std6.json",
    "source": "n_transfer.json 2s upright '+L3 local (output)'/tip",
-   "regenerated_in_last_run": false,
-   "note": "From results/n_transfer.json, the full run of 2 Nov 2026 (packaged code d51a007, ~2 h); not repeated by this run (scripts/reproduce.py --full does).",
-   "last_run": null
+   "regenerated_in_last_run": true,
+   "note": null,
+   "last_run": {
+    "ok": true,
+    "seconds": 5981.9,
+    "mode": "fast",
+    "finished": "2026-11-03 15:03:42"
+   }
   },
   {
    "where": "Learned residual: 4 modules",
    "line": 371,
    "context": "raises four modules to 1.21",
    "printed": "1.21",
-   "regenerated": 1.2125985963322943,
-   "regenerated_str": "1.213",
-   "delta": 0.0025985963322943118,
-   "status": "reproduced",
+   "regenerated": 1.124241567027147,
+   "regenerated_str": "1.124",
+   "delta": -0.0857584329728529,
+   "status": "differs",
    "step": "n_transfer",
    "command": "OMP_NUM_THREADS=8 .venv/bin/python scripts/n_transfer.py --mc results/mc_std6.json",
    "source": "n_transfer.json 4s g0 '+L3 local (output)'/tip",
-   "regenerated_in_last_run": false,
-   "note": "From results/n_transfer.json, the full run of 2 Nov 2026 (packaged code d51a007, ~2 h); not repeated by this run (scripts/reproduce.py --full does).",
-   "last_run": null
+   "regenerated_in_last_run": true,
+   "note": null,
+   "last_run": {
+    "ok": true,
+    "seconds": 5981.9,
+    "mode": "fast",
+    "finished": "2026-11-03 15:03:42"
+   }
   },
   {
    "where": "Learned residual: hanging",
    "line": 372,
    "context": "hanging to 0.59",
    "printed": "0.59",
-   "regenerated": 0.5861113542702724,
-   "regenerated_str": "0.586",
-   "delta": -0.00388864572972758,
-   "status": "reproduced",
+   "regenerated": 0.5632925139098153,
+   "regenerated_str": "0.563",
+   "delta": -0.026707486090184696,
+   "status": "differs",
    "step": "n_transfer",
    "command": "OMP_NUM_THREADS=8 .venv/bin/python scripts/n_transfer.py --mc results/mc_std6.json",
    "source": "n_transfer.json 2s ghang '+L3 local (output)'/tip",
-   "regenerated_in_last_run": false,
-   "note": "From results/n_transfer.json, the full run of 2 Nov 2026 (packaged code d51a007, ~2 h); not repeated by this run (scripts/reproduce.py --full does).",
-   "last_run": null
+   "regenerated_in_last_run": true,
+   "note": null,
+   "last_run": {
+    "ok": true,
+    "seconds": 5981.9,
+    "mode": "fast",
+    "finished": "2026-11-03 15:03:42"
+   }
   },
   {
    "where": "Other residual variants: count",
@@ -2306,25 +2391,35 @@
    "step": "n_transfer",
    "command": "OMP_NUM_THREADS=8 .venv/bin/python scripts/n_transfer.py --mc results/mc_std6.json",
    "source": "n_transfer.json: models other than L0+L1 and '+L3 local (output)'",
-   "regenerated_in_last_run": false,
-   "note": "From results/n_transfer.json, the full run of 2 Nov 2026 (packaged code d51a007, ~2 h); not repeated by this run (scripts/reproduce.py --full does).",
-   "last_run": null
+   "regenerated_in_last_run": true,
+   "note": null,
+   "last_run": {
+    "ok": true,
+    "seconds": 5981.9,
+    "mode": "fast",
+    "finished": "2026-11-03 15:03:42"
+   }
   },
   {
    "where": "Other variants worse on 4 modules: count",
    "line": 372,
    "context": "four are worse on four modules",
    "printed": "4",
-   "regenerated": 4.0,
-   "regenerated_str": "4",
-   "delta": 0.0,
-   "status": "reproduced",
+   "regenerated": 3.0,
+   "regenerated_str": "3",
+   "delta": -1.0,
+   "status": "differs",
    "step": "n_transfer",
    "command": "OMP_NUM_THREADS=8 .venv/bin/python scripts/n_transfer.py --mc results/mc_std6.json",
    "source": "n_transfer.json 4s g0: variants at least twice the physics-alone error",
-   "regenerated_in_last_run": false,
-   "note": "From results/n_transfer.json, the full run of 2 Nov 2026 (packaged code d51a007, ~2 h); not repeated by this run (scripts/reproduce.py --full does). The best variant (0.54 mm) is also above the physics alone (0.50 mm), as the text says ('no better'); 'worse' here means at least twice the physics-alone error.",
-   "last_run": null
+   "regenerated_in_last_run": true,
+   "note": "The best variant (0.54 mm) is also above the physics alone (0.50 mm), as the text says ('no better'); 'worse' here means at least twice the physics-alone error.",
+   "last_run": {
+    "ok": true,
+    "seconds": 5981.9,
+    "mode": "fast",
+    "finished": "2026-11-03 15:03:42"
+   }
   },
   {
    "where": "Other variants worse on 4 modules: range",
@@ -2332,69 +2427,89 @@
    "context": "worse on four modules (1.0--5.9",
    "printed": "1.0--5.9",
    "regenerated": [
-    1.0243262071312764,
-    5.941878233912906
+    0.9017483685874812,
+    6.173192564744985
    ],
-   "regenerated_str": "1.02--5.94",
+   "regenerated_str": "0.90--6.17",
    "delta": [
-    0.024326207131276423,
-    0.04187823391290557
+    -0.0982516314125188,
+    0.2731925647449849
    ],
-   "status": "reproduced",
+   "status": "differs",
    "step": "n_transfer",
    "command": "OMP_NUM_THREADS=8 .venv/bin/python scripts/n_transfer.py --mc results/mc_std6.json",
    "source": "n_transfer.json 4s g0: the five other variants but the best, min-max",
-   "regenerated_in_last_run": false,
-   "note": "From results/n_transfer.json, the full run of 2 Nov 2026 (packaged code d51a007, ~2 h); not repeated by this run (scripts/reproduce.py --full does). 4-module tip per variant: +L3 local (inside) 5.94, +L3 local+N (inside) 3.27, +L3 naive-N (inside) 2.59, +L3 local+N (output) 1.02, +L3 naive-N (output) 0.54; physics alone 0.50 mm.",
-   "last_run": null
+   "regenerated_in_last_run": true,
+   "note": "4-module tip per variant: +L3 local (inside) 5.13, +L3 local+N (inside) 6.17, +L3 naive-N (inside) 3.27, +L3 local+N (output) 0.90, +L3 naive-N (output) 0.60; physics alone 0.50 mm.",
+   "last_run": {
+    "ok": true,
+    "seconds": 5981.9,
+    "mode": "fast",
+    "finished": "2026-11-03 15:03:42"
+   }
   },
   {
    "where": "Best other variant on 4 modules",
    "line": 373,
    "context": "the best reaches 0.54",
    "printed": "0.54",
-   "regenerated": 0.5366102765527867,
-   "regenerated_str": "0.537",
-   "delta": -0.003389723447213333,
-   "status": "reproduced",
+   "regenerated": 0.6038577024084304,
+   "regenerated_str": "0.604",
+   "delta": 0.06385770240843036,
+   "status": "differs",
    "step": "n_transfer",
    "command": "OMP_NUM_THREADS=8 .venv/bin/python scripts/n_transfer.py --mc results/mc_std6.json",
    "source": "n_transfer.json 4s g0 '+L3 naive-N (output)'/tip",
-   "regenerated_in_last_run": false,
-   "note": "From results/n_transfer.json, the full run of 2 Nov 2026 (packaged code d51a007, ~2 h); not repeated by this run (scripts/reproduce.py --full does).",
-   "last_run": null
+   "regenerated_in_last_run": true,
+   "note": null,
+   "last_run": {
+    "ok": true,
+    "seconds": 5981.9,
+    "mode": "fast",
+    "finished": "2026-11-03 15:03:42"
+   }
   },
   {
    "where": "Coverage: 4 modules (NN distance ratio)",
    "line": 374,
    "context": "lie 1.7 and 12.8 times further",
    "printed": "1.7",
-   "regenerated": 1.6559467273418382,
+   "regenerated": 1.6560875563251851,
    "regenerated_str": "1.66",
-   "delta": -0.044053272658161724,
+   "delta": -0.04391244367481484,
    "status": "reproduced",
    "step": "n_transfer",
    "command": "OMP_NUM_THREADS=8 .venv/bin/python scripts/n_transfer.py --mc results/mc_std6.json",
    "source": "n_transfer.json 4s g0 coverage/nn_ratio",
-   "regenerated_in_last_run": false,
-   "note": "From results/n_transfer.json, the full run of 2 Nov 2026 (packaged code d51a007, ~2 h); not repeated by this run (scripts/reproduce.py --full does).",
-   "last_run": null
+   "regenerated_in_last_run": true,
+   "note": null,
+   "last_run": {
+    "ok": true,
+    "seconds": 5981.9,
+    "mode": "fast",
+    "finished": "2026-11-03 15:03:42"
+   }
   },
   {
    "where": "Coverage: hanging (NN distance ratio)",
    "line": 374,
    "context": "lie 1.7 and 12.8 times further",
    "printed": "12.8",
-   "regenerated": 12.831767840715017,
+   "regenerated": 12.832756002078806,
    "regenerated_str": "12.83",
-   "delta": 0.03176784071501615,
+   "delta": 0.03275600207880558,
    "status": "reproduced",
    "step": "n_transfer",
    "command": "OMP_NUM_THREADS=8 .venv/bin/python scripts/n_transfer.py --mc results/mc_std6.json",
    "source": "n_transfer.json 2s ghang coverage/nn_ratio",
-   "regenerated_in_last_run": false,
-   "note": "From results/n_transfer.json, the full run of 2 Nov 2026 (packaged code d51a007, ~2 h); not repeated by this run (scripts/reproduce.py --full does).",
-   "last_run": null
+   "regenerated_in_last_run": true,
+   "note": null,
+   "last_run": {
+    "ok": true,
+    "seconds": 5981.9,
+    "mode": "fast",
+    "finished": "2026-11-03 15:03:42"
+   }
   },
   {
    "where": "PINNs: training configurations",
