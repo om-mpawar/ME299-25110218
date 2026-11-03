@@ -24,6 +24,7 @@ def _eb(model, tag):
 
 def test_matches_reference(model):
     eb, d = _eb(model, "std6_2s_sym_test")
+    eb.cT = 0.0 * eb.cT                    # the reference is rigid in twist (torsion: tests/test_torsion.py)
     dl, st = d["dl"][:20], d["stations"]
     # same fixed point, solved tight: since 29 Oct the iteration also waits for the axial strains, so at the live
     # tolerance it stops later than the reference (closer to the fixed point), not at the same iterate

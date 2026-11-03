@@ -93,22 +93,25 @@ class ModuleModel:
       tied     the same factor times the IDENTIFIED axial compliance: the notch bridges' shear compliance assumed to
                exceed plane-section theory by the same factor as their axial compliance (no new parameter)
       fit      theory times exp(s_S) in the notched cells: one more parameter (the last entry of theta); it needs
-               training data with gravity across the backbone (horizontal mounting)"""
+               training data with gravity across the backbone (horizontal mounting)
+    torsion: torsional compliance as a factor on plane-section theory (EBPrior.cT_plane), identified from a SOFA twist
+    test of one module (scripts/torsion_identify.py); None = rigid in twist (every result before 3 Nov 2026)."""
 
-    def __init__(self, knot=10.0, shear=None, cad_json=None):
+    def __init__(self, knot=10.0, shear=None, cad_json=None, torsion=None):
         if shear not in SHEAR_MODES:
             raise ValueError(f"shear must be one of {SHEAR_MODES}")
         self.knots = np.arange(0.0, MODULE_L + 1e-9, knot)
         self.K = len(self.knots)
         self.shear = shear
         self.cad_json = cad_json
+        self.torsion = torsion
         self.n_theta = 3 + 3 * self.K + (shear == "fit")
         self.base = {}
 
     @classmethod
     def from_result(cls, res):
         """Model and parameters from a module_compliance.py result (json dict)."""
-        m = cls(res["knot"], res.get("shear"), res.get("cad_json"))
+        m = cls(res["knot"], res.get("shear"), res.get("cad_json"), res.get("torsion"))
         return m, np.array(res["theta"])
 
     def prior(self, n, routing="shared", az=None, holes=None):
@@ -155,6 +158,9 @@ class ModuleModel:
         else:
             eb.cS = kS * eb.cA_cad * np.tile(np.exp(theta[-1] * cut), n)
         eb.tendon_compliance = np.zeros(3 * n)                 # reset: the prior object is cached between builds
+        eb.cT = (self.torsion or 0.0) * eb.cT_plane
+        if hw is not None:          # a softer print twists more too: torsion follows the mean bending scale, which
+            eb.cT = eb.cT * np.exp(0.5 * (hw["log_bend_x"] + hw["log_bend_z"]))   # keeps Prop. 2's invariance exact
         eb.set_arm(eb.r_bear0 + (hw.get("d_arm_mm", 0.0) if hw is not None else 0.0))
         eb.set_gap(gap)
         if hw is not None and hw["tendon_c"] > 0:

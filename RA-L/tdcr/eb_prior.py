@@ -178,12 +178,19 @@ class EBPrior:
         cA = axial_scale * (dyf / A[:nc * m]).reshape(nc, m).sum(1)   # axial_scale: wave-spring compliance of the discs
         cX = (dyf / Jx[:nc * m]).reshape(nc, m).sum(1)
         cZ = (dyf / Jz[:nc * m]).reshape(nc, m).sum(1)
+        cT = (2.0 * (1.0 + STD6.poisson) * dyf / (Jx + Jz)[:nc * m]).reshape(nc, m).sum(1)   # integral of E / (G J_p)
         self.cA, self.cX, self.cZ = np.tile(cA, n), np.tile(cX, n), np.tile(cZ, n)
         self.cA_cad = self.cA / axial_scale                            # plane-section integral of 1/A (mass distribution)
         # shear compliance per cell (integral of 1 / (kappa G A) times E, mm^-1): zero = Euler-Bernoulli (every result
         # before 19 Oct 2026). Only external transverse loads (gravity across the backbone) shear the cells: tendon
         # loads carry no shear force (Camarillo 2008, Sec. II), so the tendon map G and the pull-only QP are unchanged.
         self.cS = np.zeros_like(self.cA)
+        # torsion compliance per cell (integral of 1 / (G J_p) times E, mm^-3): zero = rigid in twist (every result
+        # before 3 Nov 2026). cT_plane is the plane-section value; ModuleModel sets cT = factor x cT_plane, the factor
+        # identified from a SOFA twist test (sim/twist_test.py, scripts/torsion_identify.py). Only the twisting part
+        # of the gravity moment loads it: tendon loads twist the backbone only at second order.
+        self.cT_plane = np.tile(cT, n)
+        self.cT = np.zeros_like(self.cA)
         self.yc = np.concatenate([(np.arange(nc) + 0.5) * cell + j * L for j in range(n)])
         self.edges = np.concatenate([[0.0], np.concatenate([(np.arange(1, nc + 1)) * cell + j * L for j in range(n)])])
         azr = np.radians(az.ravel())
@@ -288,10 +295,11 @@ class EBPrior:
 
 def capstan_factors(eb, w, sigma, mu):
     """Tension factor of every tendon in every cell, f = exp(-sigma mu Theta), Theta the turning |w| accumulated along
-    the tendon's path from the base to the cell centre. w (P, nc, 3) cell rotation vectors, sigma (P, 3n) -> (P, 3n, nc).
+    the tendon's path from the base to the cell centre. w (P, nc, 3) cell rotation vectors, sigma (P, 3n) -> (P, 3n, nc);
+    the twist (w[..., 1]) does not turn a tendon at first order and is left out.
     Source: the capstan (Euler-Eytelwein) equation applied cell by cell."""
     T = eb.through.astype(float)
-    turn = T[None] * np.linalg.norm(w, axis=-1)[:, None, :]
+    turn = T[None] * np.linalg.norm(w[..., [0, 2]], axis=-1)[:, None, :]
     theta = np.cumsum(turn, 2) - 0.5 * turn
     return np.exp(-np.asarray(sigma, float)[:, :, None] * mu * theta)
 
@@ -447,7 +455,7 @@ def predict_gravity(eb, dl, stations, g_vec=(0.0, -STD6.gravity_mm_s2, 0.0), E=S
         Ml = np.einsum("pcji,pcj->pci", Rc, Mw)                             # in the cell frame
         Fl = np.einsum("pcji,cj->pci", Rc, Fdist)
         kx, kz = eb.bend(-Ml[..., 2], Ml[..., 0])                          # moments towards +x, +z (tendon convention)
-        wg_new = np.stack([kz, np.zeros_like(kz), -kx], -1)
+        wg_new = np.stack([kz, eb.cT * Ml[..., 1], -kx], -1)              # twist: the moment about the backbone axis
         shg_new = -Fl[..., 1] * eb.cA                                       # compression when the distal weight pushes down
         sxz_new = Fl[..., [0, 2]] * eb.cS[None, :, None]                    # shear along the transverse distal force
         h = path_shift(shg_new, kx, kz)

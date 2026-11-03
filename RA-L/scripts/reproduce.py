@@ -39,7 +39,10 @@ def step(name, cmd, writes, env=None, long=False, needs=None, about=""):
 
 
 STEPS = [
-    step("module_compliance", [PY, "scripts/module_compliance.py", "--train", *TRAIN, "--out", "results/mc_std6.json"],
+    step("torsion_identify", [PY, "scripts/torsion_identify.py"], ["results/torsion_std6.json"],
+         about="torsion factor x2.45 of plane section, from the SOFA twist test (results/twist_test_std6.json)"),
+    step("module_compliance", [PY, "scripts/module_compliance.py", "--train", *TRAIN, "--torsion-json",
+                               "results/torsion_std6.json", "--out", "results/mc_std6.json"],
          ["results/mc_std6.json"], env=dict(OMP_NUM_THREADS="1"),
          about="Table I: identified physics, plane-section column; x20.2/5.9/5.3 (~2 min)"),
     step("mc_reeval", [PY, "scripts/mc_reeval.py"], ["results/mc_std6_reeval.json"],

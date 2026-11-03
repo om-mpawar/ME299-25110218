@@ -59,19 +59,24 @@ def main():
     ap.add_argument("--init", type=float, nargs=3, help="initial global log-scales (axial, bend x, bend z)")
     ap.add_argument("--skip-baseline", action="store_true")
     ap.add_argument("--shear", choices=[m for m in SHEAR_MODES if m], help="Timoshenko shear under transverse gravity")
+    ap.add_argument("--torsion-json", help="torsion factor from scripts/torsion_identify.py (default: rigid in twist)")
     ap.add_argument("--init-from", help="start from the parameters of an earlier result (json); missing entries 0")
     ap.add_argument("--only-shear", action="store_true", help="--shear fit: fit only the shear factor, keep the rest")
     ap.add_argument("--tests", nargs="+", help="test sets (default: the std6 tests when training on std6_* sets)")
     ap.add_argument("--out", default="results/module_compliance.json")
     a = ap.parse_args()
     tests = a.tests or (TESTS_STD6 if all(t.startswith("std6_") for t in a.train) else TESTS)
-    model = ModuleModel(a.knot, a.shear)
+    torsion = json.load(open(a.torsion_json))["factor"] if a.torsion_json else None
+    model = ModuleModel(a.knot, a.shear, torsion=torsion)
     train = []
     for tag in a.train:
         train.append(load_set(tag))
     print(f"training on {', '.join(f'{t} ({len(d['C'])})' for t, d in zip(a.train, train))}; "
-          f"{model.n_theta} parameters (knots every {a.knot:g} mm), ridge {a.ridge}, shear {a.shear}")
+          f"{model.n_theta} parameters (knots every {a.knot:g} mm), ridge {a.ridge}, shear {a.shear}, "
+          f"torsion {torsion}")
     res = dict(train=a.train, knot=a.knot, ridge=a.ridge, shear=a.shear)
+    if torsion is not None:
+        res.update(torsion=torsion, torsion_json=a.torsion_json)
     if not a.skip_baseline:
         res["plane_section"] = report(model, np.zeros(model.n_theta), "EB plane-section (theta = 0)", tests)
     th0 = np.zeros(model.n_theta)
