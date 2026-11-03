@@ -82,11 +82,7 @@ def fig_sections():
 def fig_disc():
     from tdcr.compliance import HOLES6 as H
     y30, A30, Jx30, _ = section_profile(holes=H)
-    ebp_json, ebp_cache = ebp.CAD_JSON, ebp.CACHE
-    ebp.CAD_JSON = os.path.join(CAD, "std6_tdcr_L150_D40.json")
-    ebp.CACHE = os.path.join(RESULTS, "eb_profile_D40.npz")
-    y40, A40, Jx40, _ = section_profile(holes=H)
-    ebp.CAD_JSON, ebp.CACHE = ebp_json, ebp_cache
+    y40, A40, Jx40, _ = section_profile(holes=H, cad_json=os.path.join(CAD, "std6_tdcr_L150_D40.json"))
     fig, axs = plt.subplots(2, 1, figsize=(6.4, 2.9), sharex=True)
     for ax, (a, b, lab) in zip(axs, ((A30, A40, "$A(y)$ (mm$^2$)"), (Jx30, Jx40, "$J_x(y)$ (mm$^4$)"))):
         ax.plot(y30, a, color=GREY, lw=0.8, label="30 mm disc (simulated, printed first)")
