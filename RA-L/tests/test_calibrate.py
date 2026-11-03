@@ -112,3 +112,24 @@ def test_mass_is_not_identifiable_from_shape(tmp_path, commands):
     pa = Twin(2, "horizontal_x", calib_json=a, tol=1e-9).shape(commands[9]).positions
     pb = Twin(2, "horizontal_x", calib_json=b, tol=1e-9).shape(commands[9]).positions
     assert np.abs(pa - pb).max() < 0.5                                  # mm, for a 35 % trade in both
+
+
+def test_unconverged_poses_are_dropped_and_a_bad_fit_raises(tmp_path, commands, monkeypatch):
+    """Code review L2: an unconverged twin iterate used to enter the least squares silently."""
+    import tdcr.calibrate as cal
+    path = _dataset(tmp_path / "c.npz", 2, "upright", commands[:6], TRUE)
+    real = cal._errors
+
+    def first_pose_fails(calib, data, sel, *a):
+        return [(r, e, ok and not (i == 0 and p == 0)) for (r, e, ok), (i, p) in zip(real(calib, data, sel, *a), sel)]
+
+    monkeypatch.setattr(cal, "_errors", first_pose_fails)
+    with pytest.warns(RuntimeWarning, match="does not converge on 1 drawn poses"):
+        c = fit([path], n_poses=6, seed=0, mass_kg=MASS_STD6 * np.exp(TRUE["log_mass"]), max_nfev=2)
+    assert c["poses_dropped"] == [[0, 0]] and [0, 0] not in c["poses_used"] and c["n_poses"] == 5
+
+    monkeypatch.setattr(cal, "_errors", lambda calib, data, sel, *a: [(r, e, "log_bend_x" not in calib or
+                                                                       calib["log_bend_x"] == 0.0)
+                                                                      for r, e, _ in real(calib, data, sel, *a)])
+    with pytest.raises(RuntimeError, match="does not converge"):
+        fit([path], n_poses=6, seed=0, max_nfev=2)

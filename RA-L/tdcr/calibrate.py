@@ -21,7 +21,8 @@ smaller radius than SOFA's cable points. Calibrated:
 
 The module mass is MEASURED (weigh the modules with their markers) and passed as mass_kg, not fitted: shape data
 alone cannot separate stiffness from weight (tendon bending depends on stiffness ratios only, gravity sag on
-compliance x weight; on synthetic data with 0.3 mm noise a free mass drifts 60 % with the compliances). log_mass
+compliance x weight; on synthetic data with 0.3 mm noise a free mass drifts by tens of percent with the
+compliances). log_mass
 stays in the calibration file (0, or fitted with fit_mass=True when the data allow it).
 
 Loss: module-end position error (mm) and lever_mm x orientation error (rad) over every module end of the chosen poses,
@@ -29,7 +30,8 @@ least squares with bounds (+-1 on the log-scales, 0 <= tendon_c <= 0.05, -1 <= d
 finite-difference Jacobian
 through the twin
 solved to a tight tolerance. Datasets: tdcr/hardware/mocap.make_dataset files (any mix of section counts and mountings);
-n_poses valid poses are drawn from their union with `seed`. The joint (gap_mm, joint_mass_kg, tip_mass_kg) is measured
+n_poses valid poses are drawn from their union with `seed`; a drawn pose on which the twin does not converge at the
+start values is dropped with a warning, and a fit that ends with an unconverged pose raises. The joint (gap_mm, joint_mass_kg, tip_mass_kg) is measured
 and passed in like the mass; it travels in the calibration file.
 
     .venv/bin/python -m tdcr.calibrate --datasets data/hw/<s1>/dataset.npz data/hw/<s2>/dataset.npz \
@@ -37,6 +39,7 @@ and passed in like the mass; it travels in the calibration file.
 """
 import argparse
 import json
+import warnings
 
 import numpy as np
 from scipy.optimize import least_squares
@@ -87,7 +90,7 @@ def calib_dict(x, names, free_len_mm, mass_kg, joint=None):
 
 
 def _errors(calib, data, sel, compliance_json, lever_mm):
-    """-> per pose: (residual vector over its module ends, mean module-end position error in mm)."""
+    """-> per pose: (residual vector over its module ends, mean module-end position error in mm, converged)."""
     twins, out = {}, []
     for i, p in sel:
         d = data[i]
@@ -101,7 +104,7 @@ def _errors(calib, data, sel, compliance_json, lever_mm):
             rv = Rotation.from_matrix(s.rotations[k].T @ d["T_ends"][p, j, :3, :3]).as_rotvec()
             r += [dp, lever_mm * rv]
             pos.append(np.linalg.norm(dp))
-        out.append((np.concatenate(r), float(np.mean(pos))))
+        out.append((np.concatenate(r), float(np.mean(pos)), s.converged))
     return out
 
 
@@ -115,16 +118,30 @@ def fit(datasets, n_poses=15, seed=0, free_len_mm=300.0, mass_kg=MASS_STD6, fit_
     sel = select_poses(data, n_poses, seed)
     names = FITTED + (("log_mass",) if fit_mass else ()) + (("mu",) if fit_friction else ())
     joint = dict(gap_mm=gap_mm, joint_mass_kg=joint_mass_kg, tip_mass_kg=tip_mass_kg)
+    x0 = np.array([START[k] for k in names])
+    ok = [e[2] for e in _errors(calib_dict(x0, names, free_len_mm, mass_kg, joint), data, sel, compliance_json,
+                                lever_mm)]
+    dropped = [p for p, k in zip(sel, ok) if not k]
+    if dropped:
+        warnings.warn(f"the twin does not converge on {len(dropped)} drawn poses (dataset, pose) {dropped}; left out",
+                      RuntimeWarning, stacklevel=2)
+        sel = [p for p, k in zip(sel, ok) if k]
+        if not sel:
+            raise ValueError("the twin converges on none of the drawn poses")
 
     def resid(x):
         return np.concatenate([e[0] for e in _errors(calib_dict(x, names, free_len_mm, mass_kg, joint), data, sel,
                                                       compliance_json, lever_mm)])
 
-    r = least_squares(resid, np.array([START[k] for k in names]),
+    r = least_squares(resid, x0,
                       bounds=(np.array([BOUNDS[k][0] for k in names]), np.array([BOUNDS[k][1] for k in names])),
                       x_scale=np.array([SCALE[k] for k in names]), diff_step=1e-3, max_nfev=max_nfev)
     calib = calib_dict(r.x, names, free_len_mm, mass_kg, joint)
-    calib.update(poses_used=sel, residual_mm=[e[1] for e in _errors(calib, data, sel, compliance_json, lever_mm)],
+    final = _errors(calib, data, sel, compliance_json, lever_mm)
+    if not all(e[2] for e in final):
+        raise RuntimeError("the calibrated twin does not converge on poses "
+                           f"{[p for p, e in zip(sel, final) if not e[2]]}: the fit is not valid")
+    calib.update(poses_used=sel, poses_dropped=dropped, residual_mm=[e[1] for e in final],
                  datasets=[d["path"] for d in data], compliance_json=compliance_json, n_poses=len(sel), seed=seed,
                  lever_mm=lever_mm, fitted=list(names), nfev=int(r.nfev), cost=float(r.cost))
     return calib
