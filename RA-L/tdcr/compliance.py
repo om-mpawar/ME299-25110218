@@ -17,10 +17,12 @@ The identification itself (Table I, results/mc_std6.json) is run by scripts/modu
     .venv/bin/python scripts/module_compliance.py --train std6_1s_sym_train_g0 std6_2s_sym_train_g0 \
         std6_1s_sym_train std6_2s_sym_train --out results/mc_std6.json
 """
+import copy
 import json
 import multiprocessing as mp
 import os
 import time
+import warnings
 
 import numpy as np
 from scipy.optimize import least_squares
@@ -117,7 +119,8 @@ class ModuleModel:
     def prior(self, n, routing="shared", az=None, holes=None):
         """az: explicit tendon azimuths (n x 3, SOFA frame, e.g. from tdcr.eb_prior.geometry_from_cables) override
         routing; holes: channel holes cut from the cross-sections (module frame)."""
-        key = (n, routing, None if az is None else tuple(np.round(np.ravel(az), 6)), None if holes is None else tuple(holes))
+        key = (n, routing, None if az is None else tuple(np.round(np.ravel(az), 6)), None if holes is None else tuple(holes),
+               self.cad_json)
         if key not in self.base:
             eb = EBPrior(n, routing=routing, tendon_az_deg=az, holes=holes, cad_json=self.cad_json)
             per = len(eb.yc) // n
@@ -139,6 +142,7 @@ class ModuleModel:
         from the SOFA cable radius (EBPrior r_bear, 10.55 mm) to where the real wire bears. hw=None is the
         SOFA-identified module alone. gap: rigid joint length between modules (EBPrior.set_gap)."""
         eb, cA, cX, cZ, B, cut = self.prior(n, routing, az, holes)
+        eb = copy.copy(eb)               # the cached prior stays untouched: below only reassigns attributes, never edits
         sc, f = self.split(theta)
         if hw is not None:
             sc = sc + np.array([hw["log_axial"], hw["log_bend_x"], hw["log_bend_z"]])
@@ -157,7 +161,7 @@ class ModuleModel:
             eb.cS = kS * eb.cA
         else:
             eb.cS = kS * eb.cA_cad * np.tile(np.exp(theta[-1] * cut), n)
-        eb.tendon_compliance = np.zeros(3 * n)                 # reset: the prior object is cached between builds
+        eb.tendon_compliance = np.zeros(3 * n)
         eb.cT = (self.torsion or 0.0) * eb.cT_plane
         if hw is not None:          # a softer print twists more too: torsion follows the mean bending scale, which
             eb.cT = eb.cT * np.exp(0.5 * (hw["log_bend_x"] + hw["log_bend_z"]))   # keeps Prop. 2's invariance exact
@@ -173,7 +177,11 @@ class ModuleModel:
         eb = self.build(theta, d["n"], d.get("routing", "shared"), d.get("az"), d.get("holes"))
         if d.get("g") is None:
             return eb.predict(d["dl"], d["stations"])
-        return predict_gravity(eb, d["dl"], d["stations"], g_vec=d["g"], E=E_FEM, mass=d.get("mass", MASS_STD))[:3]
+        C, R, lam, info = predict_gravity(eb, d["dl"], d["stations"], g_vec=d["g"], E=E_FEM, mass=d.get("mass", MASS_STD))
+        if not info["converged"]:
+            warnings.warn(f"gravity solve: {int((~info['converged_poses']).sum())} of {len(C)} poses not converged "
+                          f"({int(info['failed_poses'].sum())} diverged, NaN)", RuntimeWarning, stacklevel=2)
+        return C, R, lam
 
 
 # ---------------------------------------------------------------- fitting (parallel finite-difference Jacobian)

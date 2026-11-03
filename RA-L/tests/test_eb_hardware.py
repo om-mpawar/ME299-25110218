@@ -27,9 +27,27 @@ def test_zero_tendon_compliance_is_identical(model):
     plain = _predict(m, th, d)
     zero = _predict(m, th, d, ZERO_HW)
     assert np.abs(zero - plain).max() < 1e-12
-    _predict(m, th, d, {**ZERO_HW, "tendon_c": 0.01, "log_bend_x": 0.3})   # a calibrated build in between ...
-    again = _predict(m, th, d)                                          # ... must not leak into the next plain build
+    first = m.build(th, d["n"], d["routing"], d["az"], d["holes"], gap=2.0)
+    G, cX, gap = first.G.copy(), first.cX.copy(), first.gap_after.copy()
+    m.build(th, d["n"], d["routing"], d["az"], d["holes"], hw={**ZERO_HW, "tendon_c": 0.01, "log_bend_x": 0.3})
+    # code review L1: a later build used to overwrite the object an earlier build returned (the prior is cached)
+    assert np.array_equal(first.G, G) and np.array_equal(first.cX, cX) and np.array_equal(first.gap_after, gap)
+    again = _predict(m, th, d)
     assert np.abs(again - plain).max() < 1e-12
+
+
+def test_prior_cache_follows_the_geometry(model):
+    """Code review L1: changing cad_json must change the profile, not reuse the cached D30 one."""
+    import os
+    from tdcr.paths import CAD
+    m, th = model
+    d = load_set("std6_2s_sym_test_g0")
+    a = m.build(th, d["n"], d["routing"], d["az"], d["holes"])
+    m2 = ModuleModel.from_result(json.load(open("results/mc_std6.json")))[0]
+    m2.base = m.base                                                    # share the cache, as a reused model would
+    m2.cad_json = os.path.join(CAD, "std6_tdcr_L150_D40.json")
+    b = m2.build(th, d["n"], d["routing"], d["az"], d["holes"])
+    assert not np.allclose(a.cX, b.cX)
 
 
 def test_stretch_reduces_bend(model):
