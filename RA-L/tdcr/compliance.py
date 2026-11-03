@@ -132,8 +132,9 @@ class ModuleModel:
         """Physics core with the identified compliance theta. hw (hardware calibration, plan Task 1/7): log_axial,
         log_bend_x, log_bend_z are added to the notch log-scales; tendon_c (tendon compliance per mm of tendon, mm^-2)
         and free_len_mm (tendon length outside the robot) give tendon i the stretch tendon_c * (free_len_mm + Y_END +
-        section(i) * (L + gap)) on the diagonal of G. hw=None is the SOFA-identified module alone. gap: rigid joint
-        length between modules (EBPrior.set_gap)."""
+        section(i) * (L + gap)) on the diagonal of G; d_arm_mm (optional, default 0) moves every tendon's moment arm
+        from the SOFA cable radius (EBPrior r_bear, 10.55 mm) to where the real wire bears. hw=None is the
+        SOFA-identified module alone. gap: rigid joint length between modules (EBPrior.set_gap)."""
         eb, cA, cX, cZ, B, cut = self.prior(n, routing, az, holes)
         sc, f = self.split(theta)
         if hw is not None:
@@ -154,6 +155,7 @@ class ModuleModel:
         else:
             eb.cS = kS * eb.cA_cad * np.tile(np.exp(theta[-1] * cut), n)
         eb.tendon_compliance = np.zeros(3 * n)                 # reset: the prior object is cached between builds
+        eb.set_arm(eb.r_bear0 + (hw.get("d_arm_mm", 0.0) if hw is not None else 0.0))
         eb.set_gap(gap)
         if hw is not None and hw["tendon_c"] > 0:
             length = hw["free_len_mm"] + Y_END + (np.arange(3 * n) // 3) * (MODULE_L + gap)

@@ -1,5 +1,7 @@
 """Few-shot calibration of the hardware terms (plan Task 7), on synthetic datasets made by the twin itself with known
 parameters, in the format of hardware/mocap.make_dataset."""
+import json
+
 import numpy as np
 import pytest
 from scipy.spatial.transform import Rotation
@@ -52,6 +54,36 @@ def test_recovers_known_params(tmp_path, commands):
     assert abs(calib["mass_kg"] * np.exp(calib["log_mass"]) - true_mass) < 1e-9
     assert abs(calib["tendon_c"] - 0.01) < 0.004
     assert set(PARAMS) <= set(calib) and calib["free_len_mm"] == 300.0
+
+
+def test_recovers_the_moment_arm(tmp_path, commands):
+    """A wire bearing 0.4 mm inside SOFA's cable radius: the compliance scales cannot absorb it, the arm term recovers
+    it (physics audit K1)."""
+    true = dict(TRUE, d_arm_mm=-0.4)
+    files = [_dataset(tmp_path / "up.npz", 2, "upright", commands[:8], true, noise_mm=0.3, seed=1),
+             _dataset(tmp_path / "hx.npz", 2, "horizontal_x", commands[8:16], true, noise_mm=0.3, seed=2)]
+    calib = fit(files, n_poses=15, seed=0, mass_kg=MASS_STD6 * np.exp(TRUE["log_mass"]))
+    assert abs(calib["d_arm_mm"] + 0.4) < 0.03
+    assert abs(calib["log_bend_x"] - 0.2) < 0.05 and abs(calib["tendon_c"] - 0.01) < 0.004
+
+
+def test_calibration_without_the_arm_still_loads(commands):
+    """Calibration files written before the arm term (no d_arm_mm) mean the SOFA cable radius."""
+    old = dict(TRUE)
+    a = Twin(2, "upright", calib_json=old, tol=1e-9).shape(commands[3]).positions
+    b = Twin(2, "upright", calib_json=dict(old, d_arm_mm=0.0), tol=1e-9).shape(commands[3]).positions
+    c = Twin(2, "upright", calib_json=dict(old, d_arm_mm=-0.4), tol=1e-9).shape(commands[3]).positions
+    assert np.array_equal(a, b) and np.linalg.norm(c[-1] - a[-1]) > 1.0
+
+
+def test_arm_does_not_leak_into_the_next_build():
+    """The prior object is cached between builds: a calibrated arm must not survive into a plain build."""
+    from tdcr.compliance import ModuleModel
+    from tdcr.eb_prior import R_BEAR
+    m, theta = ModuleModel.from_result(json.load(open("results/mc_std6.json")))
+    hw = dict(log_axial=0.0, log_bend_x=0.0, log_bend_z=0.0, tendon_c=0.0, free_len_mm=300.0, d_arm_mm=-0.4)
+    assert np.isclose(np.linalg.norm(m.build(theta, 2, hw=hw).D[0]), R_BEAR - 0.4)
+    assert np.isclose(np.linalg.norm(m.build(theta, 2).D[0]), R_BEAR)
 
 
 def test_identity_when_exact(tmp_path, commands):

@@ -1,11 +1,18 @@
 """
-Few-shot hardware calibration of the twin (layer L2): five physical numbers from ~15 motion-capture poses.
+Few-shot hardware calibration of the twin (layer L2): five physical numbers (six with friction) from ~15
+motion-capture poses.
 
 The module's compliance profile comes from SOFA (results/mc_std6.json); the hardware differs from the FEM in its
-overall compliance (print, material), its weight (markers, print), and in the tendons, which stretch. Calibrated:
+overall compliance (print, material), its weight (markers, print), and in the tendons, which stretch and bear at a
+smaller radius than SOFA's cable points. Calibrated:
 
     log_axial, log_bend_x, log_bend_z   added to the identified notch log-scales (axial, bending towards x, z)
     tendon_c                            tendon compliance per mm of tendon (stretch on the diagonal of G)
+    d_arm_mm                            tendon moment arm minus the SOFA cable radius (10.55 mm). In SOFA the cable
+                                        points sit inside the channel wall; a 0.4-0.6 mm wire bearing on the wall of
+                                        the printed robot sits near 10.1-10.2 mm. Under displacement control the bend
+                                        scales as dl / arm, which the compliance scales cannot absorb (physics audit
+                                        K1: 10.15 mm against the FEM leaves 2-6 mm after refitting the scales)
     mu                                  optional (fit_friction=True): capstan friction in the channels; 0 otherwise.
                                         Under displacement control it acts mainly through the tendon stretch, a
                                         sub-millimetre effect, yet it is recovered (synthetic, 0.3 mm noise) from
@@ -18,7 +25,8 @@ compliance x weight; on synthetic data with 0.3 mm noise a free mass drifts 60 %
 stays in the calibration file (0, or fitted with fit_mass=True when the data allow it).
 
 Loss: module-end position error (mm) and lever_mm x orientation error (rad) over every module end of the chosen poses,
-least squares with bounds (+-1 on the log-scales, 0 <= tendon_c <= 0.05, 0 <= mu <= 0.6), finite-difference Jacobian
+least squares with bounds (+-1 on the log-scales, 0 <= tendon_c <= 0.05, -1 <= d_arm_mm <= 0.5, 0 <= mu <= 0.6),
+finite-difference Jacobian
 through the twin
 solved to a tight tolerance. Datasets: tdcr/hardware/mocap.make_dataset files (any mix of section counts and mountings);
 n_poses valid poses are drawn from their union with `seed`. The joint (gap_mm, joint_mass_kg, tip_mass_kg) is measured
@@ -37,12 +45,12 @@ from scipy.spatial.transform import Rotation
 from tdcr.compliance import MASS_STD6
 from tdcr.twin import Twin, direction_from_sequence
 
-PARAMS = ("log_axial", "log_bend_x", "log_bend_z", "log_mass", "tendon_c", "mu")
-FITTED = ("log_axial", "log_bend_x", "log_bend_z", "tendon_c")       # default: mass measured, not fitted
+PARAMS = ("log_axial", "log_bend_x", "log_bend_z", "log_mass", "tendon_c", "d_arm_mm", "mu")
+FITTED = ("log_axial", "log_bend_x", "log_bend_z", "tendon_c", "d_arm_mm")   # default: mass measured, not fitted
 BOUNDS = dict(log_axial=(-1.0, 1.0), log_bend_x=(-1.0, 1.0), log_bend_z=(-1.0, 1.0), log_mass=(-1.0, 1.0),
-              tendon_c=(0.0, 0.05), mu=(0.0, 0.6))
-START = dict(log_axial=0.0, log_bend_x=0.0, log_bend_z=0.0, log_mass=0.0, tendon_c=1e-4, mu=0.1)
-SCALE = dict(log_axial=1.0, log_bend_x=1.0, log_bend_z=1.0, log_mass=1.0, tendon_c=0.01, mu=0.1)
+              tendon_c=(0.0, 0.05), d_arm_mm=(-1.0, 0.5), mu=(0.0, 0.6))
+START = dict(log_axial=0.0, log_bend_x=0.0, log_bend_z=0.0, log_mass=0.0, tendon_c=1e-4, d_arm_mm=0.0, mu=0.1)
+SCALE = dict(log_axial=1.0, log_bend_x=1.0, log_bend_z=1.0, log_mass=1.0, tendon_c=0.01, d_arm_mm=0.1, mu=0.1)
 JOINT = ("gap_mm", "joint_mass_kg", "tip_mass_kg")                 # measured joint, passed in (see fit)
 STATIONS_PER_MODULE = 32                                   # twin stations every 5 mm, 160 mm per module (tdcr.params)
 

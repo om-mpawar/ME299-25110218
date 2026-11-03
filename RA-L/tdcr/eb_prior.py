@@ -187,8 +187,9 @@ class EBPrior:
         self.yc = np.concatenate([(np.arange(nc) + 0.5) * cell + j * L for j in range(n)])
         self.edges = np.concatenate([[0.0], np.concatenate([(np.arange(1, nc + 1)) * cell + j * L for j in range(n)])])
         azr = np.radians(az.ravel())
-        self.D = r_bear * np.stack([np.cos(azr), np.sin(azr)], 1)                             # (3n, 2) x, z, base frame
-        self.d = self.D[:3]
+        self.D_unit = np.stack([np.cos(azr), np.sin(azr)], 1)                                 # (3n, 2) x, z, base frame
+        self.r_bear0 = r_bear
+        self.set_arm(r_bear)
         self.phi = np.repeat(np.radians(rot), nc)                                             # module rotation per cell
         # tendon i = 3 s + k passes cells whose centre lies in [Y_START, Y_END + s L]
         self.through = np.array([(self.yc >= Y_START) & (self.yc <= Y_END + (i // 3) * L) for i in range(3 * n)])
@@ -197,6 +198,11 @@ class EBPrior:
         self.tendon_compliance = np.zeros(3 * n)
         self.set_gap(gap)
         self.assemble()
+
+    def set_arm(self, r_bear):
+        """Tendon moment arm (mm from the backbone axis) of every tendon; call assemble() afterwards."""
+        self.D = r_bear * self.D_unit
+        self.d = self.D[:3]
 
     def set_gap(self, gap):
         """Rigid straight step of gap mm after the last cell of every module but the last, along that cell's end frame.

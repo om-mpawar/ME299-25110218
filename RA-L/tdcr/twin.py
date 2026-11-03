@@ -82,8 +82,9 @@ class Twin:
             model.cad_json = _path(cad_json)
         calib = calib_json if isinstance(calib_json, dict) else (json.load(open(_path(calib_json))) if calib_json else None)
         self.tol = tol
-        hw = None if calib is None else {k: calib[k] for k in
-                                         ("log_axial", "log_bend_x", "log_bend_z", "tendon_c", "free_len_mm")}
+        hw = None if calib is None else {**{k: calib[k] for k in
+                                            ("log_axial", "log_bend_x", "log_bend_z", "tendon_c", "free_len_mm")},
+                                         "d_arm_mm": calib.get("d_arm_mm", 0.0)}   # absent in older calibrations
         base_mass = calib.get("mass_kg", mass_kg) if calib else mass_kg  # the measured mass travels with the calibration
         self.mass = base_mass * (np.exp(calib["log_mass"]) if calib else 1.0)
         c = calib or {}
