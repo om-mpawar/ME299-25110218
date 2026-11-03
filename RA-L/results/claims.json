@@ -1,6 +1,6 @@
 {
  "meta": {
-  "generated": "2026-11-03 01:48",
+  "generated": "2026-11-03 12:44",
   "paper": "paper/main.tex",
   "machine": "Intel(R) Core(TM) Ultra 9 185H, 22 logical cores, Python 3.12.3, numba 0.68.0",
   "statuses": [
@@ -35,9 +35,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -56,9 +56,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -77,9 +77,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -164,13 +164,13 @@
    "context": "The twin takes 0.9--3.7",
    "printed": "0.9--3.7",
    "regenerated": [
-    0.902,
-    3.615
+    0.899,
+    3.681
    ],
-   "regenerated_str": "0.90--3.62",
+   "regenerated_str": "0.90--3.68",
    "delta": [
-    0.0020000000000000018,
-    -0.08499999999999996
+    -0.0010000000000000009,
+    -0.019000000000000128
    ],
    "status": "reproduced",
    "step": "study_guide",
@@ -180,9 +180,9 @@
    "note": "Timing: machine- and load-dependent (paper: Intel Core Ultra 9 185H laptop); checked to a relative tolerance.",
    "last_run": {
     "ok": true,
-    "seconds": 6.2,
+    "seconds": 6.3,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:42"
+    "finished": "2026-11-03 01:54:19"
    }
   },
   {
@@ -206,13 +206,13 @@
    "context": "in 0.9--3.7\\,ms per pose for one to four modules",
    "printed": "0.9--3.7",
    "regenerated": [
-    0.902,
-    3.615
+    0.899,
+    3.681
    ],
-   "regenerated_str": "0.90--3.62",
+   "regenerated_str": "0.90--3.68",
    "delta": [
-    0.0020000000000000018,
-    -0.08499999999999996
+    -0.0010000000000000009,
+    -0.019000000000000128
    ],
    "status": "reproduced",
    "step": "study_guide",
@@ -222,9 +222,9 @@
    "note": "Timing: machine- and load-dependent (paper: Intel Core Ultra 9 185H laptop); checked to a relative tolerance.",
    "last_run": {
     "ok": true,
-    "seconds": 6.2,
+    "seconds": 6.3,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:42"
+    "finished": "2026-11-03 01:54:19"
    }
   },
   {
@@ -395,7 +395,7 @@
     "ok": true,
     "seconds": 1.2,
     "mode": "fast",
-    "finished": "2026-11-03 01:46:19"
+    "finished": "2026-11-03 01:55:57"
    }
   },
   {
@@ -416,7 +416,7 @@
     "ok": true,
     "seconds": 1.2,
     "mode": "fast",
-    "finished": "2026-11-03 01:46:19"
+    "finished": "2026-11-03 01:55:57"
    }
   },
   {
@@ -465,9 +465,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -486,9 +486,9 @@
    "note": "W3 K3: the FEM's uniform nodal mass puts +4.2 % / +2.1 % gravity moment on 1 / 2 modules; refitted with the FEM's own mass distribution the scales are x19.66 / 5.72 / 5.18 (about 2.7 % lower): the identified values carry this bias against a real, volume-weighted part. W3 K2: FEM stiffness is not shown mesh-converged for std6 (P1 tets at nu 0.48 lock); the absolute scales describe the mesh as much as the module.",
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -507,9 +507,9 @@
    "note": "W3 K3: the FEM's uniform nodal mass puts +4.2 % / +2.1 % gravity moment on 1 / 2 modules; refitted with the FEM's own mass distribution the scales are x19.66 / 5.72 / 5.18 (about 2.7 % lower): the identified values carry this bias against a real, volume-weighted part. W3 K2: FEM stiffness is not shown mesh-converged for std6 (P1 tets at nu 0.48 lock); the absolute scales describe the mesh as much as the module.",
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -528,9 +528,9 @@
    "note": "W3 K3: the FEM's uniform nodal mass puts +4.2 % / +2.1 % gravity moment on 1 / 2 modules; refitted with the FEM's own mass distribution the scales are x19.66 / 5.72 / 5.18 (about 2.7 % lower): the identified values carry this bias against a real, volume-weighted part. W3 K2: FEM stiffness is not shown mesh-converged for std6 (P1 tets at nu 0.48 lock); the absolute scales describe the mesh as much as the module.",
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -549,9 +549,9 @@
    "note": "W3 C1: Prop. 1's premise (every tendon taut) holds for none of the FEM poses (1s_sym_train_g0: 0/150 all taut, 1s_sym_train: 0/150 all taut, 2s_sym_train_g0: 0/200 all taut, 2s_sym_train: 0/175 all taut, 1s_sym_test: 0/60 all taut, 2s_sym_test: 0/69 all taut, 4s_sym_test_g0: 0/100 all taut). With slack tendons one module DOES identify the axial/bending ratio: the 1-module gravity-free residual's Jacobian w.r.t. the three notch scales has singular values 622 / 545 / 0.41 (weak direction = overall scale only); on the pay-out pose (3, -1.5, -1.5) doubling the axial compliance moves the tip 3.2 mm. The 4.5 mm example itself is reproduced (identified module: 4.56 mm), on an all-taut command.",
    "last_run": {
     "ok": true,
-    "seconds": 21.6,
+    "seconds": 21.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:36"
+    "finished": "2026-11-03 01:54:13"
    }
   },
   {
@@ -570,9 +570,9 @@
    "note": "Printed as a statement; regenerated tip-angle change in degrees.",
    "last_run": {
     "ok": true,
-    "seconds": 6.2,
+    "seconds": 6.3,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:42"
+    "finished": "2026-11-03 01:54:19"
    }
   },
   {
@@ -591,9 +591,9 @@
    "note": "W3 C1: Prop. 1's premise (every tendon taut) holds for none of the FEM poses (1s_sym_train_g0: 0/150 all taut, 1s_sym_train: 0/150 all taut, 2s_sym_train_g0: 0/200 all taut, 2s_sym_train: 0/175 all taut, 1s_sym_test: 0/60 all taut, 2s_sym_test: 0/69 all taut, 4s_sym_test_g0: 0/100 all taut). With slack tendons one module DOES identify the axial/bending ratio: the 1-module gravity-free residual's Jacobian w.r.t. the three notch scales has singular values 622 / 545 / 0.41 (weak direction = overall scale only); on the pay-out pose (3, -1.5, -1.5) doubling the axial compliance moves the tip 3.2 mm. The 4.5 mm example itself is reproduced (identified module: 4.56 mm), on an all-taut command.",
    "last_run": {
     "ok": true,
-    "seconds": 6.2,
+    "seconds": 6.3,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:42"
+    "finished": "2026-11-03 01:54:19"
    }
   },
   {
@@ -612,9 +612,9 @@
    "note": "Older robot variant with three shared channels (std_* sets), as the footnote says.",
    "last_run": {
     "ok": true,
-    "seconds": 24.9,
+    "seconds": 25.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:46:18"
+    "finished": "2026-11-03 01:55:55"
    }
   },
   {
@@ -633,9 +633,9 @@
    "note": "Older robot variant with three shared channels (std_* sets).",
    "last_run": {
     "ok": true,
-    "seconds": 24.9,
+    "seconds": 25.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:46:18"
+    "finished": "2026-11-03 01:55:55"
    }
   },
   {
@@ -654,9 +654,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 6.2,
+    "seconds": 6.3,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:42"
+    "finished": "2026-11-03 01:54:19"
    }
   },
   {
@@ -675,9 +675,9 @@
    "note": "Weakest direction (log_axial, log_bend_x, log_bend_z, tendon_c, log_mass) = [0.498, 0.498, 0.498, 0.095, -0.496]: the three scales up, the mass down.",
    "last_run": {
     "ok": true,
-    "seconds": 6.2,
+    "seconds": 6.3,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:42"
+    "finished": "2026-11-03 01:54:19"
    }
   },
   {
@@ -685,20 +685,20 @@
    "line": 283,
    "context": "A free mass drifts by 60",
    "printed": "60",
-   "regenerated": 64.82345235054365,
-   "regenerated_str": "64.8",
-   "delta": 4.823452350543647,
+   "regenerated": -28.461790778629958,
+   "regenerated_str": "-28.5",
+   "delta": -88.46179077862996,
    "status": "differs",
    "step": "calib_synthetic",
    "command": ".venv/bin/python scripts/calib_synthetic.py",
    "source": "synthetic_calib.json mass, noise 0.3: exp(log_mass_fit - 0.1) - 1, %",
    "regenerated_in_last_run": true,
-   "note": "Fitted log-mass 0.600 for a true 0.1 (log error +0.500), with the compliance scales -0.50 / -0.50 / -0.50 off their true values; the original run (old repo, 20 Oct) gave the same log-mass 0.5997, i.e. +65 % in mass; the paper's '60 %' appears to read the fitted log-mass 0.60 as a percentage.",
+   "note": "Fitted log-mass -0.235 for a true 0.1 (log error -0.335), with the compliance scales +0.33 / +0.33 / +0.33 off their true values. With the paper's four parameters (no moment arm) the original run (old repo, 20 Oct) and the packaged code gave log-mass 0.5997, i.e. +65 % in mass (the paper's '60 %' appears to read the log-mass 0.60 as a percentage); with the moment arm fitted too (3 Nov) the same data drive the free mass the other way. Either way shape data do not fix the mass.",
    "last_run": {
     "ok": true,
-    "seconds": 56.8,
+    "seconds": 56.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:45:53"
+    "finished": "2026-11-03 01:55:30"
    }
   },
   {
@@ -717,9 +717,9 @@
    "note": "From the identified G (gravity-free): 1.5026; upright with gravity: 1.4862. W3: Prop. 3 correct.",
    "last_run": {
     "ok": true,
-    "seconds": 21.6,
+    "seconds": 21.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:36"
+    "finished": "2026-11-03 01:54:13"
    }
   },
   {
@@ -738,9 +738,9 @@
    "note": "From the identified G (gravity-free): 1.7539; upright with gravity: 1.7467. W3: Prop. 3 correct.",
    "last_run": {
     "ok": true,
-    "seconds": 21.6,
+    "seconds": 21.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:36"
+    "finished": "2026-11-03 01:54:13"
    }
   },
   {
@@ -759,9 +759,9 @@
    "note": "From the identified G (gravity-free): 2.2565; upright with gravity: 2.2347. W3: Prop. 3 correct.",
    "last_run": {
     "ok": true,
-    "seconds": 21.6,
+    "seconds": 21.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:36"
+    "finished": "2026-11-03 01:54:13"
    }
   },
   {
@@ -780,9 +780,9 @@
    "note": "From the identified G (gravity-free): 2.5078; upright with gravity: 2.4640. W3: Prop. 3 correct.",
    "last_run": {
     "ok": true,
-    "seconds": 21.6,
+    "seconds": 21.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:36"
+    "finished": "2026-11-03 01:54:13"
    }
   },
   {
@@ -801,9 +801,9 @@
    "note": "W3 C7: the 0.005 mm holds only for the wire inside the robot: at the 2 mm equal-tension pretension (section-1 tension 1.63 N, one module) 0.5 mm steel stretches 0.0064 mm inside the robot and 0.019 mm with the 300 mm free length the calibration assumes; 0.4 mm wire 0.010-0.029 mm. Still <= 1.5 % of the pull, so 'neglected' stands.",
    "last_run": {
     "ok": true,
-    "seconds": 21.6,
+    "seconds": 21.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:36"
+    "finished": "2026-11-03 01:54:13"
    }
   },
   {
@@ -828,9 +828,9 @@
    "note": "W3 R1/C2: the paper's range needs every tendon taut; on pretensioned all-taut 2-module poses (equal tension at 2 mm plus a 0.5 / 1.0 / 1.5 mm bend, upright) the model gives 0.13 / 0.27 / 0.41 mm. On the paper's own 2-module test commands (approached winding in, left paying out) the median is 3.4 mm gravity-free and 4.2 mm upright (p10-p90 1.1-13.6 mm, 93 % above 0.7 mm): about 10x the paper's range, so the hardware argument built on it does not hold.",
    "last_run": {
     "ok": true,
-    "seconds": 21.6,
+    "seconds": 21.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:36"
+    "finished": "2026-11-03 01:54:13"
    }
   },
   {
@@ -838,9 +838,9 @@
    "line": 311,
    "context": "recovered the bending scale to within 0.003",
    "printed": "0.003",
-   "regenerated": 0.002582025810262484,
-   "regenerated_str": "0.0026",
-   "delta": -0.0004179741897375163,
+   "regenerated": 0.0025171190909018815,
+   "regenerated_str": "0.0025",
+   "delta": -0.0004828809090981186,
    "status": "reproduced",
    "step": "calib_synthetic",
    "command": ".venv/bin/python scripts/calib_synthetic.py",
@@ -849,9 +849,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 56.8,
+    "seconds": 56.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:45:53"
+    "finished": "2026-11-03 01:55:30"
    }
   },
   {
@@ -859,9 +859,9 @@
    "line": 311,
    "context": "$\\mu=0.25$ as 0.244",
    "printed": "0.244",
-   "regenerated": 0.24360663260514895,
-   "regenerated_str": "0.2436",
-   "delta": -0.0003933673948510463,
+   "regenerated": 0.2437393790896272,
+   "regenerated_str": "0.2437",
+   "delta": -0.0002606209103727941,
    "status": "reproduced",
    "step": "calib_synthetic",
    "command": ".venv/bin/python scripts/calib_synthetic.py",
@@ -870,9 +870,9 @@
    "note": "One synthetic test, as the paper says (noise 0 / 0.1 mm rows in the same file).",
    "last_run": {
     "ok": true,
-    "seconds": 56.8,
+    "seconds": 56.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:45:53"
+    "finished": "2026-11-03 01:55:30"
    }
   },
   {
@@ -923,7 +923,7 @@
     "ok": true,
     "seconds": 0.0,
     "mode": "fast",
-    "finished": "2026-11-03 01:46:18"
+    "finished": "2026-11-03 01:55:56"
    }
   },
   {
@@ -944,7 +944,7 @@
     "ok": true,
     "seconds": 1.1,
     "mode": "fast",
-    "finished": "2026-11-03 01:46:20"
+    "finished": "2026-11-03 01:55:58"
    }
   },
   {
@@ -978,9 +978,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -999,9 +999,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1020,9 +1020,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1041,9 +1041,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1093,9 +1093,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1114,9 +1114,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1135,9 +1135,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1156,9 +1156,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1208,9 +1208,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1229,9 +1229,9 @@
    "note": "W3 R2: Table I uses the gravity solver's default tolerance 1e-4; at 1e-11 this entry is 0.235 mm mean / 0.57 mm p95 (results/tol_reeval.json).",
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1250,9 +1250,9 @@
    "note": "W3 R2: Table I uses the gravity solver's default tolerance 1e-4; at 1e-11 this entry is 0.235 mm mean / 0.57 mm p95 (results/tol_reeval.json).",
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1271,9 +1271,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1323,9 +1323,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1344,9 +1344,9 @@
    "note": "W3 R2: Table I uses the gravity solver's default tolerance 1e-4; at 1e-11 this entry is 0.386 mm mean / 1.08 mm p95 (results/tol_reeval.json).",
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1365,9 +1365,9 @@
    "note": "W3 R2: Table I uses the gravity solver's default tolerance 1e-4; at 1e-11 this entry is 0.386 mm mean / 1.08 mm p95 (results/tol_reeval.json).",
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1386,9 +1386,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1438,9 +1438,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1459,9 +1459,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1480,9 +1480,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1501,9 +1501,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1553,9 +1553,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1574,9 +1574,9 @@
    "note": "W3 R2: Table I uses the gravity solver's default tolerance 1e-4; at 1e-11 this entry is 0.207 mm mean / 0.46 mm p95 (results/tol_reeval.json).",
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1595,9 +1595,9 @@
    "note": "W3 R2: Table I uses the gravity solver's default tolerance 1e-4; at 1e-11 this entry is 0.207 mm mean / 0.46 mm p95 (results/tol_reeval.json).",
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1616,9 +1616,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1668,9 +1668,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1689,9 +1689,9 @@
    "note": "W3 R2: Table I uses the gravity solver's default tolerance 1e-4; at 1e-11 this entry is 1.190 mm mean / 3.81 mm p95 (results/tol_reeval.json). W3 C3: the paper blames the horizontal error partly on the FEM's uniform nodal mass; W3 finds the cause is mainly the model's missing torsion (torsional compliance x2-3 of plane-section cuts it to 0.33-0.46 mm; a mass refit makes it slightly worse).",
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1710,9 +1710,9 @@
    "note": "W3 R2: Table I uses the gravity solver's default tolerance 1e-4; at 1e-11 this entry is 1.190 mm mean / 3.81 mm p95 (results/tol_reeval.json). W3 C3: the paper blames the horizontal error partly on the FEM's uniform nodal mass; W3 finds the cause is mainly the model's missing torsion (torsional compliance x2-3 of plane-section cuts it to 0.33-0.46 mm; a mass refit makes it slightly worse).",
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1731,9 +1731,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1783,9 +1783,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1804,9 +1804,9 @@
    "note": "W3 R2: Table I uses the gravity solver's default tolerance 1e-4; at 1e-11 this entry is 1.067 mm mean / 2.63 mm p95 (results/tol_reeval.json). W3 C3: the paper blames the horizontal error partly on the FEM's uniform nodal mass; W3 finds the cause is mainly the model's missing torsion (torsional compliance x2-3 of plane-section cuts it to 0.33-0.46 mm; a mass refit makes it slightly worse).",
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1825,9 +1825,9 @@
    "note": "W3 R2: Table I uses the gravity solver's default tolerance 1e-4; at 1e-11 this entry is 1.067 mm mean / 2.63 mm p95 (results/tol_reeval.json). W3 C3: the paper blames the horizontal error partly on the FEM's uniform nodal mass; W3 finds the cause is mainly the model's missing torsion (torsional compliance x2-3 of plane-section cuts it to 0.33-0.46 mm; a mass refit makes it slightly worse).",
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1846,9 +1846,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1898,9 +1898,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1919,9 +1919,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1940,9 +1940,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -1961,9 +1961,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -2004,9 +2004,9 @@
    "note": "A range rounded to tens (checked to +-5 mm): 10.5-68.4 mm.",
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -2025,9 +2025,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -2046,9 +2046,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -2082,9 +2082,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -2105,7 +2105,7 @@
     "ok": true,
     "seconds": 0.0,
     "mode": "fast",
-    "finished": "2026-11-03 01:46:18"
+    "finished": "2026-11-03 01:55:56"
    }
   },
   {
@@ -2124,9 +2124,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -2151,9 +2151,9 @@
    "note": "W3 C3: the paper blames the horizontal error partly on the FEM's uniform nodal mass; W3 finds the cause is mainly the model's missing torsion (torsional compliance x2-3 of plane-section cuts it to 0.33-0.46 mm; a mass refit makes it slightly worse).",
    "last_run": {
     "ok": true,
-    "seconds": 75.0,
+    "seconds": 73.4,
     "mode": "fast",
-    "finished": "2026-11-03 01:43:27"
+    "finished": "2026-11-03 01:53:04"
    }
   },
   {
@@ -2172,9 +2172,9 @@
    "note": "As computed for the paper (26 Oct): lateral tip position of the twin at its live tolerance, mounting x. Tight solve 95.9 mm; mounting y 85.8 mm. W3 C6 measures the distance from the straight tip instead: 97.9 (x) / 87.2 (y) mm.",
    "last_run": {
     "ok": true,
-    "seconds": 21.6,
+    "seconds": 21.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:36"
+    "finished": "2026-11-03 01:54:13"
    }
   },
   {
@@ -2193,9 +2193,9 @@
    "note": "the FEM mesh data/meshes/std6_two_section_sym.vtk is not in the repository (data/README.md: copy the std6 meshes into data/meshes/ and rerun scripts/reproduce.py --only fem_mass claims). One module, regenerated here: +4.2 %. W3 (with the old repository's meshes): +4.2 % (1 module) / +2.1 % (2 modules) base moment; notched cells hold 90.1 % of the FEM's mass vs 84.4 % of the part's. W3 C3: the paper blames the horizontal error partly on the FEM's uniform nodal mass; W3 finds the cause is mainly the model's missing torsion (torsional compliance x2-3 of plane-section cuts it to 0.33-0.46 mm; a mass refit makes it slightly worse).",
    "last_run": {
     "ok": true,
-    "seconds": 0.5,
+    "seconds": 0.6,
     "mode": "fast",
-    "finished": "2026-11-03 01:46:18"
+    "finished": "2026-11-03 01:55:56"
    }
   },
   {
@@ -2504,9 +2504,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 41.2,
+    "seconds": 41.6,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:14"
+    "finished": "2026-11-03 01:53:51"
    }
   },
   {
@@ -2525,9 +2525,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 41.2,
+    "seconds": 41.6,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:14"
+    "finished": "2026-11-03 01:53:51"
    }
   },
   {
@@ -2546,9 +2546,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 41.2,
+    "seconds": 41.6,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:14"
+    "finished": "2026-11-03 01:53:51"
    }
   },
   {
@@ -2567,9 +2567,9 @@
    "note": "Wall time of a least-squares fit (10 function evaluations, 2 threads); machine- and load-dependent. Faster here than printed; the point of the sentence (seconds, against the PINNs' hours) holds.",
    "last_run": {
     "ok": true,
-    "seconds": 41.2,
+    "seconds": 41.6,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:14"
+    "finished": "2026-11-03 01:53:51"
    }
   },
   {
@@ -2588,9 +2588,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 41.2,
+    "seconds": 41.6,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:14"
+    "finished": "2026-11-03 01:53:51"
    }
   },
   {
@@ -2609,9 +2609,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 41.2,
+    "seconds": 41.6,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:14"
+    "finished": "2026-11-03 01:53:51"
    }
   },
   {
@@ -2630,9 +2630,9 @@
    "note": "Rounding: the value (also 10.849 in the stored 2s_inverse_w10.json exact_same_physics) rounds to 10.8, not 10.9.",
    "last_run": {
     "ok": true,
-    "seconds": 41.2,
+    "seconds": 41.6,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:14"
+    "finished": "2026-11-03 01:53:51"
    }
   },
   {
@@ -2651,9 +2651,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 41.2,
+    "seconds": 41.6,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:14"
+    "finished": "2026-11-03 01:53:51"
    }
   },
   {
@@ -2672,9 +2672,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 41.2,
+    "seconds": 41.6,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:14"
+    "finished": "2026-11-03 01:53:51"
    }
   },
   {
@@ -2853,9 +2853,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 41.2,
+    "seconds": 41.6,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:14"
+    "finished": "2026-11-03 01:53:51"
    }
   },
   {
@@ -2874,9 +2874,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 41.2,
+    "seconds": 41.6,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:14"
+    "finished": "2026-11-03 01:53:51"
    }
   },
   {
@@ -2895,9 +2895,9 @@
    "note": "Rounding: the value (also 10.849 in the stored 2s_inverse_w10.json exact_same_physics) rounds to 10.8, not 10.9.",
    "last_run": {
     "ok": true,
-    "seconds": 41.2,
+    "seconds": 41.6,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:14"
+    "finished": "2026-11-03 01:53:51"
    }
   },
   {
@@ -2916,9 +2916,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 41.2,
+    "seconds": 41.6,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:14"
+    "finished": "2026-11-03 01:53:51"
    }
   },
   {
@@ -2937,9 +2937,9 @@
    "note": null,
    "last_run": {
     "ok": true,
-    "seconds": 41.2,
+    "seconds": 41.6,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:14"
+    "finished": "2026-11-03 01:53:51"
    }
   },
   {
@@ -2960,7 +2960,7 @@
     "ok": true,
     "seconds": 2.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:56"
+    "finished": "2026-11-03 01:54:33"
    }
   },
   {
@@ -2981,7 +2981,7 @@
     "ok": true,
     "seconds": 2.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:56"
+    "finished": "2026-11-03 01:54:33"
    }
   },
   {
@@ -3002,7 +3002,7 @@
     "ok": true,
     "seconds": 2.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:56"
+    "finished": "2026-11-03 01:54:33"
    }
   },
   {
@@ -3023,7 +3023,7 @@
     "ok": true,
     "seconds": 2.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:56"
+    "finished": "2026-11-03 01:54:33"
    }
   },
   {
@@ -3044,7 +3044,7 @@
     "ok": true,
     "seconds": 2.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:56"
+    "finished": "2026-11-03 01:54:33"
    }
   },
   {
@@ -3052,9 +3052,9 @@
    "line": 420,
    "context": "one pose costs 0.87, 1.73 and 3.7",
    "printed": "0.87",
-   "regenerated": 0.902,
-   "regenerated_str": "0.902",
-   "delta": 0.03200000000000003,
+   "regenerated": 0.899,
+   "regenerated_str": "0.899",
+   "delta": 0.029000000000000026,
    "status": "reproduced",
    "step": "study_guide",
    "command": ".venv/bin/python scripts/study_guide_figs.py",
@@ -3063,9 +3063,9 @@
    "note": "Timing: machine- and load-dependent (paper: Intel Core Ultra 9 185H laptop); checked to a relative tolerance.",
    "last_run": {
     "ok": true,
-    "seconds": 6.2,
+    "seconds": 6.3,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:42"
+    "finished": "2026-11-03 01:54:19"
    }
   },
   {
@@ -3073,9 +3073,9 @@
    "line": 420,
    "context": "one pose costs 0.87, 1.73 and 3.7",
    "printed": "1.73",
-   "regenerated": 1.702,
-   "regenerated_str": "1.702",
-   "delta": -0.028000000000000025,
+   "regenerated": 1.711,
+   "regenerated_str": "1.711",
+   "delta": -0.018999999999999906,
    "status": "reproduced",
    "step": "study_guide",
    "command": ".venv/bin/python scripts/study_guide_figs.py",
@@ -3084,9 +3084,9 @@
    "note": "Timing: machine- and load-dependent (paper: Intel Core Ultra 9 185H laptop); checked to a relative tolerance.",
    "last_run": {
     "ok": true,
-    "seconds": 6.2,
+    "seconds": 6.3,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:42"
+    "finished": "2026-11-03 01:54:19"
    }
   },
   {
@@ -3094,9 +3094,9 @@
    "line": 420,
    "context": "one pose costs 0.87, 1.73 and 3.7",
    "printed": "3.7",
-   "regenerated": 3.615,
-   "regenerated_str": "3.62",
-   "delta": -0.08499999999999996,
+   "regenerated": 3.681,
+   "regenerated_str": "3.68",
+   "delta": -0.019000000000000128,
    "status": "reproduced",
    "step": "study_guide",
    "command": ".venv/bin/python scripts/study_guide_figs.py",
@@ -3105,9 +3105,9 @@
    "note": "Timing: machine- and load-dependent (paper: Intel Core Ultra 9 185H laptop); checked to a relative tolerance.",
    "last_run": {
     "ok": true,
-    "seconds": 6.2,
+    "seconds": 6.3,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:42"
+    "finished": "2026-11-03 01:54:19"
    }
   },
   {
@@ -3115,9 +3115,9 @@
    "line": 421,
    "context": "(median; about 1150, 580 and 270\\,Hz)",
    "printed": "1150",
-   "regenerated": 1108.6474501108646,
-   "regenerated_str": "1109",
-   "delta": -41.35254988913539,
+   "regenerated": 1112.3470522803113,
+   "regenerated_str": "1112",
+   "delta": -37.652947719688655,
    "status": "reproduced",
    "step": "study_guide",
    "command": ".venv/bin/python scripts/study_guide_figs.py",
@@ -3126,9 +3126,9 @@
    "note": "Timing: machine- and load-dependent (paper: Intel Core Ultra 9 185H laptop); checked to a relative tolerance.",
    "last_run": {
     "ok": true,
-    "seconds": 6.2,
+    "seconds": 6.3,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:42"
+    "finished": "2026-11-03 01:54:19"
    }
   },
   {
@@ -3136,9 +3136,9 @@
    "line": 421,
    "context": "(median; about 1150, 580 and 270\\,Hz)",
    "printed": "580",
-   "regenerated": 587.5440658049354,
-   "regenerated_str": "588",
-   "delta": 7.5440658049353715,
+   "regenerated": 584.4535359438925,
+   "regenerated_str": "584",
+   "delta": 4.4535359438924615,
    "status": "reproduced",
    "step": "study_guide",
    "command": ".venv/bin/python scripts/study_guide_figs.py",
@@ -3147,9 +3147,9 @@
    "note": "Timing: machine- and load-dependent (paper: Intel Core Ultra 9 185H laptop); checked to a relative tolerance.",
    "last_run": {
     "ok": true,
-    "seconds": 6.2,
+    "seconds": 6.3,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:42"
+    "finished": "2026-11-03 01:54:19"
    }
   },
   {
@@ -3157,9 +3157,9 @@
    "line": 421,
    "context": "(median; about 1150, 580 and 270\\,Hz)",
    "printed": "270",
-   "regenerated": 276.62517289073304,
-   "regenerated_str": "277",
-   "delta": 6.62517289073304,
+   "regenerated": 271.66530834012497,
+   "regenerated_str": "272",
+   "delta": 1.665308340124966,
    "status": "reproduced",
    "step": "study_guide",
    "command": ".venv/bin/python scripts/study_guide_figs.py",
@@ -3168,9 +3168,9 @@
    "note": "Timing: machine- and load-dependent (paper: Intel Core Ultra 9 185H laptop); checked to a relative tolerance.",
    "last_run": {
     "ok": true,
-    "seconds": 6.2,
+    "seconds": 6.3,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:42"
+    "finished": "2026-11-03 01:54:19"
    }
   },
   {
@@ -3178,9 +3178,9 @@
    "line": 422,
    "context": "the 95th percentile for four modules is 16",
    "printed": "16",
-   "regenerated": 15.521,
-   "regenerated_str": "15.5",
-   "delta": -0.4789999999999992,
+   "regenerated": 15.682,
+   "regenerated_str": "15.7",
+   "delta": -0.3179999999999996,
    "status": "reproduced",
    "step": "study_guide",
    "command": ".venv/bin/python scripts/study_guide_figs.py",
@@ -3189,9 +3189,9 @@
    "note": "Timing: machine- and load-dependent (paper: Intel Core Ultra 9 185H laptop); checked to a relative tolerance.",
    "last_run": {
     "ok": true,
-    "seconds": 6.2,
+    "seconds": 6.3,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:42"
+    "finished": "2026-11-03 01:54:19"
    }
   },
   {
@@ -3210,9 +3210,9 @@
    "note": "Timing: machine- and load-dependent (paper: Intel Core Ultra 9 185H laptop); checked to a relative tolerance. The single slowest call is the noisiest number here.",
    "last_run": {
     "ok": true,
-    "seconds": 11.1,
+    "seconds": 11.2,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:53"
+    "finished": "2026-11-03 01:54:30"
    }
   },
   {
@@ -3222,12 +3222,12 @@
    "printed": "0.15--0.6",
    "regenerated": [
     0.154,
-    0.594
+    0.603
    ],
-   "regenerated_str": "0.15--0.59",
+   "regenerated_str": "0.15--0.60",
    "delta": [
     0.0040000000000000036,
-    -0.006000000000000005
+    0.0030000000000000027
    ],
    "status": "reproduced",
    "step": "study_guide",
@@ -3237,9 +3237,9 @@
    "note": "Timing: machine- and load-dependent (paper: Intel Core Ultra 9 185H laptop); checked to a relative tolerance.",
    "last_run": {
     "ok": true,
-    "seconds": 6.2,
+    "seconds": 6.3,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:42"
+    "finished": "2026-11-03 01:54:19"
    }
   },
   {
@@ -3258,9 +3258,9 @@
    "note": "Timing: machine- and load-dependent (paper: Intel Core Ultra 9 185H laptop); checked to a relative tolerance. Median 368 ms; the solve uses restarts, so the mean and median differ. W3 \u00a76: no gravity, uniform tube.",
    "last_run": {
     "ok": true,
-    "seconds": 11.1,
+    "seconds": 11.2,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:53"
+    "finished": "2026-11-03 01:54:30"
    }
   },
   {
@@ -3354,9 +3354,9 @@
    "note": "W3 C6: 1.3 mm is the 90th percentile, not typical: for a 1 deg error about the base axis on the horizontal test commands the median is 0.55 (x) / 0.85 (y) mm and the p90 1.33 / 1.73 mm; unbent 0.20 / 0.81 mm; in the vertical plane the median is 0.53 / 0.40 mm.",
    "last_run": {
     "ok": true,
-    "seconds": 21.6,
+    "seconds": 21.9,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:36"
+    "finished": "2026-11-03 01:54:13"
    }
   },
   {
@@ -3377,7 +3377,7 @@
     "ok": true,
     "seconds": 0.0,
     "mode": "fast",
-    "finished": "2026-11-03 01:46:18"
+    "finished": "2026-11-03 01:55:56"
    }
   },
   {
@@ -3386,10 +3386,10 @@
    "context": "runs at hundreds of hertz",
    "printed": "hundreds",
    "regenerated": [
-    276.62517289073304,
-    1108.6474501108646
+    271.66530834012497,
+    1112.3470522803113
    ],
-   "regenerated_str": "277--1109",
+   "regenerated_str": "272--1112",
    "delta": null,
    "status": "reproduced",
    "step": "study_guide",
@@ -3399,9 +3399,9 @@
    "note": "Statement; regenerated rate range shown in Hz.",
    "last_run": {
     "ok": true,
-    "seconds": 6.2,
+    "seconds": 6.3,
     "mode": "fast",
-    "finished": "2026-11-03 01:44:42"
+    "finished": "2026-11-03 01:54:19"
    }
   },
   {

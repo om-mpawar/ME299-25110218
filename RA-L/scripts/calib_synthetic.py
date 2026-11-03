@@ -8,7 +8,8 @@ copied below) and motion-capture noise.
              (the 0.3 mm row; old repository session of 25 Oct 2026).
   mass       the mass fitted as well (fit_mass=True), noise 0 and 0.3 mm. Paper: "a free mass drifts by 60 % in
              calibration on synthetic data with 0.3 mm noise" (old repository session of 20 Oct 2026, where the
-             fitted log-mass went from the true 0.1 to 0.60 while every compliance scale fell by 0.3-0.5).
+             fitted log-mass went from the true 0.1 to 0.60 while every compliance scale fell by 0.3-0.5). Since
+             3 Nov the calibration also fits the moment arm (d_arm_mm); the free mass then drifts by -28 % instead.
 
 Both were one-off runs in the old repository; the computations are reproduced here with the packaged calibration.
 

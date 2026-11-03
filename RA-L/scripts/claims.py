@@ -289,9 +289,11 @@ def define():
           note=lambda: (f"Fitted log-mass {calib_mass(0.3)['log_mass']:.3f} for a true 0.1 (log error "
                         f"{calib_mass(0.3)['log_mass_error']:+.3f}), with the compliance scales "
                         f"{calib_mass(0.3)['log_axial']:+.2f} / {calib_mass(0.3)['log_bend_x'] - 0.2:+.2f} / "
-                        f"{calib_mass(0.3)['log_bend_z']:+.2f} off their true values; the original run (old repo, "
-                        "20 Oct) gave the same log-mass 0.5997, i.e. +65 % in mass; the paper's '60 %' appears to read "
-                        "the fitted log-mass 0.60 as a percentage."))
+                        f"{calib_mass(0.3)['log_bend_z']:+.2f} off their true values. With the paper's four "
+                        "parameters (no moment arm) the original run (old repo, 20 Oct) and the packaged code gave "
+                        "log-mass 0.5997, i.e. +65 % in mass (the paper's '60 %' appears to read the log-mass 0.60 "
+                        "as a percentage); with the moment arm fitted too (3 Nov) the same data drive the free mass "
+                        "the other way. Either way shape data do not fix the mass."))
     for n, printed in ((2, ("1.5",)), (4, ("1.75", "2.25", "2.5"))):
         tex = "i.e.\\ $1:1.5$ for two modules" if n == 2 else "$1:1.75:2.25:2.5$ for"
         for i, p in enumerate(printed):
