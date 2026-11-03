@@ -5,7 +5,7 @@
  "theta_2s_deg": 35.0,
  "theta_4s_deg": 15.0,
  "mapping": "tools/make_cmd_doe.mapped (lab, pure pay-out) + pretension",
- "gravity_screen": "twin (gap 2 mm, hw_eval settings) converges on every row, per mounting: {\"calib_2s\": [\"upright\", \"horizontal_x\"], \"heldout_2s\": [\"upright\"], \"test_4s\": [\"upright\", \"hanging\"]}",
+ "gravity_screen": "twin (gap 2 mm, hw_eval settings) converges on every row with the tip >= 0.5 of the length out along the base axis, per mounting: {\"calib_2s\": [\"upright\", \"horizontal_x\"], \"heldout_2s\": [\"upright\"], \"test_4s\": [\"upright\", \"hanging\"]}",
  "order": [
   "standup_4s",
   "calib_2s (upright, then horizontal_x)",

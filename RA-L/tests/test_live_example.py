@@ -6,7 +6,7 @@ from tdcr.hardware.live_twin import dl_from_ticks, main
 
 def test_example_runs_fake():
     stats = main(["--fake", "--modules", "2", "--mounting", "upright", "--seconds", "1"])
-    assert stats["updates"] >= 100
+    assert stats["updates"] >= 100 and stats["unconverged"] == 0
     assert np.all(np.isfinite(stats["last_positions"])) and stats["last_positions"].shape[1] == 3
 
 

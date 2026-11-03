@@ -42,8 +42,12 @@ def test_lab_scene_round_trip():
 
 def test_tendon_order_is_the_lab_order():
     tw = Twin(1, (0.0, 0.0, 0.0))
-    tip = tw.shape(np.array([2.0, 0.0, 0.0])).positions[-1]             # lab tendon 1 sits at lab azimuth 0 deg
-    assert tip[0] > 1.0 and abs(tip[1]) < 0.5 * tip[0]                  # bends towards +x (lab)
+    for k, az in enumerate((0.0, 120.0, 240.0)):                        # lab tendon k + 1 sits at lab azimuth az
+        dl = np.zeros(3)
+        dl[k] = 2.0
+        tip = tw.shape(dl).positions[-1]
+        assert np.hypot(tip[0], tip[1]) > 1.0
+        assert abs((np.degrees(np.arctan2(tip[1], tip[0])) - az + 180.0) % 360.0 - 180.0) < 5.0, (k, tip)
     assert set(MOUNTINGS) == {"upright", "hanging", "horizontal_x", "horizontal_y"}
 
 
@@ -92,3 +96,50 @@ def test_reset_restores_the_homed_state():
     a.reset()
     sa, sb = a.shape(x), b.shape(x)
     assert np.array_equal(sa.positions, sb.positions)
+
+
+def test_rate_4_modules_upright():
+    """Code review W1/H5: the live twin must converge and keep its rate on a 4-module upright bend (it used to restart
+    cold on every call and never converge)."""
+    import csv
+    rows = list(csv.DictReader(open("data/hardware/poses/test_4s_upright.csv")))
+    cols = [f"dl{k}" for k in range(1, 13)]
+    seq = np.array([[float(r[c]) for c in cols] for r in rows])
+    tw = Twin(4, "upright", gap_mm=2.0)
+    tw.shape(seq[0])
+    out = []
+    for a, b in zip(seq[:-1], seq[1:]):                                 # 0.1 s ramps at 100 Hz between rows
+        out += [tw.shape(a + (k / 10) * (b - a)) for k in range(1, 11)]
+    assert all(s.converged for s in out)
+    assert np.median([s.solve_ms for s in out]) < 10.0
+
+
+def test_encoder_jitter_does_not_flip_friction():
+    """Code review H4: +-1 tick (0.0077 mm) of read noise on a held pose used to flip the friction branch and move the
+    tip by 4.7 mm (mu 0.3, stretching tendons); it must move it no more than the same noise does without friction."""
+    from tdcr.compliance import MASS_STD6
+    cal = dict(log_axial=0.0, log_bend_x=0.0, log_bend_z=0.0, log_mass=0.0, tendon_c=0.01, free_len_mm=300.0,
+               mass_kg=MASS_STD6)
+    held = np.array([5.0, -2.5, -2.5, 3.0, -1.5, -1.5]) + 2.0 * np.array([1, 1, 1, 1.5, 1.5, 1.5])
+
+    def spread(mu):
+        tw = Twin(2, "upright", calib_json={**cal, "mu": mu})
+        tw.shape(held)
+        rng = np.random.default_rng(0)
+        tips = [tw.shape(held + 0.0077 * rng.integers(-1, 2, 6)).positions[-1] for _ in range(40)]
+        return np.ptp(np.array(tips), axis=0).max(), tw
+
+    with_mu, tw = spread(0.3)
+    assert with_mu < spread(0.0)[0] + 0.1                               # 0.40 vs 0.37 mm (4.7 mm before)
+    tw.shape(held - 0.1)                                                # a real reversal still registers
+    assert np.all(tw._sigma == -1)
+
+
+def test_calibration_keeps_its_compliance():
+    """Code review L7: a calibration is only valid with the identification it was made against."""
+    import pytest
+    calib = dict(log_axial=0.0, log_bend_x=0.0, log_bend_z=0.0, log_mass=0.0, tendon_c=0.0, free_len_mm=300.0,
+                 compliance_json="results/mc_std6.json")
+    Twin(2, "upright", calib_json=calib)
+    with pytest.raises(ValueError, match="calibration was made against"):
+        Twin(2, "upright", compliance_json="results/mc_grav.json", calib_json=calib)

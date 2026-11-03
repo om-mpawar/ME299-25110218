@@ -21,7 +21,8 @@ model (tendon stretch, ~0.005 mm for steel wire here, is neglected).
 Bends come from the lab's tendon mapping and are screened twice: with the identified physics core without gravity
 (tdcr/doe.py: predicted bend per section, axial load per module), then with gravity in every mounting the list is run
 in (MOUNTS): the twin, at the settings tdcr/hw_eval.py uses, must converge on every row of the target's pass. Without
-the second screen most 4-module upright targets fold the stack over in the model (code review W1, 3 Nov 2026), which
+the second screen most 4-module upright targets fold the stack over in the model (a row stands when the twin converges
+with the tip at least MIN_TIP_HEIGHT of the length out along the base axis) (code review W1, 3 Nov 2026), which
 is also what the bench says about slack tendons. Every |dl| <= MAX_DL_MM, the limit run_poses checks. pretension_mm
 must be the stand-up minimum plus a margin: run standup_4s first and regenerate (a higher pretension lets larger
 4-module bends stand).
@@ -50,6 +51,7 @@ GAP_MM = 2.0                           # joint gap of the gravity screen (tdcr/h
 MOUNTS = {"calib_2s": ("upright", "horizontal_x"), "heldout_2s": ("upright",),
           "test_4s": ("upright", "hanging")}  # mountings each list is run in (manifest "order")
 MAX_DRAWS = 400                        # targets() gives up after MAX_DRAWS * k candidates
+MIN_TIP_HEIGHT = 0.5                   # stands(): tip at least half the length out along the base axis
 
 
 def _cables(n):
@@ -72,14 +74,18 @@ def _twin(n, mounting):
 
 
 def stands(n, dl, mountings):
-    """(P, 3n) commands, run in order from home -> (P,) bool: the twin with gravity converges in every mounting. Run
-    as tdcr/hw_eval.py runs a dataset (one fresh twin through the rows): the 60-iteration live solve warm-starts from
-    the previous row, so the order matters."""
+    """(P, 3n) commands, run in order from home -> (P,) bool: in every mounting the twin with gravity converges and
+    keeps its tip at least MIN_TIP_HEIGHT of the robot's length out along its base axis (a stack that folds over
+    converges too, with the tip near or below the base). Run as tdcr/hw_eval.py runs a dataset (one fresh twin through
+    the rows, each solve warm-started from the previous row)."""
     ok = np.ones(len(np.atleast_2d(dl)), bool)
+    length = n * STD6.module_length_mm + (n - 1) * GAP_MM
     for m in mountings:
         tw = _twin(n, m)
         tw.reset()
-        ok &= [tw.shape(x).converged for x in np.atleast_2d(dl)]
+        for k, x in enumerate(np.atleast_2d(dl)):
+            s = tw.shape(x)
+            ok[k] &= s.converged and s.positions[-1, 2] >= MIN_TIP_HEIGHT * length
     return ok
 
 
@@ -187,8 +193,9 @@ def make_all(out, pretension_mm=2.0, seed=0, standup_max=5.0, theta_2s=35.0, the
     with open(os.path.join(out, "manifest.json"), "w") as f:
         json.dump(dict(pretension_mm=p, seed=seed, standup_max_mm=standup_max, theta_2s_deg=theta_2s,
                        theta_4s_deg=theta_4s, mapping="tools/make_cmd_doe.mapped (lab, pure pay-out) + pretension",
-                       gravity_screen=f"twin (gap {GAP_MM:g} mm, hw_eval settings) converges on every row, per "
-                                      "mounting: " + json.dumps(MOUNTS),
+                       gravity_screen=f"twin (gap {GAP_MM:g} mm, hw_eval settings) converges on every row with the tip "
+                                      f">= {MIN_TIP_HEIGHT:g} of the length out along the base axis, per mounting: "
+                                      + json.dumps(MOUNTS),
                        order=["standup_4s", "calib_2s (upright, then horizontal_x)", "heldout_2s",
                               "test_4s_upright", "test_4s_hanging"],
                        lists={k_: {**v, "csv": os.path.basename(v["csv"])} for k_, v in made.items()}), f, indent=1)

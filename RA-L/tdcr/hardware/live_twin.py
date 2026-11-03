@@ -40,6 +40,7 @@ def main(argv=None):
     ap.add_argument("--mounting", default="upright", help=f"one of {sorted(MOUNTINGS)}")
     ap.add_argument("--zeros", help="homing zero file (tdcr/hardware/homing.py); not needed with --fake")
     ap.add_argument("--calib", help="calibration file (tdcr/calibrate.py); default: the SOFA-identified module")
+    ap.add_argument("--gap-mm", type=float, default=2.0, help="joint gap without a calibration (as the bench CLIs)")
     ap.add_argument("--port", default="/dev/ttyUSB0")
     ap.add_argument("--baud", type=int, default=57600)
     ap.add_argument("--ids", type=int, nargs="+", help="servo ids in lab tendon order (default 1..3n)")
@@ -53,14 +54,15 @@ def main(argv=None):
     else:                                                               # pragma: no cover (hardware)
         zeros, directions = read_zeros(a.zeros, names)
         motors = open_motors(a.port, a.baud, a.ids or list(range(1, len(names) + 1)), names)
-    tw = Twin(a.modules, a.mounting, calib_json=a.calib)
+    tw = Twin(a.modules, a.mounting, calib_json=a.calib, gap_mm=a.gap_mm)
     t_start = t_print = time.perf_counter()
-    updates, solve_ms, s = 0, [], None
+    updates, unconverged, solve_ms, s = 0, 0, [], None
     try:
         while time.perf_counter() - t_start < a.seconds:
             dl = dl_from_ticks({n: m.position() for n, m in motors.items()}, zeros, directions, names)
             s = tw.shape(dl)
             updates += 1
+            unconverged += not s.converged
             solve_ms.append(s.solve_ms)
             if time.perf_counter() - t_print > 0.5:
                 t_print = time.perf_counter()
@@ -71,7 +73,7 @@ def main(argv=None):
     except KeyboardInterrupt:                                           # pragma: no cover (interactive)
         pass
     elapsed = time.perf_counter() - t_start
-    return dict(updates=updates, rate_hz=updates / elapsed, median_solve_ms=float(np.median(solve_ms)),
+    return dict(updates=updates, unconverged=unconverged, rate_hz=updates / elapsed, median_solve_ms=float(np.median(solve_ms)),
                 last_positions=s.positions if s is not None else None)
 
 

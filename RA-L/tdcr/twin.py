@@ -25,7 +25,8 @@ before the joint.
 
 Friction (optional, calibration "mu" > 0): capstan friction in the channels makes the shape depend on whether each
 tendon was last wound in or paid out. The twin takes that direction from its own command history (the robot starts
-homed at zero, so every tendon starts wound in) or from shape(..., direction=).
+homed at zero, so every tendon starts wound in) or from shape(..., direction=). A tendon has to move DEADBAND_MM
+from its last registered position before its direction changes, so encoder jitter does not flip it.
 """
 import json
 import os
@@ -43,6 +44,8 @@ MOUNTINGS = {"upright": (0.0, 0.0, -1.0), "hanging": (0.0, 0.0, 1.0),
              "horizontal_x": (1.0, 0.0, 0.0), "horizontal_y": (0.0, 1.0, 0.0)}
 MODULE_L = STD6.module_length_mm
 _CABLE_FILES = {1: "one", 2: "two", 4: "four"}
+DEFAULT_COMPLIANCE = "results/mc_std6.json"
+DEADBAND_MM = 0.025          # friction direction deadband: ~3 encoder ticks of a 5 mm pulley (0.0077 mm per tick)
 # lab = M @ scene for vectors; body frames are re-expressed with the same change of axes: R_lab = M R_scene M^T
 M_SCENE_TO_LAB = np.array([[1.0, 0.0, 0.0], [0.0, 0.0, -1.0], [0.0, 1.0, 0.0]])
 
@@ -65,7 +68,7 @@ class Twin:
     """Digital twin of an n-module robot in a fixed mounting. One object per robot configuration; call shape() as
     often as the servos update."""
 
-    def __init__(self, n_modules, mounting, compliance_json="results/mc_std6.json", calib_json=None,
+    def __init__(self, n_modules, mounting, compliance_json=None, calib_json=None,
                  mass_kg=MASS_STD6, tol=1e-4, gap_mm=0.0, joint_mass_kg=0.0, tip_mass_kg=0.0, mu=0.0,
                  cad_json=None):
         """calib_json: path of a tdcr/calibrate.py result, or the same dict; None = the SOFA-identified module alone.
@@ -73,14 +76,20 @@ class Twin:
         0.15 mm on 2-module upright poses (FEM test commands, 29 Oct 2026); calibration
         uses ~1e-9 so that finite differences are not swamped by solver noise). gap_mm, joint_mass_kg, tip_mass_kg:
         the measured joint (see the module docstring) and any tip load; mu: capstan friction coefficient (0 = none); a
-        calibration file's values take precedence."""
+        calibration file's values take precedence. compliance_json: the module identification; None = the one the
+        calibration was made against (else results/mc_std6.json); a different one than the calibration's raises."""
         self.n = int(n_modules)
         g = np.asarray(MOUNTINGS[mounting] if isinstance(mounting, str) else mounting, float)
         self.g_scene = None if not np.any(g) else lab_to_scene(G_MAG * g / np.linalg.norm(g))
+        calib = calib_json if isinstance(calib_json, dict) else (json.load(open(_path(calib_json))) if calib_json else None)
+        made_with = (calib or {}).get("compliance_json")
+        if compliance_json is None:
+            compliance_json = made_with or DEFAULT_COMPLIANCE
+        elif made_with and os.path.realpath(_path(made_with)) != os.path.realpath(_path(compliance_json)):
+            raise ValueError(f"the calibration was made against {made_with}, not {compliance_json}")
         model, theta = ModuleModel.from_result(json.load(open(_path(compliance_json))))
         if cad_json is not None:
             model.cad_json = _path(cad_json)
-        calib = calib_json if isinstance(calib_json, dict) else (json.load(open(_path(calib_json))) if calib_json else None)
         self.tol = tol
         hw = None if calib is None else {**{k: calib[k] for k in
                                             ("log_axial", "log_bend_x", "log_bend_z", "tendon_c", "free_len_mm")},
@@ -112,25 +121,31 @@ class Twin:
         dl = np.asarray(dl, float).reshape(1, 3 * self.n)
         if not np.all(np.isfinite(dl)):
             raise ValueError("tendon displacements must be finite")
-        if direction is None:
-            step = dl[0] - self._prev
-            direction = np.where(np.abs(step) > 1e-9, np.sign(step), self._sigma)
+        if direction is None:          # a tendon changes direction only after moving DEADBAND_MM from where it last
+            step = dl[0] - self._prev  # registered: encoder jitter of a tick or two must not flip the friction branch
+            moved = np.abs(step) > DEADBAND_MM
+            direction, prev = np.where(moved, np.sign(step), self._sigma), np.where(moved, dl[0], self._prev)
+        else:
+            prev = dl[0].copy()
         direction = np.asarray(direction, float).reshape(3 * self.n)
         if not np.all(np.isin(direction, (-1.0, 0.0, 1.0))):
             raise ValueError("direction entries must be -1, 0, or +1")
-        self._prev, self._sigma = dl[0].copy(), direction.copy()
+        self._prev, self._sigma = prev, direction.copy()
         t0 = time.perf_counter()
         if self.g_scene is None and not self.mu:
             C, R, lam = self.eb.predict(dl, self.stations)
             converged = True
         else:
             g = np.zeros(3) if self.g_scene is None else self.g_scene
+            cold = self._state is None     # a cold solve needs far more iterations than a warm one (4 modules upright)
+            iters = (600 if cold else 60) if self.tol >= 1e-6 else (1000 if cold else 400)
             C, R, lam, info = predict_gravity(self.eb, dl, self.stations, g_vec=g, mass=self.mass,
-                                              state=self._state, tol=self.tol, iters=60 if self.tol >= 1e-6 else 400,
+                                              state=self._state, tol=self.tol, iters=iters,
                                               joint_mass=self.joint_mass, tip_mass=self.tip_mass, mu=self.mu,
                                               direction=self._sigma[None])
             converged = info["converged"]
-            self._state = info["state"] if converged else None      # never warm-start from a diverged iterate
+            # an unconverged but finite iterate is a good start for the next call; a diverged one is not
+            self._state = None if info["failed_poses"].any() else info["state"]
         ms = 1e3 * (time.perf_counter() - t0)
         C, R = C[0], R[0]
         if frame == "lab":
