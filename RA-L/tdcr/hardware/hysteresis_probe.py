@@ -29,10 +29,12 @@ traces the loop.
 
 What it does
 ------------
-Slowly ramps one tendon 0 -> max -> 0 for several cycles, logging commanded
-position, present position, and present current at every step. Then reports
-the loop width -- the gap between the ascending and descending branches at
-the same command.
+Slowly ramps one tendon 0 -> max -> 0 (wound in from its zero) for several
+cycles, logging commanded position, present position, and present current at
+every step. Then reports the loop width -- the gap between the ascending and
+descending branches at the same command. The zero is the homed zero
+(--zeros, tdcr/hardware/homing.py, with the servo's winding direction) or,
+without a zero file, wherever the servo is when the probe starts.
 
     .venv/bin/python -m tdcr.hardware.hysteresis_probe --sim                       # no hardware
     .venv/bin/python -m tdcr.hardware.hysteresis_probe --port /dev/ttyUSB0 --ids 1 --max-pull 5
@@ -43,8 +45,9 @@ SAFETY. This moves the robot. Read before running:
     deliberately small 5 mm. Raise it only once you have watched a run.
   * The motor stops and unwinds if present current exceeds --stall-current,
     which catches a jammed tendon or a mechanical end stop.
-  * Torque is always disabled and the tendon returned to zero on exit, even
-    on Ctrl-C or an exception.
+  * Every goal is checked against the servo range before anything moves.
+  * Torque is always disabled and the tendon returned to its zero on exit,
+    even on Ctrl-C or an exception.
   * It refuses to start without an explicit confirmation unless --yes.
 """
 
@@ -191,28 +194,38 @@ class SimulatedMotor:
 # ── The ramp ──────────────────────────────────────────────────────────────
 
 def run_probe(motor, max_pull_mm, cycles, steps, dwell, stall_ma, out_csv,
-              label=""):
-    """Ramp 0 -> max -> 0 for `cycles` cycles, logging every step."""
+              label="", zero=None, direction=1, goal_range=GOAL_RANGE):
+    """Ramp 0 -> max -> 0 (wound in from `zero`) for `cycles` cycles, logging
+    every step. zero: the homed zero (ticks); None = the servo's position at
+    the start. direction: the sign of the tick change that winds the tendon
+    in. Commands and positions are logged relative to the zero (+ wound in)."""
     peak = mm_to_ticks(max_pull_mm)
     rows = []
     t0 = time.time()
+    motor.enable()
+    if zero is None:
+        zero = int(motor.position())
+    far = zero + direction * peak
+    if not (goal_range[0] <= min(zero, far) and max(zero, far) <= goal_range[1]):
+        motor.close()
+        raise ValueError(f"goals {zero}..{far} leave the servo range "
+                         f"{goal_range[0]}..{goal_range[1]}; nothing moved")
 
     try:
-        motor.enable()
         for cyc in range(cycles):
             up = list(np.linspace(0, peak, steps))
             down = list(np.linspace(peak, 0, steps))
             for branch, seq in (("up", up), ("down", down)):
                 for cmd in seq:
-                    motor.goal(int(round(cmd)))
+                    motor.goal(zero + direction * int(round(cmd)))
                     time.sleep(dwell)
-                    pos = motor.position()
+                    pos = direction * (motor.position() - zero)
                     cur = motor.current_ma()
 
                     if abs(cur) > stall_ma:
                         print(f"\nSTALL: {cur:.0f} mA exceeds {stall_ma} mA. "
                               "Unwinding and stopping.")
-                        motor.goal(0)
+                        motor.goal(zero)
                         time.sleep(0.5)
                         raise SystemExit(1)
 
@@ -223,7 +236,7 @@ def run_probe(motor, max_pull_mm, cycles, steps, dwell, stall_ma, out_csv,
                       f"pos {ticks_to_mm(pos):5.2f} mm  {cur:7.1f} mA")
     finally:
         try:
-            motor.goal(0)
+            motor.goal(zero)
             time.sleep(0.6)
         except Exception:
             pass
@@ -327,6 +340,11 @@ if __name__ == "__main__":
     ap.add_argument("--baud", type=int, default=57600)
     ap.add_argument("--ids", type=int, nargs="+", default=[1],
                     help="motor id(s); each is probed in turn")
+    ap.add_argument("--zeros", default=None,
+                    help="homing zero file (tdcr/hardware/homing.py); default: "
+                         "start from wherever each servo is")
+    ap.add_argument("--tendons", nargs="+", default=None,
+                    help="lab tendon name of each id (e.g. s1t1), for --zeros")
     ap.add_argument("--max-pull", type=float, default=5.0,
                     help="MILLIMETRES of tendon travel (default deliberately small)")
     ap.add_argument("--cycles", type=int, default=3)
@@ -341,6 +359,14 @@ if __name__ == "__main__":
     if args.analyse:
         analyse(args.analyse)
         sys.exit(0)
+    zeros, dirs = {}, {}
+    if args.zeros:
+        if not args.tendons or len(args.tendons) != len(args.ids):
+            ap.error("--zeros needs --tendons, one name per --ids entry")
+        from tdcr.hardware.run_poses import read_zeros
+        z, d = read_zeros(args.zeros, args.tendons)
+        zeros = {i: z[t] for i, t in zip(args.ids, args.tendons)}
+        dirs = {i: d[t] for i, t in zip(args.ids, args.tendons)}
 
     for mid in args.ids:
         out = args.out or os.path.join(RESULTS_DIR, f"hysteresis_id{mid}.csv")
@@ -362,5 +388,6 @@ if __name__ == "__main__":
             motor = Dynamixel(args.port, args.baud, mid)
 
         run_probe(motor, args.max_pull, args.cycles, args.steps, args.dwell,
-                  args.stall_current, out)
+                  args.stall_current, out, zero=zeros.get(mid),
+                  direction=dirs.get(mid, 1))
         analyse(out)
