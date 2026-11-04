@@ -10,46 +10,46 @@
  "poses": 40,
  "runs": {
   "2s_g0": {
-   "d30_vs_d40_tip_median_mm": 2.900937034539421,
-   "d30_vs_d40_tip_max_mm": 4.380424549527065,
-   "tip_travel_median_mm": 95.9513773214108,
-   "ratio_to_travel": 0.030233406914234043,
+   "d30_vs_d40_tip_median_mm": 2.9009699975298213,
+   "d30_vs_d40_tip_max_mm": 4.380695430926944,
+   "tip_travel_median_mm": 95.95429821934846,
+   "ratio_to_travel": 0.030232830121880487,
    "poses": 40
   },
   "2s_hanging": {
-   "d30_vs_d40_tip_median_mm": 1.9075463184473673,
-   "d30_vs_d40_tip_max_mm": 3.0727073239137974,
-   "tip_travel_median_mm": 79.25140902455674,
-   "ratio_to_travel": 0.02406955714637575,
+   "d30_vs_d40_tip_median_mm": 1.907289978870424,
+   "d30_vs_d40_tip_max_mm": 3.0724417219974893,
+   "tip_travel_median_mm": 79.24635882353778,
+   "ratio_to_travel": 0.024067856330377165,
    "poses": 40
   },
   "2s_upright": {
-   "d30_vs_d40_tip_median_mm": 1.693166755166722,
-   "d30_vs_d40_tip_max_mm": 9.620821597268689,
-   "tip_travel_median_mm": 129.75422049882252,
-   "ratio_to_travel": 0.013049030302502469,
+   "d30_vs_d40_tip_median_mm": 1.6936654379858003,
+   "d30_vs_d40_tip_max_mm": 9.625806902047403,
+   "tip_travel_median_mm": 129.77822689277377,
+   "ratio_to_travel": 0.013050459068031125,
    "poses": 40
   },
   "4s_g0": {
-   "d30_vs_d40_tip_median_mm": 4.779562170110846,
-   "d30_vs_d40_tip_max_mm": 9.217936547575057,
-   "tip_travel_median_mm": 242.3518494660184,
-   "ratio_to_travel": 0.019721583229679526,
+   "d30_vs_d40_tip_median_mm": 4.779839357038613,
+   "d30_vs_d40_tip_max_mm": 9.2185437328512,
+   "tip_travel_median_mm": 242.35311580317642,
+   "ratio_to_travel": 0.0197226239126238,
    "poses": 40
   },
   "4s_hanging": {
-   "d30_vs_d40_tip_median_mm": 1.8841733129252185,
-   "d30_vs_d40_tip_max_mm": 3.902076471697165,
-   "tip_travel_median_mm": 118.1663775834832,
-   "ratio_to_travel": 0.015945088200694582,
-   "poses": 37
+   "d30_vs_d40_tip_median_mm": 1.8793773596044225,
+   "d30_vs_d40_tip_max_mm": 3.9014995403430537,
+   "tip_travel_median_mm": 113.68733113541569,
+   "ratio_to_travel": 0.016531106332031417,
+   "poses": 38
   },
   "4s_upright": {
-   "d30_vs_d40_tip_median_mm": 8.131429478528602,
-   "d30_vs_d40_tip_max_mm": 12.159810903574542,
-   "tip_travel_median_mm": 857.9491131563242,
-   "ratio_to_travel": 0.009477752647372922,
-   "poses": 16
+   "d30_vs_d40_tip_median_mm": 8.25473778809472,
+   "d30_vs_d40_tip_max_mm": 1038.3265650282108,
+   "tip_travel_median_mm": 837.5590218900154,
+   "ratio_to_travel": 0.009855708758849351,
+   "poses": 23
   }
  }
 }
