@@ -148,15 +148,10 @@
 
 <section class="text">
   <h2>How the approach changed</h2>
-  <ol class="timeline">
-    <li><time>Early September</time><p>A virtual sensor: a constant-curvature tip estimate corrected by a Gaussian process trained on FEM.</p></li>
-    <li><time>11 September</time><p>Moved the lab's CAD-to-FEM pipeline to SOFA 25.06 for the ICRA study, submitted on the 15th.</p></li>
-    <li><time>30 September</time><p>The Gaussian process now predicted the whole backbone; tip error on one section fell from 14.7 to 0.16&nbsp;mm. Found that the simulated cables could push.</p></li>
-    <li><time>Early October</time><p>The pull-only multi-section model turned out to be published already (Camarillo et al., 2009), so the work moved to identifying it from data and testing whether it transfers.</p></li>
-    <li><time>Mid October</time><p>Residuals learned on two modules failed on four. The module law itself became the thing to learn.</p></li>
-    <li><time>Late October</time><p>A PINN baseline, which fit its training data but not new mountings, and printable parts for the hardware.</p></li>
-    <li><time>Early November</time><p>The twin packaged with 132 tests and one-command reproduction; a physics audit added torsion and a fifth calibration number.</p></li>
-  </ol>
+  <p>The first version was a virtual sensor: a constant-curvature estimate of the tip, corrected by a Gaussian process
+  trained on FEM. Two findings changed the direction. The simulated cables could push as well as pull, and the
+  pull-only model with coupling between sections turned out to be published already. The work moved to identifying
+  the law of one module from data and testing whether it transfers to longer stacks and new mountings.</p>
   <figure class="band inset">
     <div class="strip">
       <img style="flex:1.847" src="assets/fig/push_pull.png" alt="Bend of two sections with pushing and pull-only cables">

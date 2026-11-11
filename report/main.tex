@@ -108,35 +108,7 @@ along the way, and Section~\ref{sec:future} sets out how the project continues.
 % ---------------------------------------------------------------- 2
 \section{What I learnt}\label{sec:learn}
 \subsection{Reading}
-\begin{figure*}[t]
-\centering
-\begin{tikzpicture}[x=1mm,y=1mm,font=\sffamily\scriptsize]
-  \draw[line width=1.2pt,navy] (0,0) -- (172,0);
-  \foreach \x/\m in {0/Sep,61/Oct,122/Nov} {\draw[navy,line width=1pt] (\x,-1.4) -- (\x,1.4); \node[below=1.5pt,font=\sffamily\scriptsize\bfseries,text=navy,anchor=north west] at (\x+0.8,-0.6) {\m};}
-  \tikzset{ev/.style={align=left,text width=26mm,inner sep=0pt,anchor=south west},
-           dot/.style={circle,fill=#1,inner sep=1.6pt}}
-  \node[dot=blue] at (8,0) {}; \draw[blue] (8,0) -- (8,4);
-  \node[ev] at (6,4.6) {\textbf{\color{blue}Virtual sensor}\\ constant curvature + FEM, GP on the tip};
-  \node[dot=red] at (20,0) {}; \draw[red] (20,0) -- (20,-4);
-  \node[ev,anchor=north west] at (18,-4.6) {\textbf{\color{red}SOFA 25.06 port}\\ the lab's CAD-to-FEM pipeline for the ICRA study (submitted 15 Sep)};
-  \node[dot=blue] at (59,0) {}; \draw[blue] (59,0) -- (59,4);
-  \node[ev] at (36,4.6) {\textbf{\color{blue}Whole-backbone GP}\\ tip error 14.7 to 0.16\,mm on one section; pushing cables found};
-  \node[dot=blue] at (70,0) {}; \draw[blue] (70,0) -- (70,-4);
-  \node[ev,anchor=north west] at (56,-4.6) {\textbf{\color{blue}Literature check}\\ pull-only model already in~\cite{camarillo2009}; beam from the real CAD};
-  \node[dot=blue] at (89,0) {}; \draw[blue] (89,0) -- (89,4);
-  \node[ev] at (74,4.6) {\textbf{\color{blue}Law, not residual}\\ residuals do not transfer to longer stacks};
-  \node[dot=blue] at (117,0) {}; \draw[blue] (117,0) -- (117,-4);
-  \node[ev,anchor=north west] at (94,-4.6) {\textbf{\color{blue}PINN baseline}\\ and printable modules for the hardware};
-  \node[dot=blue] at (128,0) {}; \draw[blue] (128,0) -- (128,4);
-  \node[ev] at (108,4.6) {\textbf{\color{blue}Packaging and audit}\\ tests, one-command reproduction, torsion};
-  \node[dot=navy] at (146,0) {}; \draw[navy] (146,0) -- (146,-4);
-  \node[ev,anchor=north west] at (132,-4.6) {\textbf{\color{navy}Poster and report}\\ final evaluation, 14 Nov};
-  \node[ev,text width=26mm] at (144,4.6) {\textbf{\color{green}Next}\\ hardware validation with motion capture};
-  \draw[green,dashed,line width=1pt] (146,0) -- (172,0);
-\end{tikzpicture}
-\caption{How the approach changed between September and November 2026. Blue marks Part~B, red Part~A.}
-\label{fig:timeline}
-\end{figure*}
+
 \begin{figure*}[t]
 \centering
 \begin{subfigure}[b]{0.46\textwidth}\centering
@@ -182,22 +154,18 @@ Physics-informed learning \cite{feizi2026,danesh2026,zhan2025,frieden2026} & Lea
 
 
 \subsection{How the approach changed}
-The model went through four versions (Fig.~\ref{fig:timeline}). In early September it was a virtual sensor: a
-constant-curvature estimate of the tip, corrected by a Gaussian process trained on FEM. I then ported the lab's
-CAD-to-FEM pipeline to SOFA 25.06, and it became the simulation engine of the ICRA study. By the end of September the
-Gaussian process predicted the whole backbone through a few shape modes and cut the tip error of a single section from
-14.7 to 0.16\,mm.
+The model changed several times. It began as a virtual sensor: a constant-curvature estimate of the tip, corrected by a
+Gaussian process trained on FEM. The Gaussian process was then extended to predict the whole backbone through a few
+shape modes, which cut the tip error of a single section from 14.7 to 0.16\,mm.
 
-Two findings in late September changed the direction. The cables in our SOFA scenes could push as well as pull, and
-gravity was a thousand times too weak. Once the cables were made pull-only, commanding the second section of a
-two-section robot also bent the first, because its tendons run through it (Fig.~\ref{fig:early}a). A pull-only model
-with coupling between sections captured this and cut the data the learning step needed (Fig.~\ref{fig:early}b). A
-literature search in early October then showed that the same model had been published by Camarillo et al.\ in
-2009~\cite{camarillo2009}. I checked that their formulation and mine give the same configuration to $3\times10^{-6}$ and
-moved my contribution to identifying the model from data and showing that it transfers. In mid-October residuals learned
-on two modules failed on four, which led to learning the module law itself (Section~\ref{sec:b}).
-
-
+Two findings changed the direction. The cables in our SOFA scenes could push as well as pull, and gravity was a
+thousand times too weak. Once the cables were made pull-only, commanding the second section of a two-section robot also
+bent the first, because its tendons run through it (Fig.~\ref{fig:early}a). A pull-only model with coupling between
+sections captured this and cut the data the learning step needed (Fig.~\ref{fig:early}b). A literature search then
+showed that the same model had been published by Camarillo et al.~\cite{camarillo2009}. I checked that their
+formulation and mine give the same configuration to $3\times10^{-6}$ and moved my contribution to identifying the model
+from data and showing that it transfers. Residuals learned on two modules then failed on four, which led to learning the
+module law itself (Section~\ref{sec:b}).
 
 \subsection{Skills}
 \begin{figure*}[t]

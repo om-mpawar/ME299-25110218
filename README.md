@@ -107,17 +107,11 @@ Three readings changed the direction of the work:
 - Recent PINNs for continuum robots learn the solution of one robot and are retrained per design. That is why I learn
   the law instead.
 
-**How the approach changed with evidence.**
-
-| When | Step | What it taught me |
-|---|---|---|
-| Early Sep | Virtual sensor: constant curvature + FEM + Gaussian process on the tip | Tip-only learning says nothing about the body |
-| 11 Sep | Ported the lab's CAD → FEM pipeline to SOFA 25.06 (used for the ICRA study, submitted 15 Sep) | Read the logs: a run stopped at the step limit is not an equilibrium |
-| 30 Sep | Whole-backbone GP on shape modes: tip error 14.7 → 0.16 mm on one section ([progress report](learning/2026-09-30_progress_report.pdf)) | Found cables that pushed and gravity 1000× too weak in the scenes |
-| 4–6 Oct | Literature check; switched to the real 6-channel robot and a beam built from its CAD | Check novelty early |
-| Mid Oct | Learned residuals did not carry over to longer stacks; a module law does ([method and plan](learning/2026-10-19_method_and_plan.pdf)) | Learn what transfers |
-| Late Oct | PINN baseline; printable TPU modules and couplers for hardware | Test the strongest alternative |
-| Early Nov | Packaged the twin: tests, one-command reproduction; physics audit found torsion ×2.45 and a fifth calibration number (tendon moment arm) | Every number must regenerate |
+**How the approach changed.** The work began as a virtual sensor: a constant-curvature estimate of the tip, corrected
+by a Gaussian process trained on FEM, later extended to the whole backbone
+([progress report](learning/2026-09-30_progress_report.pdf)). Finding that the simulated cables could push, and that
+the pull-only multi-section model was already published, moved the work to identifying the law of one module from data
+and testing whether it transfers ([method and plan](learning/2026-10-19_method_and_plan.pdf)).
 
 **Skills.** Over the semester I learnt continuum-robot mechanics through beam and rod theory, finite-element simulation
 in SOFA with CadQuery and CGAL, convex optimisation with unilateral constraints, parameter identification,
