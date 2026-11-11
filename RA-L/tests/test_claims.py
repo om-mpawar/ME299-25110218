@@ -10,6 +10,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 @pytest.fixture(scope="module")
 def claims():
+    if not os.path.exists(os.path.join(ROOT, "paper", "main.tex")):
+        pytest.skip("paper/main.tex is not in this release (added at submission)")
     spec = importlib.util.spec_from_file_location("claims", os.path.join(ROOT, "scripts", "claims.py"))
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)

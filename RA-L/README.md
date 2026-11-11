@@ -1,8 +1,9 @@
 # tdcr-twin
 
 Sensor-free digital twin of a modular, notched tendon-driven continuum robot (TDCR): tendon displacements plus the
-robot's mounting give the whole backbone shape in a few milliseconds. The code and data behind the RA-L paper in
-`paper/`.
+robot's mounting give the whole backbone shape in a few milliseconds. The code and data behind an RA-L paper in
+preparation. The manuscript (`paper/main.tex`) is added at submission; until then `scripts/claims.py` and its test
+are skipped, and `results/CLAIMS.md` holds the last comparison against the draft.
 
 The model, in layers:
 
