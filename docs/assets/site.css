@@ -1,0 +1,51 @@
+:root {
+  --ink: #1d232b;
+  --muted: #5d6672;
+  --rule: #d9dee5;
+  --navy: #0d1b2a;
+  --blue: #0b6fb3;
+  --red: #c0392b;
+  --bg: #ffffff;
+  --serif: "Libre Caslon Text", Georgia, serif;
+  --sans: "Fira Sans", "Helvetica Neue", Arial, sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 17px/1.65 var(--serif); }
+a { color: var(--blue); }
+img { max-width: 100%; height: auto; display: block; }
+
+header { max-width: 860px; margin: 0 auto; padding: 48px 20px 8px; text-align: center; }
+.logo { width: 76px; margin: 0 auto 14px; }
+.kicker { font: 500 13px var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--blue); margin: 0 0 10px; }
+h1 { font: 700 30px/1.25 var(--serif); color: var(--navy); margin: 0 0 14px; }
+.authors { font: 400 16px/1.5 var(--sans); color: var(--muted); margin: 0 0 18px; }
+.authors b { color: var(--ink); font-weight: 600; }
+nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 10px; padding: 14px 0 22px; border-bottom: 1px solid var(--rule); }
+nav a { font: 500 14px var(--sans); text-decoration: none; color: var(--navy); border: 1px solid var(--rule); border-radius: 999px; padding: 6px 14px; }
+nav a:hover { border-color: var(--blue); color: var(--blue); }
+
+main { max-width: 860px; margin: 0 auto; padding: 8px 20px 40px; }
+section { margin-top: 34px; }
+h2 { font: 600 21px/1.3 var(--sans); color: var(--navy); margin: 0 0 10px; }
+h2 span { font: 400 14px var(--sans); color: var(--muted); margin-left: 8px; }
+p { margin: 0 0 12px; }
+
+figure { margin: 22px 0 8px; }
+figure.wide { margin-left: -60px; margin-right: -60px; }
+.strip { display: flex; gap: 14px; align-items: flex-end; justify-content: center; }
+.strip img { min-width: 0; width: 100%; height: auto; }
+
+
+img.mid { width: 78%; margin: 0 auto; }
+figcaption { font: 400 14px/1.5 var(--sans); color: var(--muted); max-width: 720px; margin: 10px auto 0; text-align: left; }
+
+footer { border-top: 1px solid var(--rule); text-align: center; font: 400 13px var(--sans); color: var(--muted); padding: 18px 20px 30px; }
+
+@media (max-width: 1000px) { figure.wide { margin-left: 0; margin-right: 0; } }
+@media (max-width: 640px) {
+  body { font-size: 16px; }
+  h1 { font-size: 23px; }
+  .strip { flex-direction: column; align-items: center; }
+  .strip img { flex: none !important; width: 100%; }
+  img.mid { width: 100%; }
+}

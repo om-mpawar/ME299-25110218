@@ -3,288 +3,128 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ME 299 Report: TDCR Geometry and Digital Twin</title>
-<meta name="description" content="ME 299 project report of Om Mohan Pawar (25110218), IIT Gandhinagar: geometry and compliance of rolling-disc notched tendon-driven continuum robots (ICRA 2027, under review) and a sensor-free real-time digital twin (in preparation for IEEE RA-L).">
+<title>ME 299: TDCR Geometry and Digital Twin</title>
+<meta name="description" content="ME 299 project of Om Mohan Pawar (25110218), IIT Gandhinagar: geometry and compliance of rolling-disc notched tendon-driven continuum robots, and a sensor-free real-time digital twin.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/report.css">
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;600&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
-<main class="report">
-
-<!-- ======================================================= PAGE 1 -->
-<section class="page" id="overview">
-<header class="masthead">
-  <img class="logo" src="assets/logo/iitgn.png" alt="IIT Gandhinagar logo">
-  <div>
-    <p class="course">ME 299 &nbsp;·&nbsp; Project report &nbsp;·&nbsp; November 2026</p>
-    <h1>From Geometry to a Real-Time Digital Twin of Rolling-Disc Notched Tendon-Driven Continuum Robots</h1>
-    <p class="byline"><b>Om Mohan Pawar</b> (25110218) &nbsp;·&nbsp; Supervisor: <b>Prof. Madhu Vadali</b><br>
-    IITGN Robotics Laboratory, Mechanical Engineering, IIT Gandhinagar<br>
-    Repository: <a href="https://github.com/om-mpawar/ME299-25110218">github.com/om-mpawar/ME299-25110218</a></p>
-  </div>
+<header>
+  <img src="assets/logo/iitgn.png" alt="IIT Gandhinagar" class="logo">
+  <p class="kicker">ME 299 project, IIT Gandhinagar, 2026</p>
+  <h1>From Geometry to a Real-Time Digital Twin of Rolling-Disc Notched Tendon-Driven Continuum Robots</h1>
+  <p class="authors"><b>Om Mohan Pawar</b> (25110218) &nbsp;&middot;&nbsp; Supervisor: <b>Prof. Madhu Vadali</b><br>
+  IITGN Robotics Laboratory, Department of Mechanical Engineering</p>
+  <nav>
+    <a href="report.pdf">Report (PDF)</a>
+    <a href="https://github.com/om-mpawar/ME299-25110218/blob/main/poster/poster.pdf">Poster</a>
+    <a href="https://github.com/om-mpawar/ME299-25110218/tree/main/ICRA">ICRA code</a>
+    <a href="https://github.com/om-mpawar/ME299-25110218/tree/main/RA-L">Digital twin code</a>
+    <a href="https://github.com/om-mpawar/ME299-25110218/blob/main/learning/literature_review.md">Literature review</a>
+  </nav>
 </header>
 
-<p class="abstract"><b>Abstract.</b> Tendon-driven continuum robots (TDCRs) bend along their whole length, which makes them
-useful in confined spaces but hard to design and to model. This project has two parts. <b>Part A</b> (IEEE ICRA 2027,
-under review, second author) asks how the geometry of a rolling-disc notched backbone sets its bending, and answers it
-with an automated CAD-to-FEM pipeline (616 simulations) and three printed prototypes. <b>Part B</b> (in preparation for
-IEEE RA-L, lead author) asks whether the whole shape of a modular robot can be predicted in real time from the servo
-commands alone. A beam model whose cross-section follows the CAD, with pull-only tendons and gravity, is identified once
-on one and two modules and predicts unseen four-module stacks and new mountings to 0.5&nbsp;mm against FEM, in 1 to
-4&nbsp;ms per pose. The report also records what I learnt, how the approach changed with evidence, and the plan to take the
-work to hardware.</p>
-
-<h2><span>1</span> The robot, the two questions and this repository</h2>
-<div class="row" style="grid-template-columns: 55fr 45fr">
-  <figure class="w55">
-    <img src="assets/fig/design_params.png" alt="Rolling-disc notched TDCR with its design parameters">
-    <figcaption><b>Fig. 1.</b> The robot: a printed TPU tube with two orthogonal families of rolling-disc notches and
-    tendons in its wall. Modules of 160&nbsp;mm stack into longer robots.</figcaption>
-  </figure>
-  <div class="w45">
-    <div class="q q-a"><b>A. Design.</b> Which geometry gives a wanted bend, and what tendon stroke and force does it
-    cost?</div>
-    <div class="q q-b"><b>B. Model.</b> Can the whole shape be predicted in real time from the servo commands alone, for
-    any number of modules and any mounting, without sensors on the robot?</div>
-    <div class="stats">
-      <div><b>616</b><span>FEM runs in the geometry study (A)</span></div>
-      <div><b>0.50&nbsp;mm</b><span>tip error, 4 unseen modules (B)</span></div>
-      <div><b>1&ndash;4&nbsp;ms</b><span>per pose, 250&ndash;970&nbsp;Hz (B)</span></div>
-      <div><b>132</b><span>automated tests, one-command reproduction (B)</span></div>
-    </div>
+<main>
+<figure class="wide">
+  <div class="strip">
+    <img style="flex:1.776" src="assets/fig/design_params.png" alt="Notched backbone and its design parameters">
+    <img style="flex:0.836" src="assets/fig/hw_parts.png" alt="Printable TPU module, couplers and base column">
+    <img style="flex:1.158" src="assets/fig/sofa_sims.png" alt="SOFA simulations of three disc sizes">
   </div>
-</div>
+  <figcaption>The robot: a TPU tube with two orthogonal families of rolling-disc notches, the parts designed for the
+  four-module build, and simulations of the same load on three disc sizes.</figcaption>
+</figure>
 
-<table class="map">
-<caption><b>Table 1.</b> What is in the repository and what I did in each part.</caption>
-<thead><tr><th>Folder</th><th>Content</th><th>Status</th><th>My role</th></tr></thead>
-<tbody>
-<tr><td><a href="https://github.com/om-mpawar/ME299-25110218/tree/main/ICRA"><code>ICRA/</code></a></td>
-<td>SWEEP: parametric CAD &rarr; tetrahedral mesh &rarr; SOFA FEM pipeline and the geometry study</td>
-<td>IEEE ICRA 2027, under review. D. Yadav, <b>O. M. Pawar</b>, Krishnapriya R, S. Gandhi, M. Vadali</td>
-<td>Second author: ported the pipeline to SOFA 25.06, parallel sweeps, mesh-fidelity and settling checks</td></tr>
-<tr><td><a href="https://github.com/om-mpawar/ME299-25110218/tree/main/RA-L"><code>RA-L/</code></a></td>
-<td><code>tdcr-twin</code>: the digital-twin package, FEM data, results, paper draft</td>
-<td>In preparation for IEEE RA-L</td>
-<td>Lead: model, solver, identification, baselines, software, reproduction, paper</td></tr>
-<tr><td><a href="https://github.com/om-mpawar/ME299-25110218/tree/main/learning"><code>learning/</code></a></td>
-<td>Literature review, progress report (30 Sep), method and plan (19 Oct)</td><td>Course record</td><td>Author</td></tr>
-<tr><td><a href="https://github.com/om-mpawar/ME299-25110218/tree/main/poster"><code>poster/</code></a></td>
-<td>A0 poster of both parts</td><td>Final evaluation</td><td>Author</td></tr>
-</tbody></table>
-<div class="evidence">
-  <div><b>2</b><span>papers: ICRA 2027 (under review), IEEE RA-L (in preparation)</span></div>
-  <div><b>12&nbsp;300</b><span>lines of Python in the twin: library, scripts, tests</span></div>
-  <div><b>1&nbsp;291</b><span>FEM simulations analysed (616 in A, 675 poses in B)</span></div>
-  <div><b>~30</b><span>papers read; citations checked against the publisher</span></div>
-</div>
+<section>
+<h2>Abstract</h2>
+<p>Tendon-driven continuum robots bend along their whole length, which suits confined spaces but makes them hard to
+design and to model. This project concerns a printed robot whose backbone is a TPU tube with rolling-disc notches. The
+first part, submitted to ICRA 2027 with me as second author, studies how the notch geometry sets the bend. An automated
+pipeline from CAD to finite-element simulation ran 616 simulations and three printed prototypes were tested; the disc
+diameter controls curvature, the length controls reach, and close to half of the tendon stroke is lost to axial
+compression. The second part, which I lead and which is being prepared for IEEE RA-L, is a digital twin that predicts
+the full shape of a modular robot from the servo commands alone. A beam model built from the CAD, with tendons that can
+only pull, is identified once on one and two modules. Without refitting, it predicts four-module stacks and new
+mountings to within 0.5&nbsp;mm of FEM in 1 to 4&nbsp;ms per pose.</p>
+<p>The full write-up is the <a href="report.pdf">five-page report</a>.</p>
 </section>
 
-<!-- ======================================================= PAGE 2 -->
-<section class="page" id="learning">
-<h2><span>2</span> What I learnt</h2>
-<h3>2.1 Literature review</h3>
-<p>I read about thirty papers; full notes are in <a href="https://github.com/om-mpawar/ME299-25110218/blob/main/learning/literature_review.md"><code>learning/literature_review.md</code></a>.
-Table 2 lists the ones that changed what I built.</p>
-<table class="lit">
-<caption><b>Table 2.</b> Literature that shaped the project.</caption>
-<thead><tr><th>Topic</th><th>Key idea</th><th>What I took from it</th></tr></thead>
-<tbody>
-<tr><td>Constant-curvature kinematics [1, 2]</td><td>Each section bends as a circular arc</td>
-<td>The first baseline. It fails on a loaded notched robot: its error grows about five-fold with notch count (A) and reaches 11 to 68&nbsp;mm (B)</td></tr>
-<tr><td>Tendon mechanics and coupling [3, 4]</td><td>Tendon stroke = bending + axial compression; tendons of distal sections load proximal ones; slack</td>
-<td>The core of the twin and the stroke budget of Part A. Also showed the pull-only model is not new, so the contribution moved to identification and transfer</td></tr>
-<tr><td>Cosserat rods [5, 6]</td><td>Exact rod statics; displacement inputs need complementarity</td>
-<td>Pull-only tendons as a convex problem; an independent Cosserat solver to check mine (0.004&nbsp;mm)</td></tr>
-<tr><td>Benchmarking [7]</td><td>Report tip error as % of robot length</td><td>The hardware pass criterion: 2&nbsp;% of length, fixed before data</td></tr>
-<tr><td>FEM for soft robots [8, 9, 10]</td><td>SOFA with cable constraints as ground truth</td>
-<td>A simulator must be checked before it is trusted: I found cables that could push and gravity 1000&times; too weak</td></tr>
-<tr><td>Shape estimation [11, 12, 13]</td><td>GP on SE(3) from sensors; observers from actuator readings; modular models of one robot</td>
-<td>The gap: no work calibrates on 1 to 2 sections and predicts longer stacks or other mountings without sensors</td></tr>
-<tr><td>Modular digital twins [14]</td><td>Calibrate modules alone, compose them</td>
-<td>Closest work. There, actuation is local to a module; here tendons load every module below, so a module cannot be calibrated alone</td></tr>
-<tr><td>Physics-informed learning [15&ndash;18]</td><td>PINNs and neural operators for continuum-robot shape</td>
-<td>They learn the <i>solution</i> for one robot and are retrained per design. I learn the <i>law</i> inside an exact solver, and use operators across designs as the next step</td></tr>
-</tbody></table>
-
-<h3>2.2 How the approach changed with evidence</h3>
-<ol class="timeline">
-<li><time>Early Sep</time><b>Virtual sensor</b> Constant curvature + FEM + a Gaussian process on the tip.<i>Tip-only learning says nothing about the body.</i></li>
-<li><time>11 Sep</time><b>SOFA 25.06 port</b> The lab's CAD&rarr;FEM pipeline, used for the ICRA study (submitted 15 Sep).<i>Read logs: timeouts are not equilibria.</i></li>
-<li><time>30 Sep</time><b>Whole-body GP</b> Shape modes along the backbone: tip 14.7&rarr;0.16&nbsp;mm on one section.<i>Fixed pushing cables, weak gravity.</i></li>
-<li><time>4&ndash;6 Oct</time><b>Literature check</b> The pull-only model is Camarillo 2009. Switched to the real 6-channel robot and a beam built from its CAD.<i>Check novelty early.</i></li>
-<li><time>Mid Oct</time><b>Law, not residual</b> Learned residuals did not carry over to longer stacks; a module law does.<i>Learn what transfers.</i></li>
-<li><time>Late Oct</time><b>PINN baseline, hardware</b> PINNs fit but do not transfer. Printable TPU modules and couplers.<i>Test the strongest alternative.</i></li>
-<li><time>Early Nov</time><b>Package and audit</b> Tests, one-command reproduction, physics audit: torsion &times;2.45, a 5th calibration number.<i>Every number must regenerate.</i></li>
-</ol>
-
-<h3>2.3 Skills gained</h3>
-<div class="skills">
-<div><b>Mechanics</b>Constant curvature, Euler&ndash;Bernoulli and Timoshenko beams, Cosserat rods, tendon routing and coupling, section properties from CAD</div>
-<div><b>Simulation</b>SOFA FEM (corotational tetrahedra, cable constraints, contact), CadQuery CAD, CGAL meshing, mesh and settling checks</div>
-<div><b>Optimisation</b>Convex QP and LCP for pull-only tendons, fixed-point gravity, nonlinear least squares, identifiability</div>
-<div><b>Learning</b>Gaussian processes, functional PCA shape modes, forward and inverse PINNs, cross-validation, transfer tests</div>
-<div><b>Software</b>A Python package, 132 tests, claim-by-claim reproduction, git, LaTeX, scientific figures</div>
-<div><b>Research practice</b>Verifying citations, positioning against prior work, stating pass criteria before data, writing for review</div>
-</div>
-<p class="record"><b>Record of the semester</b> (in <a href="https://github.com/om-mpawar/ME299-25110218/tree/main/learning"><code>learning/</code></a>):
-progress report to the supervisor (30 Sep), method and research plan (10 Oct, revised 19 Oct) and the literature review.</p>
-</section>
-
-<!-- ======================================================= PAGE 3 -->
-<section class="page" id="part-a">
-<h2 class="a"><span>3</span> Part A: how geometry governs compliance <em>ICRA 2027, under review</em></h2>
-<p>Each notch is removed from a tube of outer radius <i>R<sub>o</sub></i> and length <i>L</i> by a rolling disc of
-diameter <i>D<sub>RD</sub></i> = 2<i>R<sub>d</sub></i>; with a clearance <i>c</i> between cuts, the notch pitch is</p>
-<p class="eq"><img src="assets/eq/pitch.svg" alt="p = D_RD - 2 sqrt(R_d^2 - R_o^2) + c"><span>(1)</span></p>
-<p>so <i>D<sub>RD</sub></i> sets how many notches fit. SWEEP turns a parameter set into a measured bend with no manual
-step (Fig. 2): 14 designs &times; 4 tendons &times; 11 loads = 616 runs (614 completed), TPU with the measured
-<i>E</i> = 56&nbsp;MPa, gravity on. Claims are limited to tension <i>T</i> &le; 0.9&nbsp;N, where the model stays valid.</p>
-<div class="flow a">
-  <div><b>Parameters</b><i>D<sub>RD</sub>, L, D<sub>o</sub>, D<sub>i</sub>, e, c, N<sub>t</sub></i></div>
-  <div><b>CAD</b>CadQuery, one Boolean cut</div>
-  <div><b>Mesh</b>CGAL tetrahedra</div>
-  <div><b>FEM</b>SOFA 25.06, pull-only cables</div>
-  <div class="end"><b>Metrics</b>curvature, CC error, stroke</div>
-</div>
-<div class="row" style="grid-template-columns: 38fr 62fr">
-  <figure class="w38"><img src="assets/fig/sofa_sims.png" alt="SOFA simulations of three disc diameters">
-  <figcaption><b>Fig. 2.</b> Same load, three disc sizes: a larger disc gives more, shallower notches and a tighter bend.</figcaption></figure>
-  <figure class="w62"><div class="pair"><img src="assets/fig/heat_drd_curv.png" alt="Curvature against disc diameter and tension"><img src="assets/fig/heat_L_curv.png" alt="Curvature against length and tension"></div>
-  <figcaption><b>Fig. 3.</b> Mean curvature against tension: <i>D<sub>RD</sub></i> (left) sets curvature, <i>L</i> (right) barely changes it.</figcaption></figure>
-</div>
-<div class="row" style="grid-template-columns: 55fr 45fr">
-  <figure class="w55"><div class="pair"><img src="assets/fig/stroke_D.png" alt="Stroke budget fractions"><img src="assets/fig/tension_D.png" alt="Tension needed for a 110 degree bend"></div>
-  <figcaption><b>Fig. 4.</b> Stroke budget (2): bending and compression fractions, and the tension for a 110&deg; bend, against <i>D<sub>RD</sub></i>.</figcaption></figure>
-  <div class="w45">
-    <p class="eq"><img src="assets/eq/stroke.svg" alt="tendon stroke = bending + axial compression"><span>(2)</span></p>
-    <table class="small">
-    <caption><b>Table 3.</b> Printed prototypes (single tendon, hanging weights, ten tracked markers): NRMSE, % of length.</caption>
-    <thead><tr><th><i>D<sub>RD</sub></i> (mm)</th><th>centreline</th><th>tip</th><th>axial</th></tr></thead>
-    <tbody><tr><td>30</td><td>18.5</td><td>20.9</td><td>43.1</td></tr>
-    <tr><td>67.89</td><td>10.1</td><td>23.5</td><td>11.9</td></tr>
-    <tr><td>86.84</td><td>16.3</td><td>64.7</td><td>23.9</td></tr></tbody></table>
+<section>
+<h2>Geometry and compliance <span>ICRA 2027, under review</span></h2>
+<p>With D. Yadav, Krishnapriya R, S. Gandhi and M. Vadali. The SWEEP pipeline builds each design in CadQuery, meshes it
+with CGAL and pulls one tendon at a time in SOFA. The disc diameter sets how many notches fit and therefore the
+curvature, while the length mainly sets reach. I ported the pipeline to SOFA 25.06 and added the parallel sweeps and
+the mesh, settling and self-contact checks.</p>
+<figure class="wide">
+  <div class="strip four">
+    <img style="flex:1.086" src="assets/fig/heat_drd_curv.png" alt="Curvature against disc diameter and tension">
+    <img style="flex:1.098" src="assets/fig/heat_drd_cc.png" alt="Constant-curvature error against disc diameter and tension">
+    <img style="flex:1.087" src="assets/fig/heat_L_curv.png" alt="Curvature against length and tension">
+    <img style="flex:1.089" src="assets/fig/heat_L_cc.png" alt="Constant-curvature error against length and tension">
   </div>
-</div>
-<ul class="findings">
-<li><b>Disc diameter sets curvature.</b> 26 to 50&nbsp;mm: 4 to 12 notches, bend 54&deg; to 143&deg; at 0.9&nbsp;N, but the deviation from constant curvature grows about five-fold.</li>
-<li><b>Length sets reach.</b> 100 to 200&nbsp;mm: tip travel 78 to 157&nbsp;mm while curvature changes by less than 20&nbsp;%.</li>
-<li><b>Nearly half the stroke is compression.</b> The budget (2) closes to 0.99 on notched designs (0.72 on a plain tube); 14 to 17&nbsp;mm of a 33 to 36&nbsp;mm stroke shortens the body instead of bending it. A larger disc halves the force for a 110&deg; bend (0.87 to 0.45&nbsp;N).</li>
-<li><b>Four tendons suit the structure.</b> The anisotropy index <img class="inl" src="assets/eq/aniso.svg" alt="A_kappa = sigma_kappa / |mean kappa|"> falls from 6.2&nbsp;% to 2.6&nbsp;% (13 of 14 designs), and two antagonistic pairs need two motors per section.</li>
-<li><b>Experiments agree on shape, less on the tip</b> (Table 3): friction and self-contact are not modelled.</li>
-</ul>
-<p class="role"><b>My contribution.</b> I ported the pipeline from SOFA 23 to 25.06 (batch runner, removed components, a
-duplicate-mass fix, failure classification), added parallel and phased sweeps, a CAD-versus-mesh volume check and a
-per-run check for timeouts and self-contact, and reported the settling and mesh-convergence limits that set the
-0.9&nbsp;N validity range.</p>
+  <figcaption>Mean curvature and constant-curvature error against tension, for the disc-diameter sweep (left pair)
+  and the length sweep (right pair).</figcaption>
+</figure>
+<figure class="wide">
+  <div class="strip">
+    <img style="flex:1.391" src="assets/fig/stroke_D.png" alt="Bending and compression fractions of the stroke">
+    <img style="flex:1.391" src="assets/fig/tension_D.png" alt="Tension for a 110 degree bend">
+    <img style="flex:1.347" src="assets/fig/aniso_27.png" alt="Anisotropy index for three and four tendons">
+  </div>
+  <figcaption>The stroke budget against disc diameter, the tension needed for a 110&deg; bend, and the spread of
+  curvature across tendon directions for three and four tendons.</figcaption>
+</figure>
 </section>
 
-<!-- ======================================================= PAGE 4 -->
-<section class="page" id="part-b">
-<h2 class="b"><span>4</span> Part B: a sensor-free, real-time digital twin <em>in preparation for IEEE RA-L</em></h2>
-<p>Input: servo commands and the mounting. Output: the backbone pose every 5&nbsp;mm. Nothing is measured on the robot; one module model is composed by statics into any stack.</p>
-<h3>4.1 The physics</h3>
-<figure><img src="assets/fig/physics.svg" alt="Loads on a slice, shortening and bending, taut and slack tendons" style="width:66%">
-<figcaption><b>Fig. 5.</b> (1) A tendon at offset <i>d</i> loads every slice it passes with a moment <i>Td</i> and a compression <i>T</i>; (2) the slice shortens and bends;
-(3) tendons only pull, so some go slack.</figcaption></figure>
-<p>Integrating the slice compliances from the CAD gives a map from tensions to tendon shortening that is exactly
-linear at any bend angle, and pull-only tendons become a convex problem with a unique solution:</p>
-<p class="eq"><img src="assets/eq/gmap.svg" alt="tendon map"><span>(3)</span></p>
-<p class="eq"><img src="assets/eq/qp.svg" alt="pull-only QP"><span>(4)</span></p>
-<p class="tight">Here <i>&tau;<sub>ic</sub></i> &isin; {0,1} marks the slices tendon <i>i</i> passes and <i>c<sub>t</sub>L<sub>i</sub></i> is tendon stretch.
-Gravity in any direction is added by a fixed point around (4). In a notch only two 4&nbsp;mm bridges of the sleeve remain:
-area &divide;8, bending stiffness &divide;280, so the notches do the bending.</p>
-<p class="tight"><b>Verification.</b> The solver matches closed-form beam cases to under 1&nbsp;&micro;m and an independent Cosserat rod to 0.004&nbsp;mm.</p>
-<h3>4.2 Scientific ML: learn the law, not the solution</h3>
-<p>Beam theory underestimates how compliant a short notch is. I learn the law, not the shape: one scale per notch family, fitted <i>through</i> the exact solver on 675 FEM poses of one and two modules,</p>
-<p class="eq"><img src="assets/eq/law.svg" alt="identified law"><span>(5)</span></p>
-<p class="tight">giving notch compliances &times;20.2 (axial) and &times;5.9 / 5.3 (bending) of beam theory, and torsion &times;2.45 from a twist test.
-The law has four physical numbers and is reused unchanged for every stack and mounting.</p>
-<div class="row" style="grid-template-columns: 50fr 50fr">
-  <figure class="w50"><img src="assets/fig/shapes.svg" alt="Twin against FEM on unseen configurations">
-  <figcaption><b>Fig. 6.</b> Twin (colour by module) against FEM (dots) on configurations never used for identification.</figcaption></figure>
-  <figure class="w50"><img src="assets/fig/transfer.svg" alt="Tip error of four models on six test sets">
-  <figcaption><b>Fig. 7.</b> Mean tip error, 60 to 100 held-out poses per set; bars: 95th percentile.</figcaption></figure>
-</div>
-<table class="small">
-<caption><b>Table 4.</b> Mean tip error against FEM (mm); 4-module length 640&nbsp;mm; 1 to 4&nbsp;ms per pose. <b>Limit:</b> all errors are against FEM; hardware is next (Section 5).</caption>
-<thead><tr><th>Model</th><th>seen (1&ndash;2 modules)</th><th>new mounting</th><th>4 modules</th></tr></thead>
-<tbody>
-<tr><td>Beam theory from CAD, no fit</td><td>10.5&ndash;30.8</td><td>43.6&ndash;68.0</td><td>61.7</td></tr>
-<tr><td>Twin + learned residual (GP)</td><td>0.14&ndash;0.36</td><td>0.56&ndash;1.40</td><td>1.12</td></tr>
-<tr><td>PINNs, forward and inverse (learn the solution)</td><td>3.4&ndash;6.0</td><td>9.2&ndash;77</td><td>54&ndash;73, retrained</td></tr>
-<tr class="ours"><td>Identified law in the exact solver (ours)</td><td>0.24&ndash;0.38</td><td>0.21&ndash;0.42</td><td>0.50 (0.08&nbsp;% of length)</td></tr>
-</tbody></table>
+<section>
+<h2>A sensor-free digital twin <span>in preparation for IEEE RA-L</span></h2>
+<p>The backbone is modelled as a beam whose cross-section follows the CAD. Each tendon loads every slice it passes,
+tendons that would have to push go slack, and gravity acts in any direction. Instead of training a network to output
+shapes, the twin learns the law of one module, a few compliance factors fitted through the exact solver, and reuses it
+for every stack and mounting.</p>
+<figure class="wide">
+  <img src="assets/fig/physics.svg" alt="Loads on a slice, its deformation, and slack tendons" class="mid">
+  <figcaption>A tendon at offset <i>d</i> applies a moment and a compression to every slice it passes; the slice
+  shortens and bends, and some tendons go slack.</figcaption>
+</figure>
+<figure class="wide">
+  <div class="strip two">
+    <img style="flex:2.410" src="assets/fig/shapes.svg" alt="Twin against FEM on unseen configurations">
+    <img style="flex:1.958" src="assets/fig/transfer.svg" alt="Tip error of four models on six test sets">
+  </div>
+  <figcaption>Left: the twin (coloured by module) against FEM (dots) on configurations never used for fitting. Right:
+  mean tip error of four models; the identified law stays below 0.5&nbsp;mm in every case, while the learned
+  solutions do not carry over to new configurations.</figcaption>
+</figure>
 </section>
 
-<!-- ======================================================= PAGE 5 -->
-<section class="page" id="future">
-<h2><span>5</span> Future scope: how this long-term project will be executed</h2>
-<p>The two parts meet in one direction: SWEEP generates designs (A), and the twin turns each design into a module law
-(B). Making that law a function of geometry gives a model that answers <i>&ldquo;which backbone gives this shape with
-this stroke?&rdquo;</i> in milliseconds.</p>
-<div class="phases">
-  <div class="p1"><h4>1 &nbsp;Hardware validation <small>Nov 2026 &ndash; early 2027</small></h4>
-  Print and weigh four modules; pretension 1&nbsp;:&nbsp;1.75&nbsp;:&nbsp;2.25&nbsp;:&nbsp;2.5. PhaseSpace motion capture.
-  Calibrate 5 numbers (the four of (5) and the moment arm) on about 15 poses of two modules; test four modules upright
-  and hanging.
-  <p class="pass"><b>Pass:</b> mean tip error &le; 2&nbsp;% of length (13&nbsp;mm), fixed before any data.</p></div>
-  <div class="p2"><h4>2 &nbsp;Geometry-conditioned law <small>2027</small></h4>
-  Identify the law for each SWEEP design and fit &theta; = <i>f</i>(<i>D<sub>RD</sub></i>, <i>D<sub>i</sub></i>, <i>L</i>), first as a
-  smooth regression, then as a neural operator if the data demand it.
-  <p class="pass"><b>Pass:</b> beats beam theory from the CAD on designs held out entirely.</p></div>
-  <div class="p3"><h4>3 &nbsp;Inverse design and control <small>2027 onwards</small></h4>
-  Target curvature and stroke budget &rarr; geometry; print and verify. Use the twin as the model in closed-loop shape control.
-  <p class="pass"><b>Pass:</b> a printed design meets its target bend within the Phase 1 tolerance.</p></div>
-</div>
-<table class="small risks">
-<caption><b>Table 5.</b> Risks and the planned response.</caption>
-<thead><tr><th>Risk</th><th>Sign in the data</th><th>Response</th></tr></thead>
-<tbody>
-<tr><td>Notch law not linear on hardware</td><td>Residual grows with bend angle</td><td>A convex notch energy &psi;<sub>&theta;</sub>(<i>N</i>, <b>M</b>) in place of the linear law, kept inside the same solver</td></tr>
-<tr><td>Friction in the tendon channels</td><td>Hysteresis between loading and unloading</td><td>The capstan term already in the code; load in one direction only</td></tr>
-<tr><td>Self-weight confounded with stiffness</td><td>Stiffness and mass trade off in the fit</td><td>Weigh every module; never fit mass from shape</td></tr>
-<tr><td>Creep of TPU</td><td>Drift at constant command</td><td>Fixed settling time per pose; repeat poses at the start and end</td></tr>
-</tbody></table>
-<p class="tight"><b>Outputs planned.</b> ICRA 2027 decision and revision (early 2027); RA-L submission once Phase 1 gives a hardware table; the twin as an installable package.</p>
-
-<h2><span>6</span> Conclusions and what I gained</h2>
-<ul class="findings">
-<li><b>Design (A):</b> disc diameter sets curvature, length sets reach, and nearly half the tendon stroke goes into compression; four tendons suit the two-plane symmetry.</li>
-<li><b>Model (B):</b> a module law identified on short stacks, inside exact physics, predicts longer stacks and new mountings to 0.5&nbsp;mm against FEM in milliseconds; learned solutions do not transfer.</li>
-<li><b>What I gained:</b> continuum-robot mechanics from first principles, FEM practice and its pitfalls, convex optimisation and identification, where learning helps and where physics must carry the generalisation, and research habits: check novelty, verify the simulator, state pass criteria before data, make every number reproducible.</li>
-</ul>
-
-<h3 class="refs-h">References</h3>
-<ol class="refs">
-<li>R. J. Webster, B. A. Jones, &ldquo;Design and kinematic modeling of constant curvature continuum robots: a review,&rdquo; <i>IJRR</i>, 29(13), 2010.</li>
-<li>J. Burgner-Kahrs, D. C. Rucker, H. Choset, &ldquo;Continuum robots for medical applications: a survey,&rdquo; <i>IEEE T-RO</i>, 31(6), 2015.</li>
-<li>D. B. Camarillo et al., &ldquo;Mechanics modeling of tendon-driven continuum manipulators,&rdquo; <i>IEEE T-RO</i>, 24(6), 2008.</li>
-<li>D. B. Camarillo, C. R. Carlson, J. K. Salisbury, &ldquo;Configuration tracking for continuum manipulators with coupled tendon drive,&rdquo; <i>IEEE T-RO</i>, 25(4), 2009.</li>
-<li>D. C. Rucker, R. J. Webster, &ldquo;Statics and dynamics of continuum robots with general tendon routing and external loading,&rdquo; <i>IEEE T-RO</i>, 27(6), 2011.</li>
-<li>K. Oliver-Butler, J. Till, C. Rucker, &ldquo;Continuum robot stiffness under external loads and prescribed tendon displacements,&rdquo; <i>IEEE T-RO</i>, 35(2), 2019.</li>
-<li>P. Rao, Q. Peyron, S. Lilge, J. Burgner-Kahrs, &ldquo;How to model tendon-driven continuum robots and benchmark modelling performance,&rdquo; <i>Front. Robot. AI</i>, 7, 2020.</li>
-<li>F. Faure et al., &ldquo;SOFA: a multi-model framework for interactive physical simulation,&rdquo; Springer, 2012.</li>
-<li>E. Coevoet et al., &ldquo;Software toolkit for modeling, simulation, and control of soft robots,&rdquo; <i>Adv. Robot.</i>, 31(22), 2017.</li>
-<li>C. Duriez, &ldquo;Control of elastic soft robots based on real-time finite element method,&rdquo; <i>ICRA</i>, 2013.</li>
-<li>S. Lilge, T. D. Barfoot, J. Burgner-Kahrs, &ldquo;Continuum robot state estimation using Gaussian process regression on SE(3),&rdquo; <i>IJRR</i>, 41(13&ndash;14), 2022.</li>
-<li>D. Feliu-Talegon et al., &ldquo;Dynamic shape estimation of tendon-driven soft manipulators via actuation readings,&rdquo; <i>IEEE RA-L</i>, 10(1), 2025.</li>
-<li>Zhang et al., &ldquo;A general modular framework for modeling cable-driven continuum surgical robots,&rdquo; <i>Int. J. Mech. Sci.</i>, 318, 2026.</li>
-<li>S. H. Kim et al., &ldquo;Digital twins for the design, interactive control, and deployment of modular, fiber-reinforced soft continuum arms,&rdquo; arXiv:2507.10121, 2025.</li>
-<li>N. Feizi et al., &ldquo;Few-shot physics-informed neural network for shape reconstruction of concentric-tube robots,&rdquo; <i>ICRA</i>, 2026.</li>
-<li>R. Danesh, P. Qarehdaghi, F. Janabi-Sharifi, &ldquo;Constraint-aware physics-informed neural networks for static shape estimation of co-manipulative continuum robots,&rdquo; arXiv:2608.26273, 2026.</li>
-<li>G. Zhan et al., &ldquo;Physics informed neural pose estimation for real-time shape reconstruction of soft continuum robots,&rdquo; <i>IEEE RA-L</i>, 10(7), 2025.</li>
-<li>B. Frieden, J. M. Ferguson, A. Kuntz, V. Shankar, &ldquo;Neural operators for design-space surrogate modeling of tendon-actuated continuum robots,&rdquo; <i>ICRA</i>, 2026.</li>
-</ol>
+<section>
+<h2>How the approach changed</h2>
+<p>The first version was a virtual sensor: a constant-curvature estimate of the tip corrected by a Gaussian process.
+Finding that the simulated cables could push, and that the pull-only multi-section model was already published, moved
+the work towards identifying a physical law and testing whether it transfers. The progress report of 30 September and
+the method and plan of 19 October are in the <a href="https://github.com/om-mpawar/ME299-25110218/tree/main/learning">learning folder</a>.</p>
+<figure class="wide">
+  <div class="strip two">
+    <img style="flex:1.847" src="assets/fig/push_pull.png" alt="Bend of two sections with pushing and pull-only cables">
+    <img style="flex:2.078" src="assets/fig/learning.png" alt="Tip error against number of training poses">
+  </div>
+  <figcaption>Two early results on the first three-tendon robot: pushing against pull-only cables, and how much data
+  each model needs.</figcaption>
+</figure>
 </section>
 
+<section>
+<h2>Next</h2>
+<p>The twin will be tested on a printed four-module robot with PhaseSpace motion capture, calibrating five numbers on
+about fifteen poses of two modules. The pass criterion, fixed before any data, is a mean tip error below 2&nbsp;% of
+length. After that, the module law will be written as a function of the SWEEP geometry parameters, so that the model
+can be used to choose a backbone for a required shape and stroke.</p>
+</section>
 </main>
-<footer class="site-foot">
-  <a href="report.pdf">Download this report as PDF</a> &nbsp;·&nbsp;
-  <a href="https://github.com/om-mpawar/ME299-25110218">Repository</a> &nbsp;·&nbsp;
-  <a href="https://github.com/om-mpawar/ME299-25110218/blob/main/poster/poster.pdf">A0 poster</a>
-</footer>
+
+<footer>Om Mohan Pawar, IIT Gandhinagar, 2026 &nbsp;&middot;&nbsp; <a href="https://github.com/om-mpawar/ME299-25110218">Repository</a></footer>
 </body>
 </html>
