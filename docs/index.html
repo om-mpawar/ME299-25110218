@@ -18,7 +18,7 @@
     <h1>From geometry to a real-time digital twin of rolling-disc notched tendon-driven continuum robots</h1>
     <p class="lede">A printed robot that bends along its whole length when a tendon in its wall is pulled. This ME&nbsp;299
     project asks how the shape of its notches sets the bend, and whether its full shape can be predicted from the servo
-    commands alone, with no sensor on the robot.</p>
+    commands alone, for any number of modules, with no sensor on the robot.</p>
     <p class="who"><span><b>Om Mohan Pawar</b>, 25110218</span><span>Supervised by <b>Prof. Madhu Vadali</b></span>
     <span>IITGN Robotics Laboratory, Mechanical Engineering</span></p>
     <nav class="links">
@@ -51,11 +51,6 @@
         <button type="button" data-modules="3" aria-pressed="false">3</button>
         <button type="button" data-modules="4" aria-pressed="false">4</button>
       </div>
-      <div class="seg" role="group" aria-label="Mounting">
-        <span>Mounting</span>
-        <button type="button" data-mount="upright" aria-pressed="true">Upright</button>
-        <button type="button" data-mount="hanging" aria-pressed="false">Hanging</button>
-      </div>
     </div>
     <figcaption><span id="readout" aria-live="polite"></span> A constant-curvature sketch; the twin itself also accounts
     for compression, slack tendons and gravity.</figcaption>
@@ -72,15 +67,15 @@
   to half of the tendon stroke is lost to axial compression.</p>
   <p>The second part, which I lead and which is being prepared for IEEE RA-L, is a digital twin that predicts the full
   shape of a modular robot from the servo commands alone. A beam model built from the CAD, with tendons that can only
-  pull, is identified once on one and two modules. Without refitting, it predicts four-module stacks and new mountings
-  to within 0.5&nbsp;mm of FEM, in 1 to 4&nbsp;ms per pose.</p>
+  pull, is identified once on one and two modules. Without refitting, it predicts four-module stacks (640&nbsp;mm) to
+  0.50&nbsp;mm of FEM, 0.08&nbsp;% of length, in 1 to 4&nbsp;ms per pose.</p>
 </section>
 
 <figure class="band">
   <div class="strip">
     <img style="flex:1.776" src="assets/fig/design_params.png" alt="Notched backbone and its design parameters">
-    <img style="flex:0.836" src="assets/fig/hw_parts.png" alt="Printable TPU module, couplers and base column">
-    <img style="flex:1.158" src="assets/fig/sofa_sims.png" alt="SOFA simulations of three disc sizes">
+    <img style="flex:0.836" src="assets/fig/hw_parts_render.png" alt="Printable TPU module, couplers and base column">
+    <img style="flex:2.746" src="assets/fig/sofa_renders.png" alt="SOFA simulations of three disc sizes">
   </div>
   <figcaption>The backbone and its design parameters; the parts designed for the four-module build (TPU module,
   PLA couplers and base); and the same load simulated on three disc sizes.</figcaption>
@@ -121,28 +116,34 @@
 
 <section class="part part-b">
   <div class="part-head">
-    <h2>A sensor-free, real-time digital twin</h2>
+    <h2>A sensor-free twin of one SWEEP design</h2>
     <p class="venue">In preparation for IEEE Robotics and Automation Letters, lead author</p>
   </div>
   <div class="text">
-    <p>The backbone is a beam whose cross-section follows the CAD. Each tendon loads every slice it passes, tendons that
-    would have to push go slack, and gravity acts in any direction. Instead of training a network to output shapes,
-    the twin learns the law of one module, a few compliance factors fitted through the exact solver on one and two
-    modules, and reuses it unchanged for every stack and mounting.</p>
+    <p>The module is the SWEEP design with a 30&nbsp;mm disc. Its backbone is a beam whose cross-section follows the
+    CAD: each tendon loads every slice it passes, the tendon map is exactly linear, and tendons that would have to push
+    go slack, which makes the tensions the solution of a convex problem. Instead of training a network to output
+    shapes, the twin learns the law of one module, four compliance scales and a smooth correction fitted through the
+    exact solver on one and two modules, and reuses it unchanged for any number of modules.</p>
   </div>
+  <figure class="band">
+    <img src="assets/fig/physics_render.png" alt="Half sections of the CAD module showing tendon loads, one slice deforming, and taut and slack tendons">
+    <figcaption>The physics, drawn on half sections of the CAD: a tendon at offset <i>d</i> puts a compression
+    <i>N</i>&nbsp;=&nbsp;<i>T</i> and a moment <i>M</i>&nbsp;=&nbsp;<i>Td</i> on every section it passes; each slice
+    shortens and bends; a paid-out tendon goes slack.</figcaption>
+  </figure>
   <figure class="band narrow">
-    <img src="assets/fig/physics.svg" alt="Loads on a slice, its deformation, and slack tendons">
-    <figcaption>A tendon at offset <i>d</i> puts a moment and a compression on every slice it passes; the slice shortens
-    and bends, and tendons that would have to push go slack.</figcaption>
+    <img src="assets/fig/law.svg" alt="Identified compliance of one module relative to the CAD: axial times 20.2, bending times 5.9 and 5.3, torsion times 2.45">
+    <figcaption>The identified law: each compliance of one module divided by its plane-section value.</figcaption>
   </figure>
   <figure class="band">
     <div class="strip">
-      <img style="flex:2.410" src="assets/fig/shapes.svg" alt="Twin against FEM on unseen configurations">
-      <img style="flex:1.958" src="assets/fig/transfer.svg" alt="Tip error of four models on six test sets">
+      <img style="flex:1.579" src="assets/fig/stacks_render.png" alt="The twin rendered for 1, 2 and 4 modules with FEM points">
+      <img style="flex:1.75" src="assets/fig/transfer_b.svg" alt="Mean tip error of five models on four held-out test sets">
     </div>
-    <figcaption>Left: the twin, coloured by module, against FEM (dots) on configurations never used for fitting.
-    Right: the identified law stays below 0.5&nbsp;mm on every test set, while learned solutions do not carry over to
-    new configurations.</figcaption>
+    <figcaption>Left: the twin rendered on the CAD for 1, 2 and 4 modules at one scale; dots are the FEM centreline.
+    Right: mean tip error on held-out poses. The identified law stays at 0.24 to 0.50&nbsp;mm; constant curvature errs
+    by 38 to 121&nbsp;mm and a physics-informed network must be retrained for four modules.</figcaption>
   </figure>
 </section>
 
@@ -151,7 +152,7 @@
   <p>The first version was a virtual sensor: a constant-curvature estimate of the tip, corrected by a Gaussian process
   trained on FEM. Two findings changed the direction. The simulated cables could push as well as pull, and the
   pull-only model with coupling between sections turned out to be published already. The work moved to identifying
-  the law of one module from data and testing whether it transfers to longer stacks and new mountings.</p>
+  the law of one module from data and testing whether it transfers to longer stacks.</p>
   <figure class="band inset">
     <div class="strip">
       <img style="flex:1.847" src="assets/fig/push_pull.png" alt="Bend of two sections with pushing and pull-only cables">
@@ -163,15 +164,17 @@
 </section>
 
 <section class="text">
-  <h2>What comes next</h2>
+  <h2>What comes next: towards sensor-free cavity insertion</h2>
+  <p>Part A is complete. The work continues on the twin.</p>
   <ol class="steps">
-    <li><h3>Hardware validation</h3><p>A printed four-module robot under PhaseSpace motion capture. Five numbers are
-    calibrated on about fifteen poses of two modules; the twin passes if its mean tip error on four modules stays below
-    2&nbsp;% of length, a bar set before any data were taken.</p></li>
-    <li><h3>A law that depends on geometry</h3><p>Identify the module law for each SWEEP design and write it as a
-    function of disc diameter, inner diameter and length, tested on designs held out entirely.</p></li>
-    <li><h3>Inverse design and control</h3><p>Ask the model which backbone gives a required bend for a given stroke,
-    print it, and use the twin for closed-loop shape control.</p></li>
+    <li><h3>Hardware validation (now)</h3><p>Five numbers are calibrated on about fifteen motion-capture poses of two
+    modules and the twin is tested on four. It passes if the mean tip error is at most 2&nbsp;% of length, a bar set
+    before any data.</p></li>
+    <li><h3>Contact in the twin</h3><p>A wall pushes one way only, like a tendon pulls one way only, so contact adds a
+    second complementarity problem of the same kind to the solver. It passes if the shape against a wall matches FEM
+    and motion capture.</p></li>
+    <li><h3>Cavity insertion</h3><p>The stack is fed through an opening while the twin chooses the servo commands. It
+    passes if the robot reaches a target inside a printed cavity, with no sensor on the robot.</p></li>
   </ol>
 </section>
 </main>

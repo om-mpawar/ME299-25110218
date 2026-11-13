@@ -14,7 +14,7 @@ reading behind them, and a plan for continuing the work.
 | Folder | What it is | Status | My role |
 |---|---|---|---|
 | [`ICRA/`](ICRA/) | **SWEEP**: an automated CAD → tetrahedral mesh → SOFA FEM pipeline, and a parametric study of how notch geometry sets bending | IEEE ICRA 2027, under review. D. Yadav, **O. M. Pawar**, Krishnapriya R, S. Gandhi, M. Vadali | Second author |
-| [`RA-L/`](RA-L/) | **tdcr-twin**: a sensor-free, real-time digital twin of a modular notched TDCR (Python package, FEM data, results, paper draft) | In preparation for IEEE RA-L | Lead author |
+| [`RA-L/`](RA-L/) | **tdcr-twin**: a sensor-free, real-time digital twin of a modular notched TDCR (Python package, FEM data and results; the manuscript is added at submission) | In preparation for IEEE RA-L | Lead author |
 | [`learning/`](learning/) | Literature review, progress report (30 Sep), method and research plan (19 Oct) | Course record | Author |
 | [`poster/`](poster/) | A0 poster of both parts for the final evaluation | 14 Nov 2026 | Author |
 | [`report/`](report/), [`docs/`](docs/) | The 5-page report (LaTeX) and the project website (GitHub Pages) | | Author |
@@ -29,8 +29,8 @@ rather than pinches) and tendons in its wall. Modules of 160 mm stack into longe
 project:
 
 - **A. Design.** Which geometry gives a wanted bend, and what tendon stroke and force does it cost?
-- **B. Model.** Can the whole shape be predicted in real time from the servo commands alone, for any number of modules
-  and any mounting, with no sensors on the robot?
+- **B. Model.** Can the whole shape be predicted in real time from the servo commands alone, for any number of modules,
+  with no sensors on the robot?
 
 ## 2. Part A: how geometry governs compliance (`ICRA/`)
 
@@ -61,8 +61,8 @@ folder is the code released with the submission; simulation outputs are not incl
 
 ## 3. Part B: a sensor-free, real-time digital twin (`RA-L/`)
 
-**Input:** the tendon displacements commanded by the servos, and how the robot is mounted. **Output:** the pose of the
-backbone every 5 mm, in 1 to 4 ms.
+The twin models one SWEEP design (*D<sub>RD</sub>* = 30 mm, *L* = 150 mm). **Input:** the tendon displacements
+commanded by the servos. **Output:** the pose of the backbone every 5 mm, in 1 to 4 ms.
 
 **The physics.** The robot is a beam whose cross-section follows the CAD: in a notch only two 4 mm bridges remain
 (area ÷8, bending stiffness ÷280), so the notches do the bending. A tendon at offset **d** loads every slice it passes
@@ -71,29 +71,34 @@ tendon shortening that is exactly linear at any bend angle:
 
 &nbsp;&nbsp;&nbsp;&nbsp;δ**ℓ** = *G* **λ**,  *G<sub>ij</sub>* = Σ<sub>c</sub> τ<sub>ic</sub> τ<sub>jc</sub> ( *a<sub>c</sub>* + **d**<sub>i</sub><sup>T</sup> *C<sub>c</sub>* **d**<sub>j</sub> ) + *c<sub>t</sub> L<sub>i</sub>* δ<sub>ij</sub>
 
-Tendons only pull, so the tensions solve a convex problem with a unique solution,
-**λ**\* = argmin<sub>**λ** ≥ 0</sub> ½ **λ**<sup>T</sup> *G* **λ** − δ**ℓ**<sup>T</sup> **λ**, and gravity in
-any direction is added by a fixed point around it. One module model is composed by statics into any stack.
+*G* is symmetric positive definite (½**λ**<sup>T</sup>*G***λ** is the complementary energy). Tendons only pull, so
+the tensions solve a strictly convex problem with a unique solution,
+**λ**\* = argmin<sub>**λ** ≥ 0</sub> ½ **λ**<sup>T</sup> *G* **λ** − δ**ℓ**<sup>T</sup> **λ**, and gravity is added
+by a fixed point around it. One module model is composed by statics into any stack. The full derivation, with three
+identifiability propositions, is in the [report](docs/report.pdf).
 
 **Scientific ML: learn the law, not the solution.** Beam theory underestimates how compliant a short notch is. I do not
 learn the shape; I learn the module's law, one scale per notch family, fitted *through* the exact solver on 675 SOFA
-poses of one and two modules. Result: notch compliance ×20.2 (axial) and ×5.9 / 5.3 (bending) of beam theory, and
-torsion ×2.45. These four physical numbers are then reused unchanged for every stack and mounting.
+poses of one and two modules. Result: notch compliance ×20.2 (axial) and ×5.9 / 5.3 (bending) of beam theory, a
+smooth correction along the module within 13 %, and torsion ×2.45 from a twist test. The law is then reused unchanged
+for any number of modules.
 
-| Mean tip error vs FEM (mm) | seen (1–2 modules) | new mounting | 4 modules (640 mm) |
-|---|---|---|---|
-| Beam theory from CAD, no fit | 10.5–30.8 | 43.6–68.0 | 61.7 |
-| Twin + learned residual (GP) | 0.14–0.36 | 0.56–1.40 | 1.12 |
-| PINNs, forward and inverse (learn the solution) | 3.4–6.0 | 9.2–77 | 54–73, retrained |
-| **Identified law in the exact solver (this work)** | **0.24–0.38** | **0.21–0.42** | **0.50 (0.08 % of length)** |
+| Mean tip error vs FEM (mm) | 1 module | 2 modules | 2 modules, gravity | 4 modules (640 mm, never fitted) |
+|---|---|---|---|---|
+| Constant curvature, one arc per module | 39.5 | 61.8 | 38.3 | 120.9 |
+| Beam theory from CAD, no fit | 17.8 | 30.8 | 10.5 | 61.7 |
+| Physics-informed network (learns the shape) | – | 4.6 | 6.0 | 72.5, retrained |
+| Twin + learned residual (GP) | 0.14 | 0.36 | 0.35 | 1.12 |
+| **Identified law in the exact solver (this work)** | **0.24** | **0.24** | **0.38** | **0.50 (0.08 % of length)** |
 
-<p align="center"><img src="docs/assets/fig/shapes.svg" width="49%" alt="Twin against FEM on unseen configurations"> <img src="docs/assets/fig/transfer.svg" width="46%" alt="Tip error of four models"></p>
+<p align="center"><img src="docs/assets/fig/stacks_render.png" width="52%" alt="The twin rendered for 1, 2 and 4 modules with FEM points"> <img src="docs/assets/fig/transfer_b.svg" width="46%" alt="Tip error of five models on four held-out sets"></p>
 
 **Verification.** The solver matches closed-form beam cases to under 1 µm and an independent Cosserat rod to 0.004 mm.
-There are 132 automated tests, and one command (`scripts/reproduce.py`) regenerates every simulation number in the paper
-draft and checks it against the printed value (`results/CLAIMS.md`).
+There are 132 automated tests, and one command (`scripts/reproduce.py`) regenerates every simulation number and checks it
+against the reported value (`results/CLAIMS.md`).
 
-**Limit.** Every number above is against FEM. Hardware validation is the next step (Section 5).
+**Limit.** Every number above is against FEM, whose coarse and fine meshes differ by about 0.6 mm at the tip. Hardware
+validation is the next step (Section 5).
 
 How to install, use the twin and reproduce the results: [`RA-L/README.md`](RA-L/README.md).
 
@@ -119,32 +124,25 @@ Gaussian-process regression and physics-informed neural networks. The habits mat
 simple cases before trusting it, searching the literature before claiming anything is new, fixing a pass criterion
 before collecting data, and writing code so that every number in a paper can be regenerated by one command.
 
-## 5. Future scope: the long-term plan
+## 5. Future scope: towards sensor-free cavity insertion
 
-The two parts meet in one direction. SWEEP generates designs (A), and the twin turns each design into a module law (B).
-Making that law a function of geometry gives a model that answers *"which backbone gives this shape with this stroke?"*
-in milliseconds.
+Part A is complete; the work continues on the twin.
 
-| Phase | When (target) | Work | Pass criterion |
-|---|---|---|---|
-| 1. Hardware validation | Nov 2026 – early 2027 | Print and weigh four modules; pretension 1 : 1.75 : 2.25 : 2.5; PhaseSpace motion capture; calibrate 5 numbers on ~15 poses of two modules; test four modules upright and hanging | Mean tip error ≤ 2 % of length (13 mm), fixed before any data |
-| 2. Geometry-conditioned law | 2027 | Identify the law for each SWEEP design; fit θ = *f*(*D<sub>RD</sub>*, *D<sub>i</sub>*, *L*), first by regression, then a neural operator if needed | Beats CAD-only beam theory on designs held out entirely |
-| 3. Inverse design and control | 2027 onwards | Target curvature and stroke budget → geometry; print and verify; closed-loop shape control with the twin as the model | A printed design meets its target bend within the Phase 1 tolerance |
-
-| Risk | Sign in the data | Planned response |
+| Step | Work | Pass criterion |
 |---|---|---|
-| The notch law is not linear on hardware | Residual grows with bend angle | A convex notch energy ψ<sub>θ</sub>(*N*, **M**) in place of the linear law, inside the same solver |
-| Friction in the tendon channels | Hysteresis between loading and unloading | The capstan term already in the code; load in one direction |
-| Self-weight confounded with stiffness | Mass and stiffness trade off in the fit | Weigh every module; never fit mass from shape |
-| Creep of TPU | Drift at a constant command | Fixed settling time; repeat poses at the start and end |
+| 1. Hardware validation (now) | Print and weigh four modules; pretension 1 : 1.75 : 2.25 : 2.5; motion capture; calibrate 5 numbers on ~15 poses of two modules; test on four | Mean tip error ≤ 2 % of length (13 mm), fixed before any data |
+| 2. Contact in the twin | A wall pushes one way only, as a tendon pulls one way only: contact forces *f* ≥ 0, gaps *g* ≥ 0, *f g* = 0 form a second complementarity problem of the same kind, solved inside the gravity fixed point | Shape against a wall matches FEM and motion capture |
+| 3. Cavity insertion | Feed the stack through an opening while the twin chooses the servo commands | Reaches a target inside a printed cavity, with no sensor on the robot |
 
-**Planned outputs:** the ICRA 2027 decision and any revision (early 2027); an RA-L submission once Phase 1 gives a
-hardware table; the twin released as an installable package.
+If the hardware residual grows with bend angle, a convex notch energy replaces the linear law inside the same solver.
+
+**Planned outputs:** the ICRA 2027 decision; an RA-L submission once step 1 gives a hardware table; the twin released as
+an installable package.
 
 ## 6. Reproducing the results
 
 ```bash
-# Part B (no SOFA needed): the twin, its tests and every simulation number of the paper draft
+# Part B (no SOFA needed): the twin, its tests and every simulation number
 cd RA-L
 python3.12 -m venv .venv && .venv/bin/pip install -e ".[dev]"
 .venv/bin/python -m pytest -q
